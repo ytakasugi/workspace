@@ -1,0 +1,365 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - test01",
+            "request": "launch",
+            "mainClass": "Chapter15.Test.test01",
+            "projectName": "Java_workspace_25320dd9"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - practice_15_04",
+            "request": "launch",
+            "mainClass": "Chapter15.Practice.practice_15_04",
+            "projectName": "Java_workspace_25320dd9"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - example05",
+            "request": "launch",
+            "mainClass": "Chapter15.Practice.example05",
+            "projectName": "Java_workspace_25320dd9"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - practice_15_03",
+            "request": "launch",
+            "mainClass": "Chapter15.Practice.practice_15_03",
+            "projectName": "Java_workspace_25320dd9"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - practice_15_03",
+            "request": "launch",
+            "mainClass": "Chapter15.Practice.practice_15_03",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - example04",
+            "request": "launch",
+            "mainClass": "Chapter15.Practice.example04",
+            "projectName": "Java_workspace_25320dd9"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - example03",
+            "request": "launch",
+            "mainClass": "Chapter15.Practice.example03",
+            "projectName": "Java_workspace_25320dd9"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - example03",
+            "request": "launch",
+            "mainClass": "Chapter15.Practice.example03",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - execNull",
+            "request": "launch",
+            "mainClass": "Chapter15.Practice.execNull",
+            "projectName": "Java_workspace_25320dd9"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - ExecuteCard",
+            "request": "launch",
+            "mainClass": "Chapter15.Practice.ExecuteCard",
+            "projectName": "Java_workspace_25320dd9"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - sample",
+            "request": "launch",
+            "mainClass": "sample.sample",
+            "projectName": "Java_workspace_25320dd9"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - test03",
+            "request": "launch",
+            "mainClass": "Chapter12.Test.test03",
+            "projectName": "Java_workspace_25320dd9"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - example01",
+            "request": "launch",
+            "mainClass": "Chapter15.Practice.example01",
+            "projectName": "Java_workspace_25320dd9"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Execute",
+            "request": "launch",
+            "mainClass": "Chapter14.Practice.Execute",
+            "projectName": "Java_workspace_1109af63"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Exec",
+            "request": "launch",
+            "mainClass": "Chapter14.Practice.Exec",
+            "projectName": "Java_workspace_1109af63"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Exec",
+            "request": "launch",
+            "mainClass": "Chapter13.Test.Exec",
+            "projectName": "Java_workspace_1109af63"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Exec",
+            "request": "launch",
+            "mainClass": "Chapter13.Practice.Exec",
+            "projectName": "Java_workspace_1109af63"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - test03",
+            "request": "launch",
+            "mainClass": "Chapter12.Test.test03",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - test01",
+            "request": "launch",
+            "mainClass": "Chapter12.Test.test01",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - practice05",
+            "request": "launch",
+            "mainClass": "Chapter12.Practice.practice05",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - practice03",
+            "request": "launch",
+            "mainClass": "Chapter12.Practice.practice03",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - practice02",
+            "request": "launch",
+            "mainClass": "Chapter12.Practice.practice02",
+            "projectName": "Java_workspace_1109af63"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - practice01",
+            "request": "launch",
+            "mainClass": "Chapter12.Practice.practice01",
+            "projectName": "Java_workspace_1109af63"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - method",
+            "request": "launch",
+            "mainClass": "sample.method",
+            "projectName": "Java_workspace_1109af63"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - test02",
+            "request": "launch",
+            "mainClass": "Chapter11.Test.test02",
+            "projectName": "Java_workspace_1109af63"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - test01",
+            "request": "launch",
+            "mainClass": "Chapter11.Test.test01",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - practice04",
+            "request": "launch",
+            "mainClass": "Chapter11.Practice.practice04",
+            "projectName": "Java_workspace_1109af63"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - practice03",
+            "request": "launch",
+            "mainClass": "Chapter11.Practice.practice03",
+            "projectName": "Java_workspace_1109af63"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - practice01",
+            "request": "launch",
+            "mainClass": "Chapter11.Practice.practice01",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - test04",
+            "request": "launch",
+            "mainClass": "Chapter10.Test.test04",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - test03",
+            "request": "launch",
+            "mainClass": "Chapter10.Test.test03",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - test02",
+            "request": "launch",
+            "mainClass": "Chapter10.Test.test02",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - test03",
+            "request": "launch",
+            "mainClass": "Chapter09.Test.test03",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - test02",
+            "request": "launch",
+            "mainClass": "Chapter09.Test.test02",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - test01",
+            "request": "launch",
+            "mainClass": "Chapter09.Test.test01",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - practice04",
+            "request": "launch",
+            "mainClass": "Chapter09.Practice.practice04",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - practice03",
+            "request": "launch",
+            "mainClass": "Chapter09.Practice.practice03",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - practice02",
+            "request": "launch",
+            "mainClass": "Chapter09.Practice.practice02",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - practice01",
+            "request": "launch",
+            "mainClass": "Chapter09.Practice.practice01",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - practice06",
+            "request": "launch",
+            "mainClass": "Chapter10.Practice.practice06",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - practice05",
+            "request": "launch",
+            "mainClass": "Chapter10.Practice.practice05",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - practice04",
+            "request": "launch",
+            "mainClass": "Chapter10.Practice.practice04",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - practice03",
+            "request": "launch",
+            "mainClass": "Chapter10.Practice.practice03",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - practice02",
+            "request": "launch",
+            "mainClass": "Chapter10.Practice.practice02",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - test01",
+            "request": "launch",
+            "mainClass": "Chapter10.Test.test01",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - sandbox",
+            "request": "launch",
+            "mainClass": "sample.sandbox",
+            "projectName": "Java_workspace_1109af63"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - sample",
+            "request": "launch",
+            "mainClass": "sample.sample",
+            "projectName": "Java_workspace_1109af63"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - practice01",
+            "request": "launch",
+            "mainClass": "Chapter10.Practice.practice01",
+            "projectName": "Java_workspace_1109af63",
+            "console": "integratedTerminal"
+        }
+    ]
+}
