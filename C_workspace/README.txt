@@ -1,0 +1,1 @@
+gcc-o [filename] [filename].cpp
