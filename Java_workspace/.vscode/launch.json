@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - practice01",
+            "request": "launch",
+            "mainClass": "practice01",
+            "projectName": "Java_workspace_a6068b20"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - practice03",
             "request": "launch",
             "mainClass": "practice03",
