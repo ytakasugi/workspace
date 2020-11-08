@@ -14,5 +14,5 @@ public class practice03{
     public static int tax(int unitprice, double taxrate){
         return (int)(unitprice * taxrate);
     }
-       
+    
 }
