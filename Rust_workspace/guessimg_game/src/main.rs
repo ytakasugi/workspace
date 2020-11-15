@@ -21,7 +21,7 @@ fn main() {
         // read_lineメソッドに対して、&mut guessという引数を渡している。
         // 「&」は、引数が参照であることを示す。
         // このため、データを複数回メモリにコピーせずに、複数個所で同じデータにアクセス可能
-        // read_lineメソッがエラーを返却した際、expectメソッドでクラッシュさせる
+        // read_lineメソッドがエラーを返却した際、expectメソッドでクラッシュさせる
         io::stdin().read_line(&mut guess).expect("Faild to read line");
         let guess: u32 = match guess.trim().parse() {
             Ok(num) => num,
