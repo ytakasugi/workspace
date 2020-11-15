@@ -1,5 +1,6 @@
 https://github.com/ytakasugi/workspace.git
 
+git pull origin master
 git add Rust_workspace/ 
 git commit -m "changes"
 git push origin master 
