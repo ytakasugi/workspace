@@ -1,5 +1,5 @@
 [package]
-name = "Rust_workspace"
+name = "enum_matching"
 version = "0.1.0"
 authors = ["ytakasugi <sh7.tibi0129@gmail.com>"]
 edition = "2018"
