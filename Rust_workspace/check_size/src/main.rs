@@ -1,22 +1,24 @@
-//use std::io;
+/*use std::io;
+
+// 入力されたString型を数値へ変換する関数
+fn get_input() -> u32 {
+    let mut n = String::new();
+    io::stdin().read_line(&mut n).ok();
+    return n.trim().parse().ok().unwrap();
+}*/
 
 fn main() {
+    /*println!("please enter the height");
+    let height = get_input();
+    println!("please enter the width");
+    let width = get_input();
+    println!("please enter the depth");
+    let depth = get_input();*/
 
-    //let mut height = String::new();
-    //let mut width = String::new();
-    //let mut depth = String::new();
-
-    //io::stdin().read_line(&mut height).expect("Faild to read line");
-    //io::stdin().read_line(&mut width).expect("Faild to read line");
-    //io::stdin().read_line(&mut depth).expect("Faild to read line");
-    
-    //let size = checksize {height(&height), width, depth}
-
-    let size = Checksize {height: 50, width: 60, depth: 90};
+    let size = Checksize { height: 50, width: 60, depth:90 };
+    // let size = height + width + depth;
     println!("message {}", size.check(&size));
 
-
-    
     struct Checksize {
         height: u32,
         width: u32,
