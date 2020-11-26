@@ -1,7 +1,7 @@
 use std::io;
 
 fn main() {
-    println!("Please enter a number");
+    println!("Please enter a n");
 
     let n = get_input();
 
@@ -12,6 +12,8 @@ fn main() {
     } else {
         print!("{} is zero", n)
     }
+
+    
 }
 
 fn get_input() -> i32 {
