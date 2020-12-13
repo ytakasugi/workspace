@@ -1,0 +1,1 @@
+C:\Users\sigur\Documents\900_github\000_lerning\Rust_workspace\rust_basics\practice\chapter0401\samplecli\target\debug\samplecli.exe: C:\Users\sigur\Documents\900_github\000_lerning\Rust_workspace\rust_basics\practice\chapter0401\samplecli\src\main.rs
