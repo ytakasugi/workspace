@@ -1,1 +1,1 @@
-New-Item -type file [ƒtƒ@ƒCƒ‹–¼]
+New-Item -type file [ãƒ•ã‚¡ã‚¤ãƒ«å]
