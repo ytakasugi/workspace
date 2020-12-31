@@ -39,6 +39,8 @@ fn main() {
 
         // try_borrow_mutならパニックせずErrを返してくれる
         assert!(b.s.try_borrow_mut().is_err());  // Errが返る
+        println!("{}", b.s.try_borrow_mut().is_err());
     }   // rbsはここでスコープを抜ける
     assert!(b.s.try_borrow_mut().is_ok());       // Okが返る
+    println!("{}", b.s.try_borrow_mut().is_ok());
 }
