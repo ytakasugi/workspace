@@ -2,6 +2,8 @@ https://github.com/ytakasugi/workspace.git
 
 ・gitコマンド一覧
 git branch
+git init
+git colone https://github.com/ytakasugi/workspace
 git pull origin master
 git add Rust_workspace/ 
 git commit -m "changes"
