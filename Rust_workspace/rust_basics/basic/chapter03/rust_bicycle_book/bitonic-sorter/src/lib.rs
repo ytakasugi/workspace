@@ -1,7 +1,10 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
+// 第1段階：初歩的な実装。u32型の値のソートのみに対応
+pub mod first;
+
+// 第2段階：ジェネリクスでさまざまなデータ型に対応
+pub mod second;
+
+pub enum SortOrder {
+    Ascending,   // 昇順
+    Descending,  // 降順
 }
