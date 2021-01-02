@@ -2,6 +2,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch test03",
+            "request": "launch",
+            "mainClass": "Chapter12.Test.test03",
+            "projectName": "Java_workspace_7d028f04"
+        },
+        {
+            "type": "java",
+            "name": "Launch sample",
+            "request": "launch",
+            "mainClass": "sample.sample",
+            "projectName": "Java_workspace_7d028f04"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - test03",
             "request": "launch",
             "mainClass": "Chapter12.Test.test03",
