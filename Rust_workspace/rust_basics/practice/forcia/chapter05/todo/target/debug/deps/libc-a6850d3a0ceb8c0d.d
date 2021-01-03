@@ -1,0 +1,11 @@
+E:\000_GitHub\workspace\Rust_workspace\rust_basics\practice\forcia\chapter05\todo\target\debug\deps\libc-a6850d3a0ceb8c0d.rmeta: C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\libc-0.2.81\src\lib.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\libc-0.2.81\src\macros.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\libc-0.2.81\src\fixed_width_ints.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\libc-0.2.81\src\windows\mod.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\libc-0.2.81\src\windows\msvc.rs
+
+E:\000_GitHub\workspace\Rust_workspace\rust_basics\practice\forcia\chapter05\todo\target\debug\deps\liblibc-a6850d3a0ceb8c0d.rlib: C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\libc-0.2.81\src\lib.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\libc-0.2.81\src\macros.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\libc-0.2.81\src\fixed_width_ints.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\libc-0.2.81\src\windows\mod.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\libc-0.2.81\src\windows\msvc.rs
+
+E:\000_GitHub\workspace\Rust_workspace\rust_basics\practice\forcia\chapter05\todo\target\debug\deps\libc-a6850d3a0ceb8c0d.d: C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\libc-0.2.81\src\lib.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\libc-0.2.81\src\macros.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\libc-0.2.81\src\fixed_width_ints.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\libc-0.2.81\src\windows\mod.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\libc-0.2.81\src\windows\msvc.rs
+
+C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\libc-0.2.81\src\lib.rs:
+C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\libc-0.2.81\src\macros.rs:
+C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\libc-0.2.81\src\fixed_width_ints.rs:
+C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\libc-0.2.81\src\windows\mod.rs:
+C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\libc-0.2.81\src\windows\msvc.rs:

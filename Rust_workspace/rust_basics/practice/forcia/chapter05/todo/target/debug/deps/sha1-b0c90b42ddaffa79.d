@@ -1,0 +1,11 @@
+E:\000_GitHub\workspace\Rust_workspace\rust_basics\practice\forcia\chapter05\todo\target\debug\deps\sha1-b0c90b42ddaffa79.rmeta: C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\sha-1-0.9.2\src\lib.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\sha-1-0.9.2\src\compress.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\sha-1-0.9.2\src\consts.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\sha-1-0.9.2\src\compress\soft.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\sha-1-0.9.2\src\compress\x86.rs
+
+E:\000_GitHub\workspace\Rust_workspace\rust_basics\practice\forcia\chapter05\todo\target\debug\deps\libsha1-b0c90b42ddaffa79.rlib: C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\sha-1-0.9.2\src\lib.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\sha-1-0.9.2\src\compress.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\sha-1-0.9.2\src\consts.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\sha-1-0.9.2\src\compress\soft.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\sha-1-0.9.2\src\compress\x86.rs
+
+E:\000_GitHub\workspace\Rust_workspace\rust_basics\practice\forcia\chapter05\todo\target\debug\deps\sha1-b0c90b42ddaffa79.d: C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\sha-1-0.9.2\src\lib.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\sha-1-0.9.2\src\compress.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\sha-1-0.9.2\src\consts.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\sha-1-0.9.2\src\compress\soft.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\sha-1-0.9.2\src\compress\x86.rs
+
+C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\sha-1-0.9.2\src\lib.rs:
+C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\sha-1-0.9.2\src\compress.rs:
+C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\sha-1-0.9.2\src\consts.rs:
+C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\sha-1-0.9.2\src\compress\soft.rs:
+C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\sha-1-0.9.2\src\compress\x86.rs:
