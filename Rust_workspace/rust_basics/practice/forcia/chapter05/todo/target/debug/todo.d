@@ -1,1 +1,1 @@
-C:\Users\sigur\Documents\900_github\000_lerning\Rust_workspace\rust_basics\practice\forcia\chapter05\todo\target\debug\todo.exe: C:\Users\sigur\Documents\900_github\000_lerning\Rust_workspace\rust_basics\practice\forcia\chapter05\todo\src\main.rs
+/home/ytakasugi/000_learning/workspace/Rust_workspace/rust_basics/practice/forcia/chapter05/todo/target/debug/todo: /home/ytakasugi/000_learning/workspace/Rust_workspace/rust_basics/practice/forcia/chapter05/todo/src/main.rs
