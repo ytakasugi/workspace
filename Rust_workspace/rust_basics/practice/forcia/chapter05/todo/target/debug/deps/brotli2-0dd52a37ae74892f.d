@@ -1,0 +1,11 @@
+/home/ytakasugi/000_learning/workspace/Rust_workspace/rust_basics/practice/forcia/chapter05/todo/target/debug/deps/brotli2-0dd52a37ae74892f.rmeta: /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli2-0.3.2/src/lib.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli2-0.3.2/src/raw.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli2-0.3.2/src/bufread.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli2-0.3.2/src/read.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli2-0.3.2/src/write.rs
+
+/home/ytakasugi/000_learning/workspace/Rust_workspace/rust_basics/practice/forcia/chapter05/todo/target/debug/deps/libbrotli2-0dd52a37ae74892f.rlib: /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli2-0.3.2/src/lib.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli2-0.3.2/src/raw.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli2-0.3.2/src/bufread.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli2-0.3.2/src/read.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli2-0.3.2/src/write.rs
+
+/home/ytakasugi/000_learning/workspace/Rust_workspace/rust_basics/practice/forcia/chapter05/todo/target/debug/deps/brotli2-0dd52a37ae74892f.d: /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli2-0.3.2/src/lib.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli2-0.3.2/src/raw.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli2-0.3.2/src/bufread.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli2-0.3.2/src/read.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli2-0.3.2/src/write.rs
+
+/home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli2-0.3.2/src/lib.rs:
+/home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli2-0.3.2/src/raw.rs:
+/home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli2-0.3.2/src/bufread.rs:
+/home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli2-0.3.2/src/read.rs:
+/home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli2-0.3.2/src/write.rs:

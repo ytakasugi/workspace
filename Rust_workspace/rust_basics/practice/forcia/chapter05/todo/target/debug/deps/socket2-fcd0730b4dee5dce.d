@@ -1,0 +1,11 @@
+/home/ytakasugi/000_learning/workspace/Rust_workspace/rust_basics/practice/forcia/chapter05/todo/target/debug/deps/socket2-fcd0730b4dee5dce.rmeta: /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.3.19/src/lib.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.3.19/src/sockaddr.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.3.19/src/socket.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.3.19/src/utils.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.3.19/src/sys/unix.rs
+
+/home/ytakasugi/000_learning/workspace/Rust_workspace/rust_basics/practice/forcia/chapter05/todo/target/debug/deps/libsocket2-fcd0730b4dee5dce.rlib: /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.3.19/src/lib.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.3.19/src/sockaddr.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.3.19/src/socket.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.3.19/src/utils.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.3.19/src/sys/unix.rs
+
+/home/ytakasugi/000_learning/workspace/Rust_workspace/rust_basics/practice/forcia/chapter05/todo/target/debug/deps/socket2-fcd0730b4dee5dce.d: /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.3.19/src/lib.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.3.19/src/sockaddr.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.3.19/src/socket.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.3.19/src/utils.rs /home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.3.19/src/sys/unix.rs
+
+/home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.3.19/src/lib.rs:
+/home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.3.19/src/sockaddr.rs:
+/home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.3.19/src/socket.rs:
+/home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.3.19/src/utils.rs:
+/home/ytakasugi/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.3.19/src/sys/unix.rs:
