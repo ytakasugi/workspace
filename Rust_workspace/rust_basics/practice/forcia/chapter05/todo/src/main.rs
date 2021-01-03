@@ -7,7 +7,7 @@ enum MyError {}
 impl ResponseError for MyError {}
 
 // MyError は actix_web::ResponseError を実装しているので、
-// index の戻り値に MyError を使うことが出来ます。
+// index の戻り値に MyError を使うことができる
 #[get("/")]
 async fn index() -> Result<HttpResponse, MyError> {
     let response_body = "Hello world!";
