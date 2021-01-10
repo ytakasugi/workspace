@@ -1,0 +1,129 @@
+MSYS2 による gcc 開発環境の構築
+https://qiita.com/spiegel-im-spiegel/items/ba4e8d2418bdfe0c8049
+
+C言語入門
+https://el.mml.tuis.ac.jp/moodle/course/view.php?id=66&sesskey=siDqHiXPHu#section-2
+https://el.mml.tuis.ac.jp/moodle/mod/page/view.php?id=913
+
+MSYS2 MinGW GCC環境をつくる（その1）
+https://blogs.osdn.jp/2018/01/30/msys2-mingw.html
+
+Oracle(12c) statspackのインストールと使い方
+https://qiita.com/mkyz08/items/729545aab4751f3002d0
+
+Visual Studio Code を使った Javaプログラム事始め
+https://qiita.com/kare/items/11309fef5822788501b5
+
+Visual Studio Codeを使用したC言語学習の準備
+https://qiita.com/N_Matsukiyo/items/464594d1fd3e6ef576a4
+
+VS codeでpython3の実行(windows10)
+https://qiita.com/aki34/items/6d5e4f5d6036b9bcd63e
+
+SQL 関数、PL/SQL 関数 逆引きリファレンス
+https://www.shift-the-oracle.com/sql/functions/function-base-reference-3.html
+
+MSYS2における正しいパッケージの更新方法
+https://qiita.com/k-takata/items/373ec7f23d5d7541f982
+
+Jupyter Notebookの初期ディレクトリを変更する
+https://qiita.com/mitama/items/a8129e50afcc462e02d6
+
+Oracle Database 12c Release 2 : インストール環境の設定
+https://www.server-world.info/query?os=CentOS_7&p=oracle12c
+
+CentOS7にOracle12cをインストールして使う方法＋トラブルシューティング
+https://qiita.com/tarosa0001/items/16377451a7e1b5786ac3
+
+初期設定 : Sudo を設定する
+https://www.server-world.info/query?os=CentOS_7&p=initial_conf&f=8
+
+OracleDatabase12cで地道にDBインスタンスの作成
+https://blog.wackwack.net/entry/2016/08/22/234427
+
+インスタンス起動前にORA-09925が出た時の対処
+https://qiita.com/KKZ@github/items/f87f0164b27339ba3a9f
+
+VMware ESXi 5.5 LVMのディスク拡張
+https://qiita.com/Tocyuki/items/e32183f61ba839c51e78
+
+Oracle12c R2 をサイレントインストールする
+https://qiita.com/s-sasaki/items/cb768bd00d3588f494d4
+
+初心者向けシェルスクリプトの基本コマンドの紹介
+https://qiita.com/zayarwinttun/items/0dae4cb66d8f4bd2a337
+
+Bash の if 文（test文）のオプションを整理してみた
+https://qiita.com/wakayama-y/items/a9b7380263da77e51711
+
+Bashの便利な構文だがよく忘れてしまうものの備忘録
+https://qiita.com/Ping/items/57fd75465dfada76e633
+
+実践!!パフォーマンス・チューニング
+https://www.oracle.com/technetwork/jp/content/100811-sql-tuning-251245-ja.pdf
+
+PL/SQLとは？ プロシージャの書き方
+http://itref.fc2web.com/oracle/plsql.html
+
+Using GCC with MinGW
+https://code.visualstudio.com/docs/cpp/config-mingw
+
+VSCodeから直接コンパイルしたい
+https://teratail.com/questions/152399
+
+gccとgdbを用いたプログラムの開発
+https://rat.cis.k.hosei.ac.jp/article/devel/debugongccgdb1.html
+
+VM拡張
+https://nuko-yokohama.hatenadiary.org/entry/20150223/1424664122
+
+Oracle ネットワークファイル
+https://oracle-chokotto.com/ora_nwfile.html
+
+Windows環境へのCUDA・cuDNNのインストール
+https://screwandsilver.com/cuda_cudnn_tensorflow_gpu/
+
+Windows上にChainer v1.5+CUDA+cuDNNを一番簡単に入れれる方法
+https://qiita.com/okuta/items/f985b9da6de33a016a75
+
+NVIDIA
+https://developer.nvidia.com/cuda-gpus
+
+centOS上のvimでsyntax onできない
+http://sasaki.hateblo.jp/entry/20111229/1325166531
+
+shellscript 変数
+https://shellscript.sunone.me/variable.html
+
+しばちょう先生の試して納得！DBAへの道
+https://blogs.oracle.com/otnjp/shibacho-index
+
+津島博士のパフォーマンス講座
+https://blogs.oracle.com/otnjp/tsushima-hakushi-index
+
+仮想マシン(CentOS 7)でディスク拡張を行ったときのLVM拡張対応(PV領域の拡張)
+https://orebibou.com/ja/home/201610/20161003_001/
+
+VSCode に必ず入れておきたい拡張機能
+https://qiita.com/ucan-lab/items/e85931bf8276da43cc97
+
+A tour of go
+https://go-tour-jp.appspot.com/welcome/1
+
+WindowsでDocker環境を試してみる
+https://qiita.com/fkooo/items/d2fddef9091b906675ca
+
+Rust における `From<T>` とか `Into<T>` とかの考え方
+https://qiita.com/hadashiA/items/d0c34a4ba74564337d2f
+
+実践的なアプリケーションを書いてみよう！ Rustの構造化プログラミング【第二言語としてのRust】
+https://eh-career.com/engineerhub/entry/2017/07/19/110000
+
+AtCoder と Rust で始める！競技プログラミング入門（Rust 版 APG4b）
+https://zenn.dev/toga/books/apg4b-rust-ver
+
+AtCoder に登録したら次にやること ～ これだけ解けば十分闘える！過去問精選 10 問 ～
+https://qiita.com/drken/items/fd4e5e3630d0f5859067#5-%E9%81%8E%E5%8E%BB%E5%95%8F%E7%B2%BE%E9%81%B8-10-%E5%95%8F
+
+AtCoder Problems
+https://kenkoooo.com/atcoder/#/table/
