@@ -1,3 +1,12 @@
+use proconio::input;
+
 fn main() {
-    println!("Alice");
+    input!{
+        a: i32,
+        b: i32,
+        c: i32
+    }
+
+    println!("{} {} {}", c, a, b);
+
 }
