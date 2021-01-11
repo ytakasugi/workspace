@@ -1,1 +1,1 @@
-C:\Users\sigur\Documents\900_github\700_init\Rust_workspace\check_size\target\debug\check_size.exe: C:\Users\sigur\Documents\900_github\700_init\Rust_workspace\check_size\src\main.rs
+/home/ytakasugi/000_learning/workspace/Rust_workspace/Chapter12/check_size/target/debug/check_size: /home/ytakasugi/000_learning/workspace/Rust_workspace/Chapter12/check_size/src/main.rs
