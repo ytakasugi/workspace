@@ -50,11 +50,11 @@ fn main() {
     let duck = Duck;
     let tsuchinoko = Tsuchinoko;
     let i = 3;
-    // Duckトレイトのquackメソッドを呼び出している
+    // Duck構造体上のquackメソッドを呼び出している
     duck.quack();
-    // Tsuchinokoトレイトのquackメソッドを呼び出している
+    // Tsuchinoko構造体上のquackメソッドを呼び出している
     tsuchinoko.quack();
-    // Tsuchinokoトレイトのwalkメソッドを呼び出している
+    // Tsuchinoko構造体上のwalkメソッドを呼び出している
     Tsuchinoko.walk();
     // 既存の方に実装したquackメソッドを呼び出している
     i.quack();
