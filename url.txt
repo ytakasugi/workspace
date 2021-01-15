@@ -130,3 +130,9 @@ https://qiita.com/tubo28/items/e6076e9040da57368845
 
 AtCoder Problems
 https://kenkoooo.com/atcoder/#/table/
+
+Rustで作るインタプリタ
+https://qiita.com/nirasan/items/f7a232af3372ea370f4b
+
+AtcoderとRustで始める競技プログラミング
+https://zenn.dev/toga/books/apg4b-rust-ver
