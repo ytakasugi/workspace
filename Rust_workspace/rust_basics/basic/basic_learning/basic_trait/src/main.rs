@@ -46,6 +46,13 @@ impl DuckLike for i64 {
     }
 }
 
+// ジェネリクスの型パラメータに`型パラメータ名: トレイト名`とつけることで、トレイト境界を実装できる
+fn duck_go<D: DuckLike>(duck: D) {
+    // 境界をつけることで、関数本体でトレイトのメソッドを使用できる
+    duck.quack();
+    duck.walk();
+}
+
 fn main() {
     let duck = Duck;
     let tsuchinoko = Tsuchinoko;
@@ -58,4 +65,8 @@ fn main() {
     Tsuchinoko.walk();
     // 既存の方に実装したquackメソッドを呼び出している
     i.quack();
+    duck_go(duck);
+    // DuckLikeを実装していない型は渡せない
+    // let f = 0.0;
+    // duck_go(f); // the trait `DuckLike` is not implemented for `{float}`
 }
