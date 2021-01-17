@@ -10,4 +10,5 @@ fn main() -> std::io::Result<()> {
     let len = reader.read_line(&mut line)?;
     println!("First line is {} bytes long", len);
     Ok(())
+
 }
