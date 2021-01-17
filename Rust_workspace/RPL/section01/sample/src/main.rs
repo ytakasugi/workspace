@@ -1,6 +1,13 @@
-fn main() {
-    let vec1 = vec![1, 2, 3];
-    let vec2 = vec![4, 5, 6];
-    println!("2 in vec1: {}", vec1.iter()     .any(|&x| x == 2));
-    println!("2 in vec2: {}", vec2.into_iter().any(| x| x == 2));
+use std::io::prelude::*;
+use std::io::BufReader;
+use std::fs::File;
+
+fn main() -> std::io::Result<()> {
+    let f = File::open("log.txt")?;
+    let mut reader = BufReader::new(f);
+
+    let mut line = String::new();
+    let len = reader.read_line(&mut line)?;
+    println!("First line is {} bytes long", len);
+    Ok(())
 }
