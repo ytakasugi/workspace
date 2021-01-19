@@ -204,4 +204,29 @@
 
     FromIterator::from_iter() が明示的にコールされることはほとんどなく、代わりに Iterator::collect() メソッドを使用する(詳細は、[Iterator::collect()](https://doc.rust-lang.org/stable/std/iter/trait.Iterator.html#method.collect)を参照)
 
-    
+- Iterator::collect
+
+  - Description
+
+    イテレータをコレクションに変換する。
+
+    collect() は、イテレータ可能なものなら何でも受け取り、関連するコレクションに変換することができる。これは標準ライブラリの中でも最も強力なメソッドのひとつで、さまざまなコンテキストで使用されている。
+
+    collect() が使用される最も基本的なパターンは、あるコレクションを別のコレクションに変換すること。コレクションを取得し、それに対して iter を呼び出し、多くの変換を行い、最後に collect() を行う。
+
+    collect() は、一般的なコレクションではない型のインスタンスを作成することもできる。例えば、文字列から String を作成したり、Result<T, E> アイテムのイテレータを Result<Collection<T>, E> に収集したりすることができる。詳細は[例](https://doc.rust-lang.org/stable/std/iter/trait.Iterator.html#method.collect)を参照のこと。
+
+    collect() は非常に一般的なので、型推論の問題を引き起こす可能性がある。そのため、collect() は「ターボフィッシュ」: ::<> として親しまれている構文を目にすることができる数少ないもののひとつである。これは、推論アルゴリズムがどのコレクションにコレクションしようとしているのかを具体的に理解するのに役立つ。
+
+- read_to_string()
+
+  - Description
+
+    End of Fileまですべてのバイトを読み込みバッファに追加する。
+
+    成功した場合、この関数は読み込んでバッファに追加したバイト数を返却する。
+
+    このストリーム内のデータが有効なUTF-8でない場合、エラーを返却し、バッファに追加されない。
+
+    そのほかの、エラーセマンティクスは[read_to_end](https://doc.rust-lang.org/stable/std/io/trait.Read.html#method.read_to_end)を参照のこと。
+
