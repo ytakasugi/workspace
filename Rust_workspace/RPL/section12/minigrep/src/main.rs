@@ -8,23 +8,33 @@ fn main() {
     // `collect()`を使用するときは、コンパイラは型を推論できないないので型注釈すること
     let args: Vec<String> = env::args().collect();
 
-    // ベクタの1番目の要素は、バイナリ名
-    let query = &args[1];
-    let filename = &args[2];
+    // 引数として、`args`を参照する
+    let config = Config::new(&args);
 
-    println!("Searching for {}", query);
-    println!("In file {}", filename);
+    println!("Searching for {}", config.query);
+    println!("In file {}", config.filename);
     
-    let mut f = File::open(filename).expect("File not found");
-    let mut contents = String::new();
-    f.read_to_string(&mut contents).expect("something went wrong reading the file");
-
-    println!("With text:\n{}", contents);
+    //let mut f = File::open(config.filename).expect("File not found");
+    //let mut contents = String::new();
+    //f.read_to_string(&mut contents).expect("something went wrong reading the file");
+    
 }
 
-fn parse_config(args: &[String]) -> (&str, &str) {
-    let query = &args[1];
-    let filename = &args[2];
-
-    (query, filename)
+struct Config {
+    query: String,
+    filename: String,
 }
+
+impl Config {
+    fn new(args: &[String]) -> Config {
+        if args.len() < 3 {
+            panic!("not enough argments.");
+        }
+        
+        let query = args[1].clone();
+        let filename = args[2].clone();
+        Config{ query, filename}
+
+    }
+}
+
