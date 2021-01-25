@@ -32,3 +32,42 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     //`ユニット型()`を`Ok()`で包む
     Ok(())
 } 
+
+
+// 空のベクタを返す関数
+// search関数に返される値は、search関数にcontents引数で渡されているデータと同じライフタイムを持つ
+// スライスに参照されるデータは、参照が有効になるために有効である必要がある
+pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+    let mut results = Vec::new();
+    // linesメソッドは、イテレータを返す
+    for line in contents.lines() {
+        // クエリを求めて各行を検索する
+        if line.contains(query) {
+            // 合致した行を保存する
+            results.push(line);
+        }
+    }
+    results
+}
+
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn one_result() {
+        let query = "duct";
+        let contents = "\
+Rust:
+safe, fast, productive.
+Pick three.";
+
+        assert_eq!(
+            vec!["safe, fast, productive."],
+            search(query, contents)
+        );
+    }
+}
+
+
