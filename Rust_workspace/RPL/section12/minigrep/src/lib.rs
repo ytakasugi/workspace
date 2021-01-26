@@ -28,7 +28,12 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let mut contents = String::new();
     // すべてのバイトを読み込みバッファに追加する
     f.read_to_string(&mut contents)?;
-    println!("With text:\n{}", contents);
+
+    // search関数に`config.query`と`contents`の参照を引数として渡す
+    for line in search(&config.query, &contents) {
+        println!("{}", line);
+    }
+
     //`ユニット型()`を`Ok()`で包む
     Ok(())
 } 
@@ -38,6 +43,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 // search関数に返される値は、search関数にcontents引数で渡されているデータと同じライフタイムを持つ
 // スライスに参照されるデータは、参照が有効になるために有効である必要がある
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+    // 可変なベクタを生成し、forループ内でpushを呼び出すことで、line(クエリ文字列を含む行)をベクタへ保存する
     let mut results = Vec::new();
     // linesメソッドは、イテレータを返す
     for line in contents.lines() {
@@ -50,24 +56,60 @@ pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     results
 }
 
+// search関数とほぼ同じ。 唯一の違いは、queryと各lineを小文字化していること。
+//  入力引数の大文字小文字によらず、行がクエリを含んでいるか確認する際には、同じになる。
+// search関数と同様に、search_case_insensitive関数に返される値は、search_case_insensitive関数にcontents引数で渡されているデータと
+// 同じ値をライフタイムを持っている
+pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+    // queryは、文字列スライスではなくStringであることに注意。 to_lowercaseを呼び出すと、既存のデータを参照するのではなく、新しいデータを作成するからです。
+    // 例として、クエリは"rUsT"だとする。その文字列スライスは、小文字のuやtを使えるように含んでいないので、 "rust"を含む新しいStringのメモリを確保しなければならない。
+    // containsメソッドに引数としてqueryを渡すときに、`&`記号を追加する必要がある。なぜなら、containsのシグニチャは、文字列スライスを取るよう定義されているから。
+    // containsのシグニチャは以下の通り
+    // pub fn contains<'a, P>(&'a self, pat: P) -> bool
+    // where
+    //     P: Pattern<'a>, 
+    let query = query.to_lowercase();
+    let mut results = Vec::new();
+    for line in contents.lines() {
+        if line.to_lowercase().contains(&query) {
+            results.push(line);
+        }
+    }
+    results
+}
+
 
 #[cfg(test)]
 mod test {
     use super::*;
 
     #[test]
-    fn one_result() {
+    fn case_sensitive() {
         let query = "duct";
         let contents = "\
 Rust:
 safe, fast, productive.
-Pick three.";
+Pick three.
+Duct tape.";
 
         assert_eq!(
             vec!["safe, fast, productive."],
             search(query, contents)
         );
     }
+
+    #[test]
+    fn case_insensitive() {
+        let query = "rUsT";
+        let contents = "\
+Rust
+safe, fast, productive.
+Pick three.
+Trust me.";
+
+        assert_eq!(
+            vec!["Rust:", "Trust me."],
+            search_case_insensitive(query, contents)
+        );
+    }
 }
-
-

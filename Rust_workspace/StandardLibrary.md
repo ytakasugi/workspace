@@ -320,5 +320,30 @@
       しかし、具体的な型ごとにメソッドが重複しないため、`dyn Trait`は`impl Trait / generic parameters` よりも小さなコードを生成する可能性がある。
       オブジェクトの安全性と traitオブジェクトについての詳細は[こちら](https://doc.rust-lang.org/stable/book/ch17-02-trait-objects.html)を参照。
 
+- str::contains
+
+  - Description
+
+    与えられたパターンが、この文字列スライスのサブスライスにマッチした場合に真を返す。
+    そうでない場合は false を返す。
+    パターンには、&str、char、文字列のスライス、文字がマッチするかどうかを判定する関数やクロージャを指定することができる。
+
+- std::error::Error
+
+  - Description
+
+    エラーは、エラー値、すなわち`Result<T, E>`の E 型の値に対する基本的な期待値を表すトレイトである。
+    エラーは、表示とデバッグのトレイトを通して自分自身を記述しなければならず、原因の連鎖情報を提供することができる。
+    `Error::source()`は、一般的にエラーが「抽象化の境界」を越える場合に使用される。
+    あるモジュールが下位レベルのモジュールからのエラーによって引き起こされたエラーを伝えなければならない場合、 [Error::source()](https://doc.rust-lang.org/stable/std/error/trait.Error.html#method.source)を介してそのエラーにアクセスできるようにすることができる。これにより、上位モジュールが独自のエラーを提供することが可能になり、同時にソースチェーンを介してデバッグ用の実装の一部を公開することも可能になる。
+
+- str::to_lowercase
+
+  - Description
+
+    この文字列スライスの小文字に相当するものを、新しい [String] として返す。
+    `Lowercase`は、Unicode Derived Core Property Lowercaseの条項に従って定義される。
+    大文字小文字を変更すると複数の文字に展開されてしまう文字があるため、この関数はパラメータをそのまま変更するのではなく、[String]として返す。
+
 - 
 
