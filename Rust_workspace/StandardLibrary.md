@@ -116,6 +116,14 @@
 
     最終行終了はオプションである。最終行終了で終わる文字列は、最終行終了のない、そうでなければ同一の文字列と同じ行を返す。
 
+- std::env::Args
+
+  - Description
+
+    プロセスの引数に対するイテレータで、各引数の String 値を返す。
+    この構造体は`env::args()`によって作成される。詳細はドキュメントを参照のこと。
+    最初の要素は伝統的に実行ファイルのパスですが、任意のテキストを設定することもでき、存在しない場合もある。つまり、このプロパティはセキュリティのために頼るべきではないということである。
+
 - std::env::args
 
   - Description
@@ -206,7 +214,7 @@
 
     一般的な構造体の場合、#[derive]は一般的なパラメータにバインドされたCloneを追加することで条件付きでCloneを実装する。
 
-- std::iter::FromIterato
+- std::iter::FromIterator
 
   - Description
 
@@ -227,6 +235,19 @@
     collect() は、一般的なコレクションではない型のインスタンスを作成することもできる。例えば、文字列から String を作成したり、Result<T, E> アイテムのイテレータを Result<Collection<T>, E> に収集したりすることができる。詳細は[例](https://doc.rust-lang.org/stable/std/iter/trait.Iterator.html#method.collect)を参照のこと。
 
     collect() は非常に一般的なので、型推論の問題を引き起こす可能性がある。そのため、collect() は「ターボフィッシュ」: ::<> として親しまれている構文を目にすることができる数少ないもののひとつである。これは、推論アルゴリズムがどのコレクションにコレクションしようとしているのかを具体的に理解するのに役立つ。
+
+- std::iter::Iterator::next
+
+  - Description
+
+    イテレータを進めて次の値を返す。反復が終了すると [None] を返す。個々のイテレータの実装は、反復処理を再開することを選択することができる。
+
+- std::iter::Iterator::filter
+
+  - Description
+
+    クロージャを使用して要素を生成するかどうかを決定するイテレータを作成する。
+    要素が与えられると、クロージャは true または false を返さなければならない。返されるイテレータは、クロージャが true を返す要素のみを返す。
 
 - read_to_string()
 
@@ -345,5 +366,18 @@
     `Lowercase`は、Unicode Derived Core Property Lowercaseの条項に従って定義される。
     大文字小文字を変更すると複数の文字に展開されてしまう文字があるため、この関数はパラメータをそのまま変更するのではなく、[String]として返す。
 
-- 
+- env::var
 
+  - Description
+
+    現在のプロセスから環境変数のキーを取得する。
+
+    
+
+- [std::result::Result::is_err](https://doc.rust-lang.org/stable/std/result/enum.Result.html#method.is_err)
+
+  - Description
+
+    結果が`Err`なら`true`を返す
+
+- 

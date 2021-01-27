@@ -9,10 +9,10 @@ fn main() {
     let args: Vec<String> = env::args().collect();
 
     // 引数として、`args`を参照する
-    // COngig::newのErr値を`err`引数のクロージャに渡している
+    // Config::newのErr値を`err`引数のクロージャに渡している
     let config = Config::new(&args).unwrap_or_else(|err| {
         // 引数解析時に問題があった場合
-        println!("Problem parsing argments: {}", err);
+        eprintln!("Problem parsing argments: {}", err);
         // 終了コード1でプロセスを終了する
         process::exit(1);
     });
@@ -21,7 +21,7 @@ fn main() {
     //println!("In file {}", config.filename);
     
     if let Err(e) = minigrep::run(config)  {
-        println!("Application error: {}", e);
+        eprintln!("Application error: {}", e);
         process::exit(1);
     }
 }
