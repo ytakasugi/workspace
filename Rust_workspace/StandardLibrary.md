@@ -4,7 +4,7 @@
 
 詳細は、[標準ライブラリの公式ドキュメント](https://doc.rust-lang.org/stable/std/)を参照のこと。
 
-- #### BufReader<R>
+### BufReader<R>
 
   - Description
 
@@ -40,7 +40,7 @@
 
     デフォルトのバッファ容量を持つ新しい BufReader<R> を作成する。デフォルトは現在 8 KB 。
 
-- AsRef
+### AsRef
 
   - Description
 
@@ -80,7 +80,7 @@
   is_hello(s);
   ~~~
 
-- Path
+### Path
 
   - Discription
 
@@ -90,7 +90,7 @@
 
     非サイズ型であり、常に 参照 や [Box] のようなポインタの後ろで使用されなければならない。
 
-- File::open
+### File::open
 
   - Description
 
@@ -98,7 +98,7 @@
 
     この関数は、パスが既に存在しない場合にエラーを返す。
 
-- BufRead::lines
+### BufRead::lines
 
   - Description
 
@@ -106,7 +106,7 @@
 
     この関数から返されるイテレータは、io::Result<[String]>のインスタンスを返します。返される各文字列は、最後に改行バイト（0xAバイト）やCRLF（0xD、0xAバイト）は持たない。
 
-- str::lines
+### str::lines
 
   - Description
 
@@ -116,7 +116,7 @@
 
     最終行終了はオプションである。最終行終了で終わる文字列は、最終行終了のない、そうでなければ同一の文字列と同じ行を返す。
 
-- std::env::Args
+### std::env::Args
 
   - Description
 
@@ -124,13 +124,13 @@
     この構造体は`env::args()`によって作成される。詳細はドキュメントを参照のこと。
     最初の要素は伝統的に実行ファイルのパスですが、任意のテキストを設定することもでき、存在しない場合もある。つまり、このプロパティはセキュリティのために頼るべきではないということである。
 
-- std::env::args
+### std::env::args
 
   - Description
 
     このプログラムが開始されたときの引数を返す（通常はコマンドライン経由で渡される）
 
-- nth(n)
+### nth(n)
 
   - Description
 
@@ -142,7 +142,7 @@
 
     nth() は、n がイテレータの長さ以上であれば [None] を返す。
 
-- std::cmp::PartialEq
+### std::cmp::PartialEq
 
   - Description
 
@@ -200,7 +200,7 @@
     assert!(b1 != b3);
     ~~~
 
-- std::clone::Clone
+### std::clone::Clone
 
   - Description
 
@@ -214,7 +214,7 @@
 
     一般的な構造体の場合、#[derive]は一般的なパラメータにバインドされたCloneを追加することで条件付きでCloneを実装する。
 
-- std::iter::FromIterator
+### std::iter::FromIterator
 
   - Description
 
@@ -222,7 +222,7 @@
 
     FromIterator::from_iter() が明示的にコールされることはほとんどなく、代わりに Iterator::collect() メソッドを使用する(詳細は、[Iterator::collect()](https://doc.rust-lang.org/stable/std/iter/trait.Iterator.html#method.collect)を参照)
 
-- Iterator::collect
+###  Iterator::collect
 
   - Description
 
@@ -236,20 +236,20 @@
 
     collect() は非常に一般的なので、型推論の問題を引き起こす可能性がある。そのため、collect() は「ターボフィッシュ」: ::<> として親しまれている構文を目にすることができる数少ないもののひとつである。これは、推論アルゴリズムがどのコレクションにコレクションしようとしているのかを具体的に理解するのに役立つ。
 
-- std::iter::Iterator::next
+### std::iter::Iterator::next
 
   - Description
 
     イテレータを進めて次の値を返す。反復が終了すると [None] を返す。個々のイテレータの実装は、反復処理を再開することを選択することができる。
 
-- std::iter::Iterator::filter
+### std::iter::Iterator::filter
 
   - Description
 
     クロージャを使用して要素を生成するかどうかを決定するイテレータを作成する。
     要素が与えられると、クロージャは true または false を返さなければならない。返されるイテレータは、クロージャが true を返す要素のみを返す。
 
-- read_to_string()
+### read_to_string()
 
   - Description
 
@@ -261,7 +261,7 @@
 
     そのほかの、エラーセマンティクスは[read_to_end](https://doc.rust-lang.org/stable/std/io/trait.Read.html#method.read_to_end)を参照のこと。
 
-- std::process
+### std::process
 
   - Description
 
@@ -269,7 +269,7 @@
 
     このモジュールは、主に子プロセスの生成と相互作用に関係していますが、現在のプロセスを終了させるための [abort] と [exit] も提供している。
 
-- std::process::exit
+### std::process::exit
 
   - Description
 
@@ -279,7 +279,7 @@
 
     この関数は何も返却せず、プロセスを終了するので、現在のスタックや他のスレッドのスタック上のデストラクタは実行されないことに注意すること。クリーンなシャットダウンが必要な場合は、実行するデストラクタがなくなった時点でのみこの関数を呼び出すことを検討すること。
 
-- unwrap_or_else
+### unwrap_or_else
 
   - Description
 
@@ -291,7 +291,7 @@
 
     値がErr値なら、このメソッドはクロージャ内でコードを呼び、クロージャに定義した引数としてunwrap_or_elseに渡す匿名関数である。
 
-- String
+### String
 
   - Description
 
@@ -309,7 +309,7 @@
 
     ※&strは不変スライス経由のアクセス、&mut strは可変スライス経由のアクセス
 
-- 配列を表現する型
+### 配列を表現する型
 
   - Description
 
@@ -324,7 +324,7 @@
     | ボックス化されたスライスBox<[T]>   | サイズ固定の配列                 | ヒープ領域                                   | 実行時                       | 不可             | 所有する             |
     | そのほかのスライス(&[T]、&mut [T]) | ベクタや配列へのアクセスを抽象化 | ヒープ領域、またはスタック領域。参照先に依存 | 実行時                       | 不可             | 所有しない           |
 
-- dynキーワード
+### dynキーワード
 
   - Description
 
@@ -341,7 +341,7 @@
       しかし、具体的な型ごとにメソッドが重複しないため、`dyn Trait`は`impl Trait / generic parameters` よりも小さなコードを生成する可能性がある。
       オブジェクトの安全性と traitオブジェクトについての詳細は[こちら](https://doc.rust-lang.org/stable/book/ch17-02-trait-objects.html)を参照。
 
-- str::contains
+### str::contains
 
   - Description
 
@@ -349,7 +349,7 @@
     そうでない場合は false を返す。
     パターンには、&str、char、文字列のスライス、文字がマッチするかどうかを判定する関数やクロージャを指定することができる。
 
-- std::error::Error
+### std::error::Error
 
   - Description
 
@@ -358,7 +358,7 @@
     `Error::source()`は、一般的にエラーが「抽象化の境界」を越える場合に使用される。
     あるモジュールが下位レベルのモジュールからのエラーによって引き起こされたエラーを伝えなければならない場合、 [Error::source()](https://doc.rust-lang.org/stable/std/error/trait.Error.html#method.source)を介してそのエラーにアクセスできるようにすることができる。これにより、上位モジュールが独自のエラーを提供することが可能になり、同時にソースチェーンを介してデバッグ用の実装の一部を公開することも可能になる。
 
-- str::to_lowercase
+### str::to_lowercase
 
   - Description
 
@@ -366,7 +366,7 @@
     `Lowercase`は、Unicode Derived Core Property Lowercaseの条項に従って定義される。
     大文字小文字を変更すると複数の文字に展開されてしまう文字があるため、この関数はパラメータをそのまま変更するのではなく、[String]として返す。
 
-- env::var
+### env::var
 
   - Description
 
@@ -374,13 +374,13 @@
 
     
 
-- [std::result::Result::is_err](https://doc.rust-lang.org/stable/std/result/enum.Result.html#method.is_err)
+### [std::result::Result::is_err](https://doc.rust-lang.org/stable/std/result/enum.Result.html#method.is_err)
 
   - Description
 
     結果が`Err`なら`true`を返す。
 
-- std::thread
+### std::thread
 
   - Description
 
@@ -459,7 +459,7 @@
       環境変数 RUST_MIN_STACK を、希望するスタックサイズを表す整数 (バイト単位)に設定する。`Builder::stack_size`の設定はこれをオーバーライドすることに注意。
       メインスレッドのスタックサイズは Rust によって決定されないことに注意。
 
-- std::time::Duration
+### std::time::Duration
 
   - Description
 
@@ -467,7 +467,7 @@
     各Durationは、秒の整数とナノ秒で表される端数で構成される。基礎となるシステムがナノ秒レベルの精度をサポートしていない場合、システム タイムアウトをバインディングするAPIは通常、ナノ秒数を切り上げる。
     Durationは、Add、Sub、その他のopsトレイトなど、多くの一般的なトレイトを実装している。長さ0のDurationを返すことでDefaultを実装している。
 
-- std::thread::JoinHandle::join
+### std::thread::JoinHandle::join
 
   - Description
 
@@ -477,7 +477,7 @@
     子スレッドがパニックに陥った場合、`panic！`に与えられたパラメータで`Err`が返される。
     この関数は、プラットフォームによってはスレッドが自分自身に参加しようとした場合にパニックを起こすかもしれないし、そうでなければスレッドの参加でデッドロックを起こすかもしれない。
 
-- std::thread::sleep
+### std::thread::sleep
 
   - Description
 
@@ -485,7 +485,7 @@
     スレッドは、スケジューリングの仕様やプラットフォーム依存の機能のために、指定された時間よりも長くスリープすることがある。スレッドのスリープ時間が短くなることはない。
     この関数はブロッキングであり、非同期関数では使用すべきではない。
 
-- std::sync::mpsc
+### std::sync::mpsc
 
   - Description
 
@@ -509,7 +509,7 @@
     チャンネルの送受信操作はすべて、操作が成功したかどうかを示す結果を返します。操作が成功しなかった場合は、通常はチャンネルの残りの半分が対応するスレッドに落とされて「ハングアップ」したことを示している。
     チャネルの半分が割り当てられてしまうと、ほとんどの操作は進行を続けることができなくなるため、`Err`が返されます。多くのアプリケーションでは、このモジュールから返された結果をアンラップし続け、あるスレッドが予期せず死んでしまった場合には、スレッド間で失敗が伝播してしまう。
 
-- mpsc::channel
+### mpsc::channel
 
   - Description
 
@@ -518,7 +518,7 @@
 
     `Sender`で送信しようとしている間に`Receiver]`が切断された場合、送信メソッドは `SendError`を返す。同様に、`Sender`が`recv`しようとしているときに切断された場合、`recv`メソッドは`RecvError`を返す。
 
-- std::sync::mpsc::Sender::send
+### std::sync::mpsc::Sender::send
 
   - Description
 
@@ -526,7 +526,7 @@
     送信が成功した場合は、チャンネルの相手側ハングアップしていないと判断された場合。送信に失敗した場合は、対応するチャンネルが既に割り当て解除されている場合。`Err`の戻り値はデータを受信しないことを意味し、`Ok`の戻り値はデータを受信することを意味しないことに注意すること。この関数が`Ok`を返した直後に、対応するチャンネルがハングアップする可能性がある。
     このメソッドは、現在のスレッドをブロックすることはない。
 
-- std::sync::mpsc::Receive::recv
+### std::sync::mpsc::Receive::recv
 
   - Description
 
@@ -534,5 +534,208 @@
     この関数は、利用可能なデータがなく、より多くのデータを送信できる可能性がある場合、常に現在のスレッドをブロックする。対応する`Sender`(または`SyncSender`) にメッセージが送信されると、このレシーバはウェイクアップしてそのメッセージを返す。
     対応する`Sender`が切断された場合や、このコールがブロックされている間に切断された場合は、このコールはウェイクアップして`Err`を返し、このチャンネルではこれ以上メッセージを受信できないことを示す。ただし、チャネルはバッファリングされているので、切断前に送信されたメッセージは正しく受信される。
 
-- 
+### std::sync::Mutex
+
+  - Description
+
+  共有データの保護に有用な相互排除プリミティブ
+  このmutexは、ロックが利用可能になるのを待つスレッドをブロックする。`mutex`は静的に初期化したり、新しいコンストラクタを使って作成することもできます。各`mutex`には保護するデータを表す`type`パラメータがあります。データは`lock`と`try_lock`から返される RAII ガードを介してのみアクセスでき、`mutex`がロックされているときにのみデータにアクセスできることを保証する。
+
+  - Poisoning
+    このモジュールのmutexは「Poisoning」と呼ばれる戦略を実装しており、mutexを保持している間にスレッドがパニックになると、いつでもmutexがポイズニングされているとみなされます。一度mutexがポイズニングされると、他のすべてのスレッドはデータが汚染されている可能性が高いので、デフォルトではデータにアクセスできなくなります(何らかの不変量が保持されていない)。
+    mutexの場合、これは`lock`メソッドと`try_lock`メソッドが、`mutex`がポイズンされたかどうかを示す `Result`を返すことを意味します。mutexのほとんどの使用法では、これらの結果を単に unwrap() して、無効な不変量が目撃されないようにスレッド間でパニックを伝播させる。
+    しかし、ポイズンされたmutexは、基礎となるデータへのすべてのアクセスを妨げるものではない。`PoisonError`型には`into_inner`メソッドがあり、これはロックが成功したときに返されるはずのガードを返す。これにより、ロックがポイズンされているにもかかわらず、データへのアクセスが可能になる。
+
+
+
+### std::sync::Mutex::lock
+
+  - Description
+
+    mutexを取得し、それが可能になるまで現在のスレッドをブロックします。
+
+    この関数は、mutexを取得できるようになるまでローカルスレッドをブロックします。復帰時には、そのスレッドはロックが保持されている唯一のスレッドとなります。ロックのスコープ付きアンロックを可能にするために、`RAII`ガードが返されます。ガードがスコープ外になると、mutexはアンロックされる。
+    既にロックを保持しているスレッドでmutexをロックする場合の正確な動作は未定義である。しかし、この関数は2回目の呼び出しでは戻りません(例えば、パニックやデッドロックになる可能性がある)。
+
+    - Error
+      このmutexを保持している間にこのmutexの他のユーザがパニックに陥った場合、この呼び出しはmutexを取得した後にエラーを返す。
+
+    - Panic
+      この関数は、現在のスレッドが既にロックを保持している場合に呼び出されるとパニックになる可能性がある。
+
+### std::rc
+
+ - Description
+
+   シングルスレッドの参照カウントポインタ。`Rc`は`Reference Counted`の略。
+
+   `Rc<T>`型は、ヒープに割り当てられたT型の値の共有所有権を提供する。Rc上でcloneを実行すると、ヒープ内の同じ値への新しいポインタが生成される。与えられたアロケーションへの最後のRcポインタが破棄されると、そのアロケーションに格納されている値(しばしば "内部値 "と呼ばれる)も破棄される。
+   Rustの共有参照はデフォルトで突然変更されることを禁止しており、`Rc`も例外ではない。もし値の変更が必要な場合は、`Rc`の中に`Cell`や`RefCell`を包含してください。
+   `Rc`は非アトミックな参照カウントを使用する。これはオーバーヘッドが非常に低いことを意味しますが、`Rc`はスレッド間で送信することができないため、`Rc`は`Send`を実装していない。その結果、Rustコンパイラはコンパイル時にスレッド間で`Rcs`を送信していないかどうかをチェックする。マルチスレッドでアトミックな参照カウントが必要な場合は、`sync::Arc`を使用すること。
+   `downgrade`メソッドを使用して、所有していない`Weak`ポインタを作成することができる。`Weak`ポインタを`Rc`にアップグレードすることができますが、アロケーションに格納されている値が既にドロップされている場合は`None`を返します。言い換えれば、`Weak`ポインタはアロケーション内の値を保持しない。
+   `Rc`ポインタ間のサイクルは決して解放されない。このため、`Weak`はサイクルを壊すために使用される。例えば、ツリーは親ノードから子ノードへの強いRcポインターを持ち、子ノードから親ノードへの弱いポインターを持つことができる。
+   `Rc<T>`は自動的にTへの派生を行います（Deref traitで）ので、`Rc<T>`型の値で`T`のメソッドを呼び出すことができます。`T`のメソッドとの名前の衝突を避けるために、Rc<T>のメソッドは関連する関数であり、[完全修飾構文]で呼ばれる。
+
+   ~~~rust
+   use std::rc::Rc;
+   
+   let my_rc = Rc::new(());
+   Rc::downgrade(&my_rc);
+   ~~~
+
+   `Clone`のようなトレイトの`Rc<T>`の実装も完全修飾構文を使って呼ばれることがあります。完全修飾構文を好む人もいれば、メソッド呼び出し構文を好む人もいます。
+
+   ~~~rust
+   use std::rc::Rc;
+   
+   let rc = Rc::new(());
+   // Method-call syntax
+   let rc2 = rc.clone();
+   // Fully qualified syntax
+   let rc3 = Rc::clone(&rc);
+   ~~~
+
+   `Weak<T>`は、内部の値が既に落とされている可能性があるため、Tへの自動参照は行わない。
+
+   - Cloning references
+     既存の参照カウントポインタと同じアロケーションへの新しい参照の作成は、Rc<T>とWeak<T>のために実装されたClone traitを使用して行われる。
+
+   ~~~rust
+   use std::rc::Rc;
+   
+   let foo = Rc::new(vec![1.0, 2.0, 3.0]);
+   // The two syntaxes below are equivalent.
+   let a = foo.clone();
+   let b = Rc::clone(&foo);
+   // a and b both point to the same memory location as foo.
+   ~~~
+
+   `Rc::clone(&from)`構文は、コードの意味をより明確に伝えることができるので、最も慣用的である。上の例では、この構文を使うと、このコードが`foo`の内容を丸ごとコピーするのではなく、新しい参照を作成していることがわかりやすくなる。
+
+   - Example
+     あるガジェットを所有者が所有している場合を考えてみる。ガジェットの所有者を特定できるようにしたいが、所有者を特定することはできない。しかし、複数のガジェットが同じオーナーに属している可能性があるため、ユニークなオーナーシップではこれを行うことができない。`Rc`では複数のガジェット間でオーナーを共有し、どのガジェットがポイントしている間もオーナーが割り当てられたままにしておくことができる。
+
+   ~~~rust
+   use std::rc::Rc;
+   
+   struct Owner {
+       name: String,
+       // ...other fields
+   }
+   
+   struct Gadget {
+       id: i32,
+       owner: Rc<Owner>,
+       // ...other fields
+   }
+   
+   fn main() {
+       // Create a reference-counted `Owner`.
+       let gadget_owner: Rc<Owner> = Rc::new(
+           Owner {
+               name: "Gadget Man".to_string(),
+           }
+       );
+   
+       // Create `Gadget`s belonging to `gadget_owner`. Cloning the `Rc<Owner>`
+       // gives us a new pointer to the same `Owner` allocation, incrementing
+       // the reference count in the process.
+       let gadget1 = Gadget {
+           id: 1,
+           owner: Rc::clone(&gadget_owner),
+       };
+       let gadget2 = Gadget {
+           id: 2,
+           owner: Rc::clone(&gadget_owner),
+       };
+   
+       // Dispose of our local variable `gadget_owner`.
+       drop(gadget_owner);
+   
+       // Despite dropping `gadget_owner`, we're still able to print out the name
+       // of the `Owner` of the `Gadget`s. This is because we've only dropped a
+       // single `Rc<Owner>`, not the `Owner` it points to. As long as there are
+       // other `Rc<Owner>` pointing at the same `Owner` allocation, it will remain
+       // live. The field projection `gadget1.owner.name` works because
+       // `Rc<Owner>` automatically dereferences to `Owner`.
+       println!("Gadget {} owned by {}", gadget1.id, gadget1.owner.name);
+       println!("Gadget {} owned by {}", gadget2.id, gadget2.owner.name);
+   
+       // At the end of the function, `gadget1` and `gadget2` are destroyed, and
+       // with them the last counted references to our `Owner`. Gadget Man now
+       // gets destroyed as well.
+   }
+   ~~~
+
+   しかし、要求が変化してオーナーからガジェットへの移動が必要になった場合、問題が発生することになる。オーナーからガジェットへの `Rc`ポインタはサイクルを導入する。これは、それらの参照カウントが`0`になることはなく、アロケーションが破棄されることもないことを意味する。これを回避するために、`Weak`ポインタを使うことができます。
+
+   Rustは実際には、そもそもこのループを生成することをやや難しくしている。2つの値がお互いを指すようになるためには、そのうちの1つは変更可能である必要があります。これは、`Rc`がラップした値への共有参照のみを与えることでメモリの安全性を確保しており、直接の突然変異を許さないからである。これは内部可変性を提供する`RefCell`で、共有参照を介して変異性を実現する方法。`RefCell`は実行時にRustの借用ルールを強制する。
+
+### std::sync::Arc
+
+  - Description
+
+    スレッドセーフな参照カウントポインタ。`Arc`は`Atomically Reference Counted`の略。
+
+    `Arc<T>`型は、ヒープに割り当てられた`T`型の値の共有所有権を提供する。`Arc`上で`clone`を実行すると、参照カウントを増加させながら、ソース`Arc`と同じヒープ上の割り当てを指す新しい`Arc`インスタンスが生成される。与えられたアロケーションへの最後の Arc ポインタが破棄されると、そのアロケーションに格納されている値 (多くの場合、「内部値」と呼ばれます) も削除されます。
+
+    Rust の共有参照はデフォルトで突然変異を禁止しており、Arc も例外ではありません。Arc を通してミューテーションを行う必要がある場合は、Mutex、RwLock、または Atomic 型のいずれかを使用してください。
+
+    Rc<T> とは異なり、Arc<T> は参照カウントにアトミック演算を使用します。これはスレッドセーフであることを意味します。欠点は、アトミック演算が通常のメモリアクセスに比べて高価なことです。スレッド間で参照カウントされた割り当てを共有しない場合は、より低いオーバーヘッドのために Rc<T> の使用を検討してください。スレッド間で Rc<T> を送ろうとすると、コンパイラがそれをキャッチするので、`Rc<T>`は安全なデフォルトです。しかし、ライブラリの利用者に柔軟性を持たせるために、ライブラリは`Arc<T>`を選択するかもしれません。
+
+    `Arc<T>`は、`T`が`Send`と`Sync`を実装している限り、`Send`と`Sync`をする。スレッドセーフではない型の`T`を`Arc<T>`に入れてスレッドセーフにすることができないのはなぜか？最初は少し直観的ではないかもしれないが、結局のところ、`Arc<T>` のスレッドセーフは重要ではないのではないのか？結局のところ、`Arc<T>`のスレッド安全性は重要ではないのではないのか？重要なのは、`Arc<T>`は、同じデータの複数の所有権を持つことをスレッドセーフにする、そのデータにスレッドセーフを追加するわけではない。`Arc<RefCell<T>>`を考えてみる。RefCell<T>はSyncではないので、もしArc<T>が常にSendであれば、Arc<RefCell<T>も同様に`Send`になります。しかし、そうすると問題が発生する。`RefCell<T>`はスレッドセーフではない。
+
+    `RefCell<T>`はスレッドセーフではないので、非アトミック演算を使って借用回数を追跡する。
+
+    `downgrade`メソッドを使用して、所有権のない`Weak`ポインタを作成することができる。`Weak`ポインタを`Arc`にアップグレードすることができますが、アロケーションに格納されている値が既にドロップされている場合は`None`を返す。言い換えれば、`Weak` `ポインタはアロケーション内の値を保持しませんが、アロケーション (値の裏付けとなるストア) を保持する。
+
+    `Arc`ポインタ間のサイクルは決して解放されない。このため、`Weak`はサイクルを壊すために使用されます。例えば、ツリーは親ノードから子ノードへの強いアークポインタを持ち、子ノードから親ノードへの弱いポインタを持つことができる。
+
+    - Cloning
+      既存の参照カウントされたポインタから新しい参照を作成するには、`Arc<T>`と`Weak<T>`に実装された`Clone`トレイトを使用します。
+
+    ~~~rust
+    use std::sync::Arc;
+    let foo = Arc::new(vec![1.0, 2.0, 3.0]);
+    // The two syntaxes below are equivalent.
+    let a = foo.clone();
+    let b = Arc::clone(&foo);
+    // a, b, and foo are all Arcs that point to the same memory location
+    ~~~
+
+    - Deref behavior
+      `Arc<T>`は自動的に (Deref trait を介して) `T`に派生するので、`Arc<T>`型の値に対して`T`のメソッドを呼び出すことができる。`T`のメソッドとの名前の衝突を避けるため、`Arc<T>`のメソッドは関連する関数であり、完全修飾構文を用いて呼び出される。
+
+    ~~~rust
+    use std::sync::Arc;
+    
+    let my_arc = Arc::new(());
+    Arc::downgrade(&my_arc);
+    ~~~
+
+    `Clone` のようなトレイトの`Arc<T>`の実装も、完全修飾構文を使って呼ばれることがある。
+
+    ~~~rust
+    use std::sync::Arc;
+    
+    let arc = Arc::new(());
+    // Method-call syntax
+    let arc2 = arc.clone();
+    // Fully qualified syntax
+    let arc3 = Arc::clone(&arc);
+    ~~~
+
+    `Weak<T>`は、内部の値が既にドロップされている可能性があるため、`T`への自動参照は行わない。
+
+### std::sync::atomic
+
+- Description
+
+  Atomic型
+
+  アトミック型はスレッド間のプリミティブな共有メモリ通信を提供し、他の並行型の構成要素となります。
+  このモジュールは、`AtomicBool`、`AtomicIsize`、`AtomicUsize`、`AtomicI8`、`AtomicU16`などを含む、選択された数のAtomic型のアトミックバージョンを定義します。Atomic型は、正しく使用されるとスレッド間の更新を同期させる操作を提供します。
+  各メソッドは、その操作のためのメモリバリアの強さを表す順序を取ります。これらの順序付けは、C++20 のアトミック順序付けと同じです。詳細については、[nomicon](https://doc.rust-lang.org/stable/nomicon/atomics.html)を参照してください。
+  Atomic変数はスレッド間で共有しても安全ですが（`Sync`を実装しています）、それ自体は共有のメカニズムを提供しておらず、Rustのスレッドモデルに従っています。アトミック変数を共有する最も一般的な方法は、`Arc`(原子的に参照カウントされた共有ポインタ) に格納することです。
+  Atomic型は静的変数に格納され、`AtomicBool::new`のような定数初期化子を使って初期化されます。Atomic静的変数は、遅延グローバル初期化によく使われます。
 
