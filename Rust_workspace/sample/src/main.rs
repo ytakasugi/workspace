@@ -1,27 +1,11 @@
-#![allow(unused)]
 fn main() {
-    enum BookFormat {
-        Paperback,
-        Hardback,
-        Ebook,
-    }
+    let v = [10, 40, 30];
+    assert!(v.starts_with(&[10]));
+    assert!(v.starts_with(&[10, 40]));
+    assert!(!v.starts_with(&[50]));
+    assert!(!v.starts_with(&[10, 50]));
 
-    struct Book {
-        isbn: i32,
-        format: BookFormat,
-    }
-
-    impl PartialEq for Book {
-        fn eq(&self, other: &Self) -> bool {
-            self.isbn == other.isbn
-        }
-    }
-
-    let b1 = Book { isbn: 3, format: BookFormat::Paperback };
-    let b2 = Book { isbn: 3, format: BookFormat::Ebook };
-    let b3 = Book { isbn: 10, format: BookFormat::Paperback };
-
-    assert!(b1 == b2);
-    assert!(b1 != b3);
-
+    println!("{}", v.starts_with(&[10]));
+    println!("{}", v.starts_with(&[40]));
+    println!("{}", v.starts_with(&[50]));
 }

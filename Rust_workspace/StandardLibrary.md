@@ -40,6 +40,16 @@
 
     デフォルトのバッファ容量を持つ新しい BufReader<R> を作成する。デフォルトは現在 8 KB 。
 
+### std::io::Read::read
+
+- Description
+
+  このソースからいくつかのバイトを指定されたバッファに引き込み、何バイト読まれたかを返します。
+
+  この関数は、データの待ち受けをブロックするかどうかについては何の保証もしませんが、オブジェクトが読み込みのためにブロックする必要があり、ブロックできない場合は、通常は`Err`返り値を介してその旨を通知します。
+
+  このメソッドの戻り値が Ok(n) である場合、`0 <= n <= buf.len()`であることが保証されなければなりません。ゼロでない`n`の値は、バッファ`buf `がこのソースからの`n`バイトのデータで埋め尽くされたことを示します。`n`が 0 の場合は、2 つのシナリオのうちの 1 つを示します。
+
 ### AsRef
 
   - Description
@@ -97,6 +107,52 @@
     読み取り専用でファイルを開く。
 
     この関数は、パスが既に存在しない場合にエラーを返す。
+
+### std::fs::write
+
+- Descriptiom
+
+  スライスをファイルの内容全体として書き込みます。
+
+  この関数は、ファイルが存在しない場合にはファイルを作成し、存在する場合にはその内容を完全に置き換えます。
+
+  これは、`File::create`や`write_all`を使用してインポートを少なくするための便利な関数です。
+
+  - Example
+
+    ~~~rust
+    use std::fs;
+    
+    fn main() -> std::io::Result<()> {
+        fs::write("foo.txt", b"Lorem ipsum")?;
+        fs::write("bar.txt", "dolor sit")?;
+        Ok(())
+    }
+    ~~~
+
+### std::io::Write
+
+  - Description
+
+    バイト指向のシンクであるオブジェクトのためのトレイト。
+
+    `Write`トレイト の実装者は`writers`と呼ばれることもあります。
+
+    ライターは `write`と`flush`の 2 つのメソッドで定義されています。
+
+    `write`メソッドは、オブジェクトにデータを書き込もうとし、何バイト書き込まれたかを返します。
+
+    `flush`メソッドは、アダプタや明示的なバッファ自体が、バッファリングされたデータがすべて「真のシンク」に押し出されたことを確認するために便利です。
+
+    ライタは、お互いに互換性があるように設計されています。`std::io`の多くの実装では、`Write`トレイトを実装した型を取り、提供しています。
+
+  - flush
+
+    この出力ストリームをフラッシュし、中間的にバッファリングされたすべてのコンテンツが目的地に到達するようにします。
+
+    - Errors
+      I/OエラーやEOFに達しているため、すべてのバイトが書き込めなかった場合はエラーとなります。
+
 
 ### BufRead::lines
 
@@ -308,6 +364,16 @@
     | &mut str | 固定長のUTF-8文字列 | ヒープ領域、スタック領域、静的領域のいずれか。参照先に依存 | 可         | 不可             | 所有しない               |
 
     ※&strは不変スライス経由のアクセス、&mut strは可変スライス経由のアクセス
+
+- String::from_utf8_lossy
+
+  無効な文字を含むバイトのスライスを文字列に変換します。
+
+  文字列はバイト([u8])でできており、バイトのスライス(&[u8])はバイトでできているので、この関数は両者を変換します。ただし、すべてのバイトスライスが有効な文字列であるわけではありません: 文字列は有効なUTF-8である必要があります。この変換の際、`from_utf8_lossy()`は無効な UTF-8 シーケンスを`U+FFFD REPLACEMENT CHARACTER`で置き換えます。
+
+  バイトスライスが有効なUTF-8であることが確実で、変換のオーバーヘッドを発生させたくない場合は、この関数の安全でないバージョンである`from_utf8_unchecked`があります。
+
+  この関数は`Cow<'a, str>`を返します。バイトスライスが無効なUTF-8であれば、置換文字を挿入する必要がありますが、これは文字列のサイズを変えることになるので、Stringが必要になります。しかし、すでに有効なUTF-8であれば、新しい割り当ては必要ありません。この戻り値型は、両方のケースを処理することができます。
 
 ### 配列を表現する型
 
@@ -739,3 +805,126 @@
   Atomic変数はスレッド間で共有しても安全ですが（`Sync`を実装しています）、それ自体は共有のメカニズムを提供しておらず、Rustのスレッドモデルに従っています。アトミック変数を共有する最も一般的な方法は、`Arc`(原子的に参照カウントされた共有ポインタ) に格納することです。
   Atomic型は静的変数に格納され、`AtomicBool::new`のような定数初期化子を使って初期化されます。Atomic静的変数は、遅延グローバル初期化によく使われます。
 
+### std::net::TcpListener
+
+- Description
+
+  TCP ソケットサーバで、接続をリッスンします。
+
+  ソケットアドレスにバインドしてTcpListenerを作成した後、着信TCP接続をリッスンします。これらは accept を呼び出すか、incoming で返された Incoming イテレータを反復処理することで受け入れることができます。
+
+  値がドロップされるとソケットは閉じられます。
+
+  送信制御プロトコルはIETF RFC 793で規定されています。
+
+  - Example
+
+    ~~~rust
+    use std::net::{TcpListener, TcpStream};
+    
+    fn handle_client(stream: TcpStream) {
+        // ...
+    }
+    
+    fn main() -> std::io::Result<()> {
+        let listener = TcpListener::bind("127.0.0.1:80")?;
+    
+        // accept connections and process them serially
+        for stream in listener.incoming() {
+            handle_client(stream?);
+        }
+        Ok(())
+    }
+    ~~~
+
+    
+
+- Implementations
+
+  - bind
+
+    指定されたアドレスにバインドされる新しいTcpListenerを作成します。
+
+    返されたリスナーは、接続を受け入れる準備ができています。
+
+    ポート番号0でバインドすると、OSがこのリスナーにポートを割り当てるように要求します。割り当てられたポートは、`TcpListener::local_addr`メソッドで問い合わせることができます。
+
+    アドレス型は`ToSocketAddrs`トレイトの任意の実装を指定することができます。具体的な例については、そのドキュメントを参照してください。
+
+    `addr`が複数のアドレスを生成した場合、1つのアドレスが成功してリスナーを返すまで、それぞれのアドレスでバインドが試みられます。どのアドレスもリスナーの作成に成功しなかった場合、最後の試行 (最後のアドレス) から返されるエラーが返されます。
+
+    
+
+    - Example
+
+      127.0.0.0.1:80 にバインドされた TCP リスナーを作成します。
+
+      ~~~rust
+      use std::net::TcpListener;
+      
+      let listener = TcpListener::bind("127.0.0.1:80").unwrap();
+      ~~~
+
+      127.0.0.0.1:80 にバインドされた TCP リスナーを作成します。失敗した場合は、127.0.0.0.1:443 にバインドされた TCP リスナーを作成します。
+
+      ~~~rust
+      use std::net::{SocketAddr, TcpListener};
+      
+      let addrs = [
+          SocketAddr::from(([127, 0, 0, 1], 80)),
+          SocketAddr::from(([127, 0, 0, 1], 443)),
+      ];
+      let listener = TcpListener::bind(&addrs[..]).unwrap();
+      ~~~
+
+  - incoming
+
+    このリスナーで受信している接続のイテレータを返します。
+
+    返されるイテレータは `None`を返すことはなく、相手の`SocketAddr`構造体も返しません。これを繰り返し処理することは、ループ内で`TcpListener::accept`を呼び出すことと同じです。
+
+    - Example
+
+      ~~~rust
+      use std::net::TcpListener;
+      
+      let listener = TcpListener::bind("127.0.0.1:80").unwrap();
+      
+      for stream in listener.incoming() {
+          match stream {
+              Ok(stream) => {
+                  println!("new client!");
+              }
+              Err(e) => { /* connection failed */ }
+          }
+      }
+      ~~~
+
+### std::net::TcpStream
+
+- Description
+
+  ローカルとリモートのソケット間のTCPストリーム。
+
+  リモートホストに接続するか、TcpListener上で接続を受け付けるかのいずれかでTcpStreamを作成した後、そこに読み書きすることでデータを送信することができます。
+
+  値をドロップした時点で接続を終了します。また、接続の読み書き部分は、シャットダウンメソッドで個別にシャットダウンすることができます。
+
+  伝送制御プロトコルはIETF RFC 793に規定されています。
+
+  - Example
+
+    ~~~rust
+    use std::io::prelude::*;
+    use std::net::TcpStream;
+    
+    fn main() -> std::io::Result<()> {
+        let mut stream = TcpStream::connect("127.0.0.1:34254")?;
+    
+        stream.write(&[1])?;
+        stream.read(&mut [0; 128])?;
+        Ok(())
+    } // the stream is closed here
+    ~~~
+
+- 

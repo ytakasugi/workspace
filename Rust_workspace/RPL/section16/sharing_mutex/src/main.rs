@@ -6,7 +6,7 @@ fn main() {
     let mut handles = vec![];
 
     for _ in 0..10 {
-        //  所有権をスレッドに移す前にRc<T>をクローン
+        //  所有権をスレッドに移す前にArc<T>をクローン
         let counter = Arc::clone(&counter);
         let handle = thread::spawn(move || {
             let mut num = counter.lock().unwrap();
