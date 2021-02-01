@@ -1,3 +1,5 @@
+use std::thread;
+use std::time::Duration;
 // std::io::preludeをスコープに導入して、ストリームから読み書きさせてくれる特定のトレイトにアクセスできるようにしている
 use std::io::prelude::*;
 use std::net::TcpStream;
@@ -6,11 +8,14 @@ use std::fs::File;
 
 fn main() {
     let listener = TcpListener::bind("172.31.80.158:7878").unwrap();
+    //let pool = ThreadPool::new(4);
 
     for stream in listener.incoming() {
         let stream = stream.unwrap();
 
-        handle_connection(stream);
+        thread::spawn(|| {
+            handle_connection(stream);
+        });
     }
 }
 // TcpStreamインスタンスが内部で返すデータを追いかけるため、stream引数は可変としている
@@ -22,9 +27,13 @@ fn handle_connection(mut stream: TcpStream) {
     stream.read(&mut buffer).unwrap();
 
     let get = b"GET / HTTP/1.1\r\n";
+    let sleep = b"GET /sleep HTTP/1.1\r\n";
 
     // bufferの先頭がgetならtrue
     let (status_line, filename) = if buffer.starts_with(get) {
+        ("HTTP/1.1 200 OK\r\n\r\n", "../hello.html")
+    } else if buffer.starts_with(sleep) {
+        thread::sleep(Duration::from_secs(5));
         ("HTTP/1.1 200 OK\r\n\r\n", "../hello.html")
     } else {
         ("HTTP/1.1 404 NOT FOUND\r\n\r\n", "../404.html")
@@ -39,8 +48,8 @@ fn handle_connection(mut stream: TcpStream) {
     let response = format!("{}{}", status_line, contents);
 
     // as_bytesを呼び出し、文字列データをバイトに変換
-        // streamのwriteメソッドは、 &[u8]を取り、コネクションに直接そのバイトを送信
-        stream.write(response.as_bytes()).unwrap();
-        // flushは待機し、 バイトが全てコネクションに書き込まれるまでプログラムが継続するのを防ぐ
-        stream.flush().unwrap();
+    // streamのwriteメソッドは、 &[u8]を取り、コネクションに直接そのバイトを送信
+    stream.write(response.as_bytes()).unwrap();
+    // flushは待機し、 バイトが全てコネクションに書き込まれるまでプログラムが継続するのを防ぐ
+    stream.flush().unwrap();
 }
