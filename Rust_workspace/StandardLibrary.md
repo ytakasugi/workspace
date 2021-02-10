@@ -101,7 +101,77 @@
   | 変更する。1つ以上のフィールドに可変の参照(&mut T)経由でアクセス、かつ所有権をムーブするフィールドがない | ×                                                            | 〇                                                           | 〇                                                           |
   | 消費する。1つ以上のフィールドからクロージャの本体へ所有権をムーブする | ×                                                            | ×                                                            | 〇                                                           |
 
+- ### Fn
 
+  - Description
+
+    `Fn`トレイトはクロージャが不変の環境を持つことを示す。`Fn`トレイトを実装するクロージャは何度でも実行でき、たとえば`Sync`トレイトを実装すれば、複数のスレッドでの同時実行もできる。`FnMut`と`FnOnce`の両方が`Fn`のスーパートレイトであるため、`Fn`トレイトを実装するクロージャは`FnMut`と`FnOnce`トレイトも実装するので、それらが要求される箇所でも使える。
+
+    - Example
+
+      ~~~rust
+      fn call_with_one<F>(func: F) -> usize
+          where F: Fn(usize) -> usize {
+          func(1)
+      }
+      
+      let double = |x| x * 2;
+      assert_eq!(call_with_one(double), 2);
+      ~~~
+
+- ### FnMut
+
+  - Description
+
+    `FnMut`トレイトはクロージャが可変の環境持つことを示す。`FnMut`トレイトを実装するクロージャは何度でも実行できますが、複数スレッドで同時実行するには、クロージャだけでなく環境のすべての型が`Sync`トレイトを実装している必要がある。`FnOnce`は`FnMut`のスーパートレイトなので、`FnMut`を実装するクロージャは`FnOnce`も実装するので、それらが要求される箇所でも使える。
+
+    - Example
+
+      ~~~rust
+      fn do_twice<F>(mut func: F)
+          where F: FnMut()
+      {
+          func();
+          func();
+      }
+      
+      let mut x: usize = 1;
+      {
+          let add_two_to_x = || x += 2;
+          do_twice(add_two_to_x);
+      }
+      
+      assert_eq!(x, 5);
+      ~~~
+
+- ### FnOnce
+
+  - Description
+
+    `FnOnce`トレイトは、環境からクロージャの本体へ所有権がムーブすることを示す。そのため、`FnOnce`トレイトを実装したクロージャは一度しか実行できない。
+
+    - Example
+
+      ~~~rust
+      fn consume_with_relish<F>(func: F)
+          where F: FnOnce() -> String
+      {
+          // `func` consumes its captured variables, so it cannot be run more
+          // than once.
+          println!("Consumed: {}", func());
+      
+          println!("Delicious!");
+      
+          // Attempting to invoke `func()` again will throw a `use of moved
+          // value` error for `func`.
+      }
+      
+      let x = String::from("x");
+      let consume_and_return_x = move || x;
+      consume_with_relish(consume_and_return_x);
+      
+      // `consume_and_return_x` can no longer be invoked at this point
+      ~~~
 
 ### use::std::mem
 

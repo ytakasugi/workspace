@@ -1,4 +1,4 @@
-//use std::mem;
+use std::mem;
 
 fn main() {
     let color = "green";
@@ -46,8 +46,30 @@ fn main() {
     // クロージャは、もはや`&mut count` を借用する必要がなくなりました。
     // したがって、エラーなく再借用することができます
     // let count_reborrowed = &mut count;
-    let count_reborrowed = &count;
+    // println!("`count_reborrowed`");
 
-    println!("count_reborrowed: {}", count_reborrowed);
+    let count_reborrowed = &count;
+    println!("`count_reborrowed`: {}", count_reborrowed);
+
+    let movable = Box::new(3);
+
+    // `mem::drop`は`T`（ジェネリック型）を取る必要があるため、このクロージャは参照ではなく値を取る。
+    // その場合、もしもコピー可能な値ならば、元の値はそのままでコピーのみを取る。不可能ならば値そのものを移動させる。
+    let consume = || {
+        println!("`movable`: {:?}", movable);
+        // 値をドロップする
+        mem::drop(movable);
+    };
+
+    // `consume`は変数を消費（開放）するため、一度しか呼び出すことができない。
+    consume();
+
+    // `move`を使用すると、クロージャはキャプチャした値を強制的に取得する
+    let haystack = vec![1, 2, 3];
+
+    let contains = move |needle| haystack.contains(needle);
+
+    println!("{}", contains(&1));
+    println!("{}", contains(&4));
 
 }
