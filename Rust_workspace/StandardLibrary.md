@@ -13,14 +13,14 @@
 
   - Description
 
-      メソッドのレシーバー、または現在のモジュール。
-      selfは2つの状況で使用されます。
+    メソッドのレシーバー、または現在のモジュール。
+    selfは2つの状況で使用されます。
 
-      - カレントモジュールを参照すること
+    - カレントモジュールを参照すること
 
-      - メソッドのレシーバーをマークすることです。
+    - メソッドのレシーバーをマークすることです。
 
-      パスでは、use文の中で、あるいは要素にアクセスするパスの中で、selfは現在のモジュールを    参照するために使用されます。
+    パスでは、use文の中で、あるいは要素にアクセスするパスの中で、selfは現在のモジュールを    参照するために使用されます。
 
 ### dynキーワード
 
@@ -197,7 +197,7 @@
   - Example
 
     ~~~rust
-use std::io::prelude::*;
+    use std::io::prelude::*;
     use std::io::BufReader;
     use std::fs::File;
     
@@ -211,10 +211,10 @@ use std::io::prelude::*;
         Ok(())
     }
     ~~~
-    
+
   - new関連関数
 
-      デフォルトのバッファ容量を持つ新しい BufReader<R> を作成する。デフォルトは現在 8 KB 。
+    デフォルトのバッファ容量を持つ新しい BufReader<R> を作成する。デフォルトは現在 8 KB 。
 
 ### std::io::Read::read
 
@@ -245,13 +245,13 @@ use std::io::prelude::*;
      - 構造体の単一フィールドのみを借用したい場合はAsrefを実施できますが、参照は実装できない。
 
     
-  
+
     ​	Note:このトレイトは失敗することができない。変換に失敗する可能性がある場合は、Option<T>または      			 Result<T, E>を返す専用のメソッドを使用すること。
-    
+
    - Generic Implementations
-  
+
      AsRef は、内部の型が参照または変異可能な参照である場合に自動参照を行う (例: foo.as_ref() は、foo が &mut Foo または &&mut Foo の型を持っていても同じように動作する)。
-  
+
   - Example
 
   ~~~rust
@@ -402,8 +402,8 @@ use std::io::prelude::*;
   これは、`a == b`と`a != b`が厳密な逆数であることに加えて、(すべての `a`, `b`,`c`に対して) 等価でなければならないことを意味する。
 
   - reflexive:`a == a`
-  -  symmetric:`a == b`は`b == a`を意味する; そして
-  -  transitive:`a == b`と`b == c`は`a ==c`を意味します。
+  - symmetric:`a == b`は`b == a`を意味する; そして
+  - transitive:`a == b`と`b == c`は`a ==c`を意味します。
 
   このプロパティはコンパイラではチェックできないので、`Eq`は`PartialEq`を意味し、余分なメソッドはありません。
 
@@ -414,7 +414,7 @@ use std::io::prelude::*;
 - Example
 
   導出ストラテジーを使用できない場合は、メソッドを持たない Eq を実装していることを指定します。
-  
+
   ~~~rust
   enum BookFormat { Paperback, Hardback, Ebook }
   struct Book {
@@ -426,9 +426,10 @@ use std::io::prelude::*;
           self.isbn == other.isbn
       }
   }
-impl Eq for Book {}
+  　impl Eq for Book {}
   ~~~
-  
+
+
 
 ### std::cmp::Ord
 
@@ -450,10 +451,10 @@ impl Eq for Book {}
     - 2つの空の配列は辞書的に等しい。
 
   - `Ord`を実装するにはどうすればよいか
-      `Ord`は型が`PartialOrd`と`Eq`（`PartialEq`を必要とします）であることが必要です。
-      次に，`cmp`の実装を定義しなければなりません．型のフィールドで`cmp`を使用すると便利です。
-      `PartialEq`、`PartialOrd`、および`Ord`の実装は、互いに一致している必要があります。つまり`a.cmp（b）== Ordering :: Equal`は、すべての`a`と`b`について`a == b`および`Some（a.cmp（b））== a.partial_cmp（b）`である場合に限ります。
-      ここでは、`id`と名前を無視して身長だけでソートしたい場合の例を示します。
+    `Ord`は型が`PartialOrd`と`Eq`（`PartialEq`を必要とします）であることが必要です。
+    次に，`cmp`の実装を定義しなければなりません．型のフィールドで`cmp`を使用すると便利です。
+    `PartialEq`、`PartialOrd`、および`Ord`の実装は、互いに一致している必要があります。つまり`a.cmp（b）== Ordering :: Equal`は、すべての`a`と`b`について`a == b`および`Some（a.cmp（b））== a.partial_cmp（b）`である場合に限ります。
+    ここでは、`id`と名前を無視して身長だけでソートしたい場合の例を示します。
 
   ~~~rust
   use std::cmp::Ordering;
@@ -483,6 +484,8 @@ impl Eq for Book {}
       }
   }
   ~~~
+
+
 
 ### std::cmp::PartialEq
 
@@ -543,6 +546,7 @@ impl Eq for Book {}
     ~~~
 
 ### std::cmp::PartialOrd
+
   - Description
     並べ替え順序で比較できる値の特徴。
     比較は，すべての`a`, `b`, `c`について，次の条件を満たさなければならない．
@@ -628,6 +632,7 @@ impl PartialEq for Person {
     一般的な構造体の場合、#[derive]は一般的なパラメータにバインドされたCloneを追加することで条件付きでCloneを実装する。
 
 ### core::marker::Copy
+
   - Description
     ビットをコピーするだけで値が複製される型。
     デフォルトでは、変数バインディングは`move semantics`を持っています。言い換えれば
@@ -666,11 +671,13 @@ println!("{:?}", x); // A-OK!
   これら2つの例では、唯一の違いは、代入後にxへのアクセスが許可されているかどうかだけであることに注意することが重要です。この2つの例では、コピーと移動の両方がメモリ内にビットがコピーされる結果になることがありますが、これは時々最適化されています。
 
   - コピーを実装するには
-      型にコピーを実装するには2つの方法があります。最も単純なのは`derive`を使用することです。
+    型にコピーを実装するには2つの方法があります。最も単純なのは`derive`を使用することです。
+
    ~~~rust
    #[derive(Copy, Clone)]
 struct MyStruct;
    ~~~
+
   コピーとクローンを手動で実装することもできます。
 
   ~~~rust 
@@ -696,13 +703,15 @@ impl Clone for MyStruct {
     `Clone`は`Copy`のスーパーtraitなので、`Copy`であるものはすべて`Clone`も実装しなければなりません。ある型が`Copy`の場合、その`Clone`の実装は`*self`を返すだけでよいのです（上の例を参照）。
 
 ### std::hash::Hash
+
   - Description
     ハッシュ可能な型。
 
 `Hash`を実装した型は、Hasherのインスタンスでハッシュ化することができます。
 
   - ハッシュの実装
-すべてのフィールドがHashを実装していれば、#[ derive(Hash)]でHashを導出することができます。結果として得られるハッシュは、各フィールドでハッシュを呼び出した値の組み合わせになります。
+    すべてのフィールドがHashを実装していれば、#[ derive(Hash)]でHashを導出することができます。結果として得られるハッシュは、各フィールドでハッシュを呼び出した値の組み合わせになります。
+
 ~~~rust
 #[derive(Hash)]
 struct Rustacean {
@@ -712,6 +721,7 @@ struct Rustacean {
 ~~~
 
   値がどのようにハッシュ化されるかをより制御したい場合は、もちろん自分でHash traitを実装      することができます。
+
 ~~~rust
 use std::hash::{Hash, Hasher};
 
@@ -732,6 +742,7 @@ impl Hash for Person {
 
   - `Hash`と`Eq`
     HashとEqの両方を実装する場合、以下のプロパティが保持されていることが重要です。
+
 ~~~
 k1 == k2 -> hash(k1) == hash(k2)
 ~~~
@@ -741,10 +752,12 @@ k1 == k2 -> hash(k1) == hash(k2)
   ありがたいことに、`#[derive(PartialEq, Eq, Hash)]`で`Eq`と`Hash`の両方を導出する際に、このプロパティを保持することを心配する必要はありません。
 
 ### std::default::Default
+
   - Description
     型に有用なデフォルト値を与えるためのトレイト。
 
     ある種のデフォルト値にフォールバックしたい場合がありますが、それが何であるかは特に気にしません。これは、オプションのセットを定義する構造体でよく出てきます。
+
 ~~~rust
 struct SomeOptions {
     foo: i32,
@@ -752,7 +765,8 @@ struct SomeOptions {
 }
 ~~~
 
-    デフォルト値を定義するには、既定値を使用することができます。
+デフォルト値を定義するには、既定値を使用することができます。
+
 ~~~rust
 #[derive(Default)]
 struct SomeOptions {
@@ -767,6 +781,7 @@ fn main() {
 
 これで、すべてのデフォルト値を取得できます。Rustは様々なプリミティブ型に対して`Default`を実装しています。
 特定のオプションをオーバーライドしても、他のデフォルト値を保持したい場合。
+
 ~~~rust
 fn main() {
     let options = SomeOptions { foo: 42, ..Default::default() };
@@ -778,6 +793,7 @@ fn main() {
 
   - デフォルトを実装するには
     `default()`メソッドの実装を提供し、デフォルトとなるべき型の値を返すようにします。
+
 ~~~rust
 enum Kind {
     A,
@@ -791,6 +807,7 @@ impl Default for Kind {
 ~~~
 
   - Example
+
   ~~~rust
   #[derive(Default)]
 struct SomeOptions {
@@ -800,6 +817,7 @@ struct SomeOptions {
   ~~~
 
 ### std::fmt::Debug
+
   - Description
     `?`フォーマット。
     `Debug`プログラマー向けのデバッグコンテキストで出力をフォーマットする必要があります。
@@ -808,7 +826,8 @@ struct SomeOptions {
     フォーマッタの詳細については、モジュールレベルの[ドキュメント](https://doc.rust-lang.org/core/fmt/index.html)を参照してください。
     この特性は、すべてのフィールドが`Debug`を実装している場合、＃[derive]とともに使用できます。 構造体用に派生する場合、構造体の名前、{、各フィールドの名前とデバッグ値のコンマ区切りリスト、}の順に使用します。 列挙型の場合は、バリアントの名前と、該当する場合は（、フィールドのデバッグ値、次に）を使用します。
 
-    - 実装の導出
+    ◆実装の導出
+
 ~~~rust
 #[derive(Debug)]
 struct Point {
@@ -821,7 +840,8 @@ let origin = Point { x: 0, y: 0 };
 assert_eq!(format!("The origin is: {:?}", origin), "The origin is: Point { x: 0, y: 0 }");
 ~~~
 
-    - 手動で実装
+​    　◆手動で実装
+
 ~~~rust
 use std::fmt;
 
@@ -847,8 +867,8 @@ assert_eq!(format!("The origin is: {:?}", origin), "The origin is: Point { x: 0,
   - Example
     `Formatter`構造体には、手動での実装を支援するためのヘルパーメソッドがいくつかあります:debug_struct。
     `Debugderive`またはデバッグビルダーAPIを使用した実装で`Formatter`は、代替フラグを使用したプリティプリントがサポートされます`{:#?}`。
+- Pretty-printing with `#?`:
 
-    - Pretty-printing with `#?`:
 ~~~rust
 ＃[ derive（Debug）] 
 struct  Point {
@@ -896,9 +916,11 @@ struct  Point {
   空のイテレータは`false`を返します。
 
 ### std::iter::Iterator::find
+
   - Description
 
 ### std::iter::Iterator::find_map
+
   - Description
 
     イテレータの要素に関数を適用して、最初の`non-none`でない結果を返します。
@@ -906,6 +928,7 @@ struct  Point {
     `iter.find_map(f)`は `iter.filter_map(f).next()`と同等です。
 
 ### std::iter::Iterator::position
+
   - Description
 
     イテレータ内の要素を検索し、そのインデックスを返します。
@@ -915,6 +938,7 @@ struct  Point {
     `position()`は短絡的な処理を行っています。
 
 ### std::iter::Iterator::rposition
+
   - Description
 
     イテレータ内の要素を右から探し、そのインデックスを返します。
@@ -937,6 +961,7 @@ struct  Point {
     要素が与えられると、クロージャは true または false を返さなければならない。返されるイテレータは、クロージャが true を返す要素のみを返す。
 
 ### core::iter::Iterator::map
+
   - Description
     クロージャを受け取り、各要素上でそのクロージャを呼び出すイテレータを作成します。
     `map()`は、引数である`FnMut`を実装したものを使って、あるイテレータを別のイテレータに変換します。これは、元のイテレータの各要素に対してこのクロージャを呼び出す新しいイテレータを生成します。
@@ -944,17 +969,20 @@ struct  Point {
     `map()`は、概念的には`for`ループに似ています。しかし、 map() は怠惰なので、すでに他のイテレータを使用している場合に使用するのが最適です。副次的な効果のために何らかのループを行う場合は、`map()`よりも`for`を使用した方が慣用的だと考えられています。
 
 ### core::iter::Iterator::take_while
+
   - Description
     述語に基づいて要素を生成するイテレータを作成します。
     `take_while()`はクロージャを引数に取ります。これは、イテレータの各要素でこのクロージャを呼び出し、それが真を返す間に要素を生成します。
     `false`が返された後、`take_while()`の作業は終了し、残りの要素は無視されます。
 
 ### core::iter::Iterator::filter
+
   - Description
     クロージャを使用して要素を生成するかどうかを決定するイテレータを作成します。
     要素が与えられると、クロージャは`true`または`false`を返さなければなりません。返されるイテレータは、クロージャが`true`を返す要素のみを返します。
 
 ### core::iter::Iterator::fold
+
   - Description
     関数を適用し、単一の最終値を生成するイテレータメソッド。
     `fold()`は、2つの引数を取ります: 初期値と、2つの引数を持つクロージャ: 'アキュムレータ' と要素です。クロージャは、アキュムレータが次の反復のために持つべき値を返します。
@@ -1079,6 +1107,7 @@ struct  Point {
       Rust プログラムのメインスレッドが終了すると、他のスレッドが実行中であってもプログラム全体がシャットダウンします。しかし、このモジュールは自動的に子スレッドの終了を待つための便利な機能を提供している。
     - Spawning a thread
       新しいスレッドは`thread::spawn`関数を使って生成することができる。
+
     ~~~rust
     use std::thread;
     
@@ -1091,6 +1120,7 @@ struct  Point {
     ​	親スレッドは子スレッドの完了を待つこともできます。
 
     ​	spawn の呼び出しは`JoinHandle`を生成する。
+
     ~~~rust
     use std::thread;
     
@@ -1100,6 +1130,7 @@ struct  Point {
     // some work here
     let res = child.join();
     ~~~
+
     ​		joinメソッドは、子スレッドが生成した最終的な値のOkを含む`thread::Result`を返し、子スレッドがパニ		ックに陥った場合は`panic!`コールに与えられた値のErrを返す。
 
     - Configuring threads
@@ -1254,10 +1285,10 @@ struct  Point {
     既にロックを保持しているスレッドでmutexをロックする場合の正確な動作は未定義である。しかし、この関数は2回目の呼び出しでは戻りません(例えば、パニックやデッドロックになる可能性がある)。
 
     - Error
-    このmutexを保持している間にこのmutexの他のユーザがパニックに陥った場合、この呼び出しはmutexを取得した後にエラーを返す。
+      このmutexを保持している間にこのmutexの他のユーザがパニックに陥った場合、この呼び出しはmutexを取得した後にエラーを返す。
 
     - Panic
-    この関数は、現在のスレッドが既にロックを保持している場合に呼び出されるとパニックになる可能性がある。
+      この関数は、現在のスレッドが既にロックを保持している場合に呼び出されるとパニックになる可能性がある。
 
 ### std::rc
 
@@ -1294,7 +1325,7 @@ struct  Point {
    `Weak<T>`は、内部の値が既に落とされている可能性があるため、Tへの自動参照は行わない。
 
    - Cloning references
-   既存の参照カウントポインタと同じアロケーションへの新しい参照の作成は、Rc<T>とWeak<T>のために実装されたClone traitを使用して行われる。
+     既存の参照カウントポインタと同じアロケーションへの新しい参照の作成は、Rc<T>とWeak<T>のために実装されたClone traitを使用して行われる。
 
    ~~~rust
    use std::rc::Rc;
@@ -1309,7 +1340,7 @@ struct  Point {
    `Rc::clone(&from)`構文は、コードの意味をより明確に伝えることができるので、最も慣用的である。上の例では、この構文を使うと、このコードが`foo`の内容を丸ごとコピーするのではなく、新しい参照を作成していることがわかりやすくなる。
 
    - Example
-   あるガジェットを所有者が所有している場合を考えてみる。ガジェットの所有者を特定できるようにしたいが、所有者を特定することはできない。しかし、複数のガジェットが同じオーナーに属している可能性があるため、ユニークなオーナーシップではこれを行うことができない。`Rc`では複数のガジェット間でオーナーを共有し、どのガジェットがポイントしている間もオーナーが割り当てられたままにしておくことができる。
+     あるガジェットを所有者が所有している場合を考えてみる。ガジェットの所有者を特定できるようにしたいが、所有者を特定することはできない。しかし、複数のガジェットが同じオーナーに属している可能性があるため、ユニークなオーナーシップではこれを行うことができない。`Rc`では複数のガジェット間でオーナーを共有し、どのガジェットがポイントしている間もオーナーが割り当てられたままにしておくことができる。
 
    ~~~rust
    use std::rc::Rc;
@@ -1362,6 +1393,7 @@ struct  Point {
        // gets destroyed as well.
    }
    ~~~
+
    しかし、要求が変化してオーナーからガジェットへの移動が必要になった場合、問題が発生することになる。オーナーからガジェットへの `Rc`ポインタはサイクルを導入する。これは、それらの参照カウントが`0`になることはなく、アロケーションが破棄されることもないことを意味する。これを回避するために、`Weak`ポインタを使うことができます。
 
    Rustは実際には、そもそもこのループを生成することをやや難しくしている。2つの値がお互いを指すようになるためには、そのうちの1つは変更可能である必要があります。これは、`Rc`がラップした値への共有参照のみを与えることでメモリの安全性を確保しており、直接の突然変異を許さないからである。これは内部可変性を提供する`RefCell`で、共有参照を介して変異性を実現する方法。`RefCell`は実行時にRustの借用ルールを強制する。
@@ -1387,7 +1419,8 @@ struct  Point {
     `Arc`ポインタ間のサイクルは決して解放されない。このため、`Weak`はサイクルを壊すために使用されます。例えば、ツリーは親ノードから子ノードへの強いアークポインタを持ち、子ノードから親ノードへの弱いポインタを持つことができる。
 
     - Cloning
-    既存の参照カウントされたポインタから新しい参照を作成するには、`Arc<T>`と`Weak<T>`に実装された`Clone`トレイトを使用します。
+      既存の参照カウントされたポインタから新しい参照を作成するには、`Arc<T>`と`Weak<T>`に実装された`Clone`トレイトを使用します。
+
     ~~~rust
     use std::sync::Arc;
     let foo = Arc::new(vec![1.0, 2.0, 3.0]);
@@ -1396,9 +1429,10 @@ struct  Point {
     let b = Arc::clone(&foo);
     // a, b, and foo are all Arcs that point to the same memory location
     ~~~
-    
+
     - Deref behavior
-    `Arc<T>`は自動的に (Deref trait を介して) `T`に派生するので、`Arc<T>`型の値に対して`T`のメソッドを呼び出すことができる。`T`のメソッドとの名前の衝突を避けるため、`Arc<T>`のメソッドは関連する関数であり、完全修飾構文を用いて呼び出される。
+      `Arc<T>`は自動的に (Deref trait を介して) `T`に派生するので、`Arc<T>`型の値に対して`T`のメソッドを呼び出すことができる。`T`のメソッドとの名前の衝突を避けるため、`Arc<T>`のメソッドは関連する関数であり、完全修飾構文を用いて呼び出される。
+
     ~~~rust
     use std::sync::Arc;
     
@@ -1407,6 +1441,7 @@ struct  Point {
     ~~~
 
     `Clone` のようなトレイトの`Arc<T>`の実装も、完全修飾構文を使って呼ばれることがある。
+
     ~~~rust
     use std::sync::Arc;
     
@@ -1552,5 +1587,5 @@ struct  Point {
         Ok(())
     } // the stream is closed here
     ~~~
-  
+
 - 
