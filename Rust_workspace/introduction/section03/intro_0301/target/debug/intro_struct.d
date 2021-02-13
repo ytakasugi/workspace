@@ -1,1 +1,1 @@
-C:\Users\sigur\Documents\900_github\700_init\Rust_workspace\intro_struct\target\debug\intro_struct.exe: C:\Users\sigur\Documents\900_github\700_init\Rust_workspace\intro_struct\src\main.rs
+/home/ytakasugi/000_learning/workspace/Rust_workspace/introduction/section03/intro_0301/target/debug/intro_struct: /home/ytakasugi/000_learning/workspace/Rust_workspace/introduction/section03/intro_0301/src/main.rs
