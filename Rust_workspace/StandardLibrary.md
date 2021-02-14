@@ -1081,6 +1081,87 @@ struct  Point {
     `Lowercase`は、Unicode Derived Core Property Lowercaseの条項に従って定義される。
     大文字小文字を変更すると複数の文字に展開されてしまう文字があるため、この関数はパラメータをそのまま変更するのではなく、[String]として返す。
 
+### std::marker::PhantomData
+
+- Description
+
+  `T`型を所有しているかのように「振る舞う」ものをマークするために使用されるゼロサイズの型。
+  型に`PhantomData<T>`フィールドを追加すると、実際には`T`型の値を格納していないにもかかわらず、あたかも`T`型の値を格納しているかのように振る舞うことをコンパイラに伝えます。この情報は、特定の安全プロパティを計算する際に使用されます。
+  PhantomData<T>の使用方法については、[Nomicon](https://doc.rust-lang.org/nomicon/phantom-data.html)を参照してください。
+
+- Example
+
+  - Unused lifetime parameters
+
+    おそらくPhantomDataの最も一般的な使用例は、未使用の寿命パラメータを持つ構造体で、通常は安全でないコードの一部として使用されます。例えば、ここには`*const T`型の2つのポインタを持つ`Slice`構造体があり、おそらくどこかの配列を指していると思われます。
+
+    ~~~rust
+    struct Slice<'a, T> {
+        start: *const T,
+        end: *const T,
+    }
+    ~~~
+
+    この意図は、基礎となるデータはライフタイム`'a`に対してのみ有効なので、`Slice`は`'a`よりも長生きしてはいけないということです。しかし、この意図はコードでは表現されていません。ライフタイム`'a`の用途がないため、どのデータに適用されるのかが明確ではありません。これを修正するには、コンパイラに`Slice`構造体に参照`&'a T`が含まれているかのように動作するように指示します。
+
+    ~~~rust
+    use std::marker::PhantomData;
+    
+    struct Slice<'a, T: 'a> {
+        start: *const T,
+        end: *const T,
+        phantom: PhantomData<&'a T>,
+    }
+    ~~~
+
+    これにより、`T: 'a`というアノテーションが必要になり、T内の参照が有効期間`'a`にわたって有効であることを示します。
+    `Slice`を初期化する際には、`Phantom`フィールドに`PhantomData`という値を指定するだけです。
+
+    ~~~rust
+    fn borrow_vec<T>(vec: &Vec<T>) -> Slice<'_, T> {
+        let ptr = vec.as_ptr();
+        Slice {
+            start: ptr,
+            end: unsafe { ptr.add(vec.len()) },
+            phantom: PhantomData,
+        }
+    }
+    ~~~
+
+  - Unused type parameters
+
+    構造体自体にはデータが存在しないにもかかわらず、未使用の型パラメータが存在し、構造体がどのようなデータに「関連付けられているか」を示すことがあります。ここでは、`FFI`でこのような問題が発生する例を示します。外部インターフェイスでは、異なるタイプの`Rust`値を参照するために`*mut()`型のハンドルを使用します。ハンドルをラップする`ExternalResource`構造体のファントム型パラメータを使用して`Rust`型を追跡します。
+
+    ~~~rust
+    use std::marker::PhantomData;
+    use std::mem;
+    
+    struct ExternalResource<R> {
+       resource_handle: *mut (),
+       resource_type: PhantomData<R>,
+    }
+    
+    impl<R: ResType> ExternalResource<R> {
+        fn new() -> Self {
+            let size_of_res = mem::size_of::<R>();
+            Self {
+                resource_handle: foreign_lib::new(size_of_res),
+                resource_type: PhantomData,
+            }
+        }
+    
+        fn do_stuff(&self, param: ParamType) {
+            let foreign_params = convert_params(param);
+            foreign_lib::do_stuff(self.resource_handle, foreign_params);
+        }
+    }
+    ~~~
+
+  - Ownership and the drop check
+
+    `PhantomData<T>`型のフィールドを追加することは、あなたの型が`T`型のデータを所有していることを示します。これは、あなたの型がドロップされたときに、`T`型の1つ以上のインスタンスをドロップする可能性があることを意味しています。これは、`Rust`コンパイラのドロップチェック解析に関係します。
+    構造体が実際に`T`型のデータを所有していない場合は、所有権を示さないように`PhantomData<&'a T>`(理想的には)または`PhantomData<*const T>`(ライフタイムが適用されない場合)のような参照型を使用した方が良いでしょう。
+
 ### env::var
 
   - Description
