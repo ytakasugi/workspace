@@ -992,6 +992,77 @@ struct  Point {
     折りたたみは、何かのコレクションを持っていて、そこから単一の値を生成したいときに便  利です。
     注意:`fold()`や、イテレータ全体を横断する同様のメソッドは、結果が有限時間内に決定可能な   トレイトあって   も、無限のイテレータでは終了しないことがあります。
 
+### std::ops::Add
+
+- Description
+
+  加算演算子`+`です。
+
+  デフォルトでは`Rhs(Right Hand Side)`は`Self`であることに注意してください。例えば、`std::time::SystemTime`は`Add<Duration>`を実装しており、`SystemTime = SystemTime + Duration`という形式の操作を許可しています。
+
+- Example
+
+  - Addable points
+
+    ジェネリックを使用して`Add trait`を実装した同じ`Point`構造体の例を示します。
+
+    ~~~rust
+    use std::ops::Add;
+    
+    #[derive(Debug, Copy, Clone, PartialEq)]
+    struct Point {
+        x: i32,
+        y: i32,
+    }
+    
+    impl Add for Point {
+        type Output = Self;
+    
+        fn add(self, other: Self) -> Self {
+            Self {
+                x: self.x + other.x,
+                y: self.y + other.y,
+            }
+        }
+    }
+    
+    assert_eq!(Point { x: 1, y: 0 } + Point { x: 2, y: 3 },
+               Point { x: 3, y: 3 });
+    ~~~
+
+    
+
+  - Implementing Add with generics
+
+    演算子`＋`を適用した結果の型。
+
+    ~~~rust
+    use std::ops::Add;
+    
+    #[derive(Debug, Copy, Clone, PartialEq)]
+    struct Point<T> {
+        x: T,
+        y: T,
+    }
+    
+    // Notice that the implementation uses the associated type `Output`.
+    impl<T: Add<Output = T>> Add for Point<T> {
+        type Output = Self;
+    
+        fn add(self, other: Self) -> Self::Output {
+            Self {
+                x: self.x + other.x,
+                y: self.y + other.y,
+            }
+        }
+    }
+    
+    assert_eq!(Point { x: 1, y: 0 } + Point { x: 2, y: 3 },
+               Point { x: 3, y: 3 });
+    ~~~
+
+    
+
 ### read_to_string()
 
   - Description
