@@ -173,7 +173,7 @@
       // `consume_and_return_x` can no longer be invoked at this point
       ~~~
 
-### std::clone::Clone
+### [std::clone::Clone](https://doc.rust-lang.org/stable/std/clone/trait.Clone.html)
 
   - Description
 
