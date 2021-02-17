@@ -173,6 +173,230 @@
       // `consume_and_return_x` can no longer be invoked at this point
       ~~~
 
+### std::clone::Clone
+
+  - Description
+
+    オブジェクトを明示的に複製することができる共通のトレイト
+
+    Copyとの違いは、Copyは暗黙的で非常に安価であるのに対して、Cloneは常に明示的あり、高価であるときもあればそうでないときもある点である。これらの特C徴を強制するために、RustではCopyは再実装できませんが、Cloneを再実装して任意のコードに対してい再実行できる。
+
+    CloneはCopyよりも一般的なので、Copyであればなんでも自動的にCloneにすることができる。
+
+    このトレイトは、すべてのフィールドがCloneであれば#[derive]で使用できます。Cloneの派生実装は、各フィールドでcloneを呼び出す。
+
+    一般的な構造体の場合、#[derive]は一般的なパラメータにバインドされたCloneを追加することで条件付きでCloneを実装する。
+
+- Derivable
+
+  このトレイトは、全てのフィールドがCloneであれば#[derive]で使用することができます。派生されたCloneの実装は，各フィールドに対してCloneを呼び出します．
+
+  一般的な構造体の場合，#[derive]は一般的なパラメータにバインドされたCloneを追加することで条件付きでCloneを実装します．
+
+  ~~~rust
+  // `derive` implements Clone for Reading<T> when T is Clone.
+  #[derive(Clone)]
+  struct Reading<T> {
+      frequency: T,
+  }
+  ~~~
+
+- Cloneを実装するには
+
+  `Copy`である型は、`Clone`の些細な実装を持っていなければなりません。より正式には: `T: Copy`, `x:T`,`y: &T`の場合、`let x = y.clone(); `は`let x = *y;`と等価です。マニュアル実装では、この不変性を維持するように注意しなければなりません。
+
+  例として、関数ポインタを保持する汎用構造体があります。この場合、Cloneの実装は派生できませんが、次のように実装することができます。
+
+  ~~~rust
+  struct Generate<T>(fn() -> T);
+  
+  impl<T> Copy for Generate<T> {}
+  
+  impl<T> Clone for Generate<T> {
+      fn clone(&self) -> Self {
+          *self
+      }
+  }
+  ~~~
+
+- クローントレイトを実装する型
+
+  - 関数ポインタ型
+  - 関数定義型
+  - すべての要素にCloneな型(Cloneを実装した型)をもつタプル型と配列型
+  - 環境に何も補足しない、あるいは、Cloneな型だけを補足したクロージャ型。なお、不変の参照として補足した変数は元の型が何であれCloneを実装する。
+
+### [core::marker::Copy](https://doc.rust-lang.org/stable/core/marker/trait.Copy.html)
+
+  - Description
+
+    ビットをコピーするだけで値が複製される型。
+    デフォルトでは、変数バインディングは`move semantics`を持っています。言い換えれば
+
+  ~~~rust
+  #[derive(Debug)]
+struct Foo;
+
+let x = Foo;
+
+let y = x;
+
+// `x` has moved into `y`, and so cannot be used
+
+// println!("{:?}", x); // error: use of moved value
+  ~~~
+
+
+  しかし、型がCopyを実装している場合は、代わりに'copy semantics'を持つことになります。
+
+  ~~~rust
+  // We can derive a `Copy` implementation. `Clone` is also required, as it's
+// a supertrait of `Copy`.
+#[derive(Debug, Copy, Clone)]
+struct Foo;
+
+let x = Foo;
+
+let y = x;
+
+// `y` is a copy of `x`
+
+println!("{:?}", x); // A-OK!
+  ~~~
+
+  これら2つの例では、唯一の違いは、代入後にxへのアクセスが許可されているかどうかだけであることに注意することが重要です。この2つの例では、コピーと移動の両方がメモリ内にビットがコピーされる結果になることがありますが、これは時々最適化されています。
+
+  - コピーを実装するには
+    型にコピーを実装するには2つの方法があります。最も単純なのは`derive`を使用することです。
+
+   ~~~rust
+   #[derive(Copy, Clone)]
+struct MyStruct;
+   ~~~
+
+  コピーとクローンを手動で実装することもできます。
+
+  ~~~rust 
+  struct MyStruct;
+
+impl Copy for MyStruct { }
+
+impl Clone for MyStruct {
+    fn clone(&self) -> MyStruct {
+        *self
+    }
+}
+  ~~~
+
+  この2つの間には小さな違いがあります: `derive`戦略では型のパラメータにも`Copy`が適用されますが、これは必ずしも望ましいものではありません。
+
+
+  - コピーとクローンの違い
+    コピーは暗黙のうちに行われ、例えば、代入`y = x`の一部として行われます。コピーの動作はオーバーロード可能ではありません。
+    クローンは明示的なアクションであり、`x.clone()`です。Cloneの実装は、値を安全に複製するために必要な型固有の動作を提供することができます。例えば、String用のCloneの実装では、ヒープ内の指し示す文字列バッファをコピーする必要があります。`String`の値を単純にビット単位でコピーすると、単にポインタをコピーするだけで、二重解放になってしまいます。この理由から、`String`は`Clone`ではありますが、`Copy`ではありません。
+    `Clone`は`Copy`のスーパーtraitなので、`Copy`であるものはすべて`Clone`も実装しなければなりません。ある型が`Copy`の場合、その`Clone`の実装は`*self`を返すだけでよいのです（上の例を参照）。
+
+  - 型がコピーになるのははいつか
+
+    型は、そのコンポーネントのすべてがCopyを実装している場合にCopyを実装できます。例えば、この構造体はCopyにすることができます。
+
+    ~~~rust
+    #[derive(Copy, Clone)]
+    struct Point {
+       x: i32,
+       y: i32,
+    }
+    ~~~
+
+    構造体は`Copy`である可能性があり、`i32`は`Copy`であるため、PointはCopyになる資格があります。これに対して、次のように考えてみましょう。
+
+    ~~~rust
+    struct PointList {
+        points: Vec<Point>,
+    }
+    ~~~
+
+    構造体`PointList`は、`Vec<T>` が `Copy`ではないので、`Copy`を実装できません。`Copy`の実装を導出しようとすると、エラーが発生します。
+
+    ~~~
+    the trait `Copy` may not be implemented for this type; field `points` does not implement `Copy`
+    ~~~
+
+    共有参照`(&T)`も`Copy`なので、型が`Copy`ではない型Tの共有参照を保持していても、型はCopyになることができます。次の構造体を考えてみましょう。これは、上から見ても`Copy`ではない型`PointList`の共有参照を保持しているだけなので、`Copy`を実装することができます。
+
+    ~~~rust
+    #[derive(Copy, Clone)]
+    struct PointListWrapper<'a> {
+        point_list_ref: &'a PointList,
+    }
+    ~~~
+
+- 型がコピーできないのはどんなときか
+
+  一般的に言えば、もしあなたの型がCopyを実装できるのであれば、実装すべきです。しかし、`Copy`の実装は型のパブリック`API`の一部であることを覚えておいてください。将来的に型が非コピーになる可能性がある場合は、`API`の変更を避けるために今は`Copy`の実装を省略するのが賢明かもしれません。
+
+- コピートレイトを実装する型
+
+
+  - すべてのスカラ型。たとえばbool、char、i32、usize、f64型
+
+  - 不変の参照`&T`型、生ポインタ`*const T`型と`*mut T型
+
+    ※可変の参照`&mut T`はCopyトレイトを実装しないことに注意
+
+  - 関数ポインタ型
+
+  - 関数定義型
+
+  - すべての要素にCopyな型(Copyを実装した型)をもつタプル型と配列型
+
+  - 環境に何も補足しない、あるいは、Copyな型だけを補足したクロージャ型。なお、不変の参照として補足した変数は元の型が何であれCopyを実装する。一方、可変の参照として補足した場合はCopyを実装しない
+
+  - すべての要素がCopyな型を持つ`Option<T>`と`Result<T,E>`型
+
+### CopyトレイトとCloneトレイトの違い
+
+CopyトレイトとCloneトレイトの違いを以下に示す
+
+| トレイト | コピーの実行                                                 | コピーの処理内容                                             | コピーの実行時コスト             |
+| -------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------------------------- |
+| Copy     | 暗黙的。所有権がムーブする場面で、ムーブの代わりにコピーされる | 単純なバイトレベルのコピー。ロジックのカスタマイズはできない | 低い                             |
+| Clone    | 明示的。cloneメソッドによりコピーされる                      | シンプルなロジックから複雑なロジックまで自由に実装できる     | 低いか高いかは処理内容と値に依存 |
+
+### ムーブセマンティクス
+
+- 所有権のムーブを伴う操作
+  - パターンマッチ(match式だけでなく、letによる変数の束縛も含む)
+  - 関数呼びだし
+  - 関数やブロックからのリターン
+  - コンストラクタ
+  - moveクロージャ
+
+### 関数ポインタ
+
+- Description
+
+  関数ポインタは、既に定義した関数を渡したい時に有用です。
+
+  関数ポインタで行うと、関数を引数として他の関数に渡して使用できます。関数は、型`fn`(小文字のfです)に型強制されます。 `Fn`クロージャトレイトと混同すべきではありません。`fn`型は、*関数ポインタ*と呼ばれます。 引数が関数ポインタであると指定する記法は、クロージャのものと似ています。
+
+  ~~~rust
+  fn add_one(x: i32) -> i32 {
+      x + 1
+  }
+  
+  fn do_twice(f: fn(i32) -> i32, arg: i32) -> i32 {
+      f(arg) + f(arg)
+  }
+  
+  fn main() {
+      let answer = do_twice(add_one, 5);
+  
+      // 答えは{}
+      println!("The answer is: {}", answer);
+  }
+  ~~~
+
 ### use::std::mem
 
 - Descriptio
@@ -616,91 +840,6 @@ impl PartialEq for Person {
     }
 }
 ~~~
-
-### std::clone::Clone
-
-  - Description
-
-    オブジェクトを明示的に複製することができる共通のトレイト
-
-    Copyとの違いは、Copyは暗黙的で非常に安価であるのに対して、Cloneは常に明示的あり、高価であるときもあればそうでないときもある点である。これらの特C徴を強制するために、RustではCopyは再実装できませんが、Cloneを再実装して任意のコードに対してい再実行できる。
-
-    CloneはCopyよりも一般的なので、Copyであればなんでも自動的にCloneにすることができる。
-
-    このトレイトは、すべてのフィールドがCloneであれば#[derive]で使用できます。Cloneの派生実装は、各フィールドでcloneを呼び出す。
-
-    一般的な構造体の場合、#[derive]は一般的なパラメータにバインドされたCloneを追加することで条件付きでCloneを実装する。
-
-### core::marker::Copy
-
-  - Description
-    ビットをコピーするだけで値が複製される型。
-    デフォルトでは、変数バインディングは`move semantics`を持っています。言い換えれば
-
-  ~~~rust
-  #[derive(Debug)]
-struct Foo;
-
-let x = Foo;
-
-let y = x;
-
-// `x` has moved into `y`, and so cannot be used
-
-// println!("{:?}", x); // error: use of moved value
-  ~~~
-
-
-  しかし、型がCopyを実装している場合は、代わりに'copy semantics'を持つことになります。
-
-  ~~~rust
-  // We can derive a `Copy` implementation. `Clone` is also required, as it's
-// a supertrait of `Copy`.
-#[derive(Debug, Copy, Clone)]
-struct Foo;
-
-let x = Foo;
-
-let y = x;
-
-// `y` is a copy of `x`
-
-println!("{:?}", x); // A-OK!
-  ~~~
-
-  これら2つの例では、唯一の違いは、代入後にxへのアクセスが許可されているかどうかだけであることに注意することが重要です。この2つの例では、コピーと移動の両方がメモリ内にビットがコピーされる結果になることがありますが、これは時々最適化されています。
-
-  - コピーを実装するには
-    型にコピーを実装するには2つの方法があります。最も単純なのは`derive`を使用することです。
-
-   ~~~rust
-   #[derive(Copy, Clone)]
-struct MyStruct;
-   ~~~
-
-  コピーとクローンを手動で実装することもできます。
-
-  ~~~rust 
-  struct MyStruct;
-
-impl Copy for MyStruct { }
-
-impl Clone for MyStruct {
-    fn clone(&self) -> MyStruct {
-        *self
-    }
-}
-  ~~~
-
-  この2つの間には小さな違いがあります: `derive`戦略では型のパラメータにも`Copy`が適用されますが、これは必ずしも望ましいものではありません。
-
-  
-
-
-  - コピーとクローンの違い
-    コピーは暗黙のうちに行われ、例えば、代入`y = x`の一部として行われます。コピーの動作はオーバーロード可能ではありません。
-    クローンは明示的なアクションであり、`x.clone()`です。Cloneの実装は、値を安全に複製するために必要な型固有の動作を提供することができます。例えば、String用のCloneの実装では、ヒープ内の指し示す文字列バッファをコピーする必要があります。`String`の値を単純にビット単位でコピーすると、単にポインタをコピーするだけで、二重解放になってしまいます。この理由から、`String`は`Clone`ではありますが、`Copy`ではありません。
-    `Clone`は`Copy`のスーパーtraitなので、`Copy`であるものはすべて`Clone`も実装しなければなりません。ある型が`Copy`の場合、その`Clone`の実装は`*self`を返すだけでよいのです（上の例を参照）。
 
 ### std::hash::Hash
 
