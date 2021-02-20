@@ -39,6 +39,50 @@
       しかし、具体的な型ごとにメソッドが重複しないため、`dyn Trait`は`impl Trait / generic parameters` よりも小さなコードを生成する可能性がある。
       オブジェクトの安全性と traitオブジェクトについての詳細は[こちら](https://doc.rust-lang.org/stable/book/ch17-02-trait-objects.html)を参照。
 
+### refキーワード
+
+- Description
+
+  パターンマッチングの際に参照によってバインドします。
+
+  `ref`は、パターンのバインディングにアノテーションを付けて、移動ではなく借用するようにします。マッチングに関する限りでは、これはパターンの一部ではありません。
+
+  デフォルトでは、`match`文は可能な限りの値を消費しますが、値を移動して所有する必要がない場合には問題になることがあります。
+
+  ~~~rust
+  let maybe_name = Some(String::from("Alice"));
+  // The variable 'maybe_name' is consumed here ...
+  match maybe_name {
+      Some(n) => println!("Hello, {}", n),
+      _ => println!("Hello, world"),
+  }
+  // ... and is now unavailable.
+  println!("Hello again, {}", maybe_name.unwrap_or("world".into()));
+  ~~~
+
+  `ref`キーワードを使用すると、値は借用されるだけで、移動されることはありません。
+
+  ~~~rust
+  let maybe_name = Some(String::from("Alice"));
+  // Using `ref`, the value is borrowed, not moved ...
+  match maybe_name {
+      Some(ref n) => println!("Hello, {}", n),
+      _ => println!("Hello, world"),
+  }
+  // ... so it's available here!
+  println!("Hello again, {}", maybe_name.unwrap_or("world".into()));
+  ~~~
+
+- `&` vs `ref`
+
+  - `&`パターンがオブジェクトへの参照を期待していることを示しています。したがって`&`はパターンの一部です: `&Foo`は`Foo`とは異なるオブジェクトにマッチします。
+
+  - `ref`は、アンパックされていない値への参照を求めていることを示します。対してはマッチしません。`Foo(ref foo)`は`Foo(foo)`と同じオブジェクトにマッチします。
+
+    
+
+  詳細は[Reference](https://doc.rust-lang.org/stable/reference/patterns.html#identifier-patterns)も参照してください。
+
 ### 変数の状態と可能な操作の一覧
 
 | 変数xの状態 | 変数xの使用/借用 | 変数xへの代入 | 変数xの可変参照 | 変数xからのムーブ |
