@@ -36,7 +36,7 @@ impl DuckLike for Tsuchinoko {
     }
 }
 
-// 既存の方にトレイトを実装することもできる
+// 既存の型にトレイトを実装することもできる
 // モンキーパッチをしているような気分
 impl DuckLike for i64 {
     fn quack(&self) {
@@ -63,7 +63,7 @@ fn main() {
     tsuchinoko.quack();
     // Tsuchinoko構造体上のwalkメソッドを呼び出している
     Tsuchinoko.walk();
-    // 既存の方に実装したquackメソッドを呼び出している
+    // 既存の型に実装したquackメソッドを呼び出している
     i.quack();
     duck_go(duck);
     // DuckLikeを実装していない型は渡せない
