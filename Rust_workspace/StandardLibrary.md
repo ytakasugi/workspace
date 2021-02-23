@@ -1064,6 +1064,22 @@ struct  Point {
 }"）;
 ~~~
 
+### [std::iter](https://doc.rust-lang.org/stable/std/iter/index.html)
+
+- Description
+
+  コンポーザブルな外部反復処理。
+
+  ある種のコレクションを持っていて、そのコレクションの要素に対して操作を行う必要がある場合、すぐに 'イテレータ' に出くわすでしょう。イテレータはRustの慣用的なコードで頻繁に使用されているので、それらに慣れることは価値があります。
+
+- Organizaiton
+
+  このモジュールは主に型によって構成されています。
+
+  - これらのトレイトは、どのような種類のイテレータが存在し、それを使って何ができるかを定義します。これらの特徴のメソッドは、特別に勉強する価値があります。
+  - 関数は、いくつかの基本的なイテレータを作成するための便利な方法を提供しています。
+  - 構造体は、このモジュールの特性にあるさまざまなメソッドの戻り値の型であることが多いです。通常、構造体自体ではなく、構造体を作成するメソッドを見たくなるでしょう。その理由についての詳細は、「`Iterator`の実装を参照してください。
+
 ### std::iter::FromIterator
 
   - Description
@@ -1136,6 +1152,66 @@ struct  Point {
 
     イテレータを進めて次の値を返す。反復が終了すると [None] を返す。個々のイテレータの実装は、反復処理を再開することを選択することができる。
 
+### std::iter::Iterator::take
+
+- Description
+
+  最初のn個の要素を生成するイテレータを作成します。
+
+  - Example
+
+    - Basic Usage
+
+      ~~~rust
+      let a = [1, 2, 3];
+      
+      let mut iter = a.iter().take(2);
+      
+      assert_eq!(iter.next(), Some(&1));
+      assert_eq!(iter.next(), Some(&2));
+      assert_eq!(iter.next(), None);
+      ~~~
+
+    - `take()`は、無限イテレータを使って有限にするためによく使われる
+
+      ~~~ rust
+      let mut iter = (0..).take(3);
+      
+      assert_eq!(iter.next(), Some(0));
+      assert_eq!(iter.next(), Some(1));
+      assert_eq!(iter.next(), Some(2));
+      assert_eq!(iter.next(), None);
+      ~~~
+
+    - 利用可能な要素がn個よりも少ない場合、takeはそれ自身を基礎となるイテレータのサイズに制限します。
+
+      ~~~rust
+      let v = vec![1, 2];
+      let mut iter = v.into_iter().take(5);
+      assert_eq!(iter.next(), Some(1));
+      assert_eq!(iter.next(), Some(2));
+      assert_eq!(iter.next(), None);
+      ~~~
+
+### std::iter::Iterator::skip
+
+- Description
+
+  最初の n 個の要素をスキップするイテレータを作成します。
+
+  要素が消費された後、残りの要素が生成されます。このメソッドを直接オーバーライドするのではなく、代わりに `nth`メソッドをオーバーライドします。
+
+  - Example
+
+    ~~~rust
+    let a = [1, 2, 3];
+    
+    let mut iter = a.iter().skip(2);
+    
+    assert_eq!(iter.next(), Some(&3));
+    assert_eq!(iter.next(), None);
+    ~~~
+
 ### std::iter::Iterator::filter
 
   - Description
@@ -1174,6 +1250,34 @@ struct  Point {
     この操作は'reduce'や'inject'と呼ばれることもあります。
     折りたたみは、何かのコレクションを持っていて、そこから単一の値を生成したいときに便  利です。
     注意:`fold()`や、イテレータ全体を横断する同様のメソッドは、結果が有限時間内に決定可能な   トレイトあって   も、無限のイテレータでは終了しないことがあります。
+
+### std::iter::Iterator::enumerate
+
+- Description
+
+  現在の反復回数と次の値を与えるイテレータを作成します。
+
+  返されるイテレータは、ペア`(i, val)`を返します。
+
+  `enumerate()`は、そのカウントを usize として保持します。異なるサイズの整数でカウントしたい場合は、`zip`関数も同様の機能を提供します。
+
+### std::vec::IntoIter
+
+- Description
+
+  ベクトルの外に移動するイテレータ。
+
+  この構造体は、`[Vec]`の`into_iter`メソッドによって作成されます（`[IntoIterator] trait`によって提供されます）。
+
+### std::iter::IntoIterator
+
+- Description
+
+  イテレータへの変換。
+
+  型に対して`IntoIterator`を実装することで、それをイテレータに変換する方法を定義します。これは、ある種のコレクションを記述する型ではよくあることです。
+
+  `IntoIterator`を実装する利点のひとつは、あなたの型が`Rust`の`for loop`構文で動作することです。
 
 ### std::ops::Add
 
@@ -1317,6 +1421,12 @@ struct  Point {
 - Description
 
   needleがスライスの接頭辞である場合にtrueを返します。
+
+### slice::iter_mut
+
+- Description
+
+  各値を変更できるようにするイテレータを返します。
 
 ### std::error::Error
 

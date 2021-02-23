@@ -347,16 +347,16 @@ fn main() {}
 
 ~~~rust
 trait UsernameWidget {
-    // Get the selected username out of this widget
+    // このウィジェットから選択されたユーザ名を取得する
     fn get(&self) -> String;
 }
 
 trait AgeWidget {
-    // Get the selected age out of this widget
+    // このウィジェットの選択された年齢を取得するこのウィジェットの選択された年齢を取得する
     fn get(&self) -> u8;
 }
 
-// A form with both a UsernameWidget and an AgeWidget
+// UsernameWidget と AgeWidget の両方を持つフォーム
 struct Form {
     username: String,
     age: u8,
