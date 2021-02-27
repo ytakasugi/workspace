@@ -484,6 +484,36 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 
     デフォルトのバッファ容量を持つ新しい BufReader<R> を作成する。デフォルトは現在 8 KB 。
 
+### std::io::Result
+
+- Description
+
+  I/O操作に特化した結果型。
+
+  この型は、エラーが発生する可能性のある操作に対して std::io 全体で広く使用されます。
+
+  この型定義は一般的に、`io::Error`を直接書き出すことを避けるために使用され、それ以外の場合は`Result``への直接のマッピングとなります。
+
+  通常のRustのスタイルでは、型を直接インポートするのが一般的ですが、`Result`のエイリアスは、それらを区別しやすくするために、そうではないことが多いです。Result は一般的に`std::result::Result`であると仮定されているため、このエイリアスのユーザは一般的に、`std::result::Result`のインポートをシャドーイングする代わりに`io::Result`を使用することになります。
+
+- Example
+
+  
+
+  ~~~rust
+  use std::io;
+  
+  fn get_string() -> io::Result<String> {
+      let mut buffer = String::new();
+  
+      io::stdin().read_line(&mut buffer)?;
+  
+      Ok(buffer)
+  }
+  ~~~
+
+  
+
 ### std::io::Read::read
 
 - Description
