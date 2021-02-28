@@ -523,6 +523,30 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 
       繰り返しになりますが、**しばしばポインタに期待される「同じ領域を複数の所有者が共有する」という機能を `Box<T>` は持っていません**。このことに注意して必要なスマートポインタを選ぶのが肝要です。
 
+
+
+### core::result::Result::map
+
+- Description
+
+  結果<T, E>を結果<U, E>にマップします。
+
+  この関数は、2つの関数の結果を合成するために使用することができます。
+
+- Example
+
+  ~~~rust
+  let line = "1\n2\n3\n4\n";
+  
+  for num in line.lines() {
+      match num.parse::<i32>().map(|i| i * 2) {
+          Ok(n) => println!("{}", n),
+          Err(..) => {}
+      }
+  }
+  ~~~
+
+
 ### std::convert::From
 
 - Descrition
@@ -1461,6 +1485,26 @@ struct  Point {
   ベクトルの外に移動するイテレータ。
 
   この構造体は、`[Vec]`の`into_iter`メソッドによって作成されます（`[IntoIterator] trait`によって提供されます）。
+
+### std::vec::Vec::extend_from_slice
+
+- Description
+
+  スライス内のすべての要素をクローン化し、`Vec`に追加します。
+
+  他のスライスを反復処理し、各要素をクローン化し、この`Vec`に追加します。他のベクトルは順番に巡回されます．
+
+  この関数は`extend`と同じですが、代わりにスライスを扱うように特化されていることに注意してください。Rustが特殊化された場合、この関数はおそらく非推奨になるでしょう（しかし、まだ利用可能です）。
+
+- Example
+
+  ~~~rust
+  let mut vec = vec![1];
+  vec.extend_from_slice(&[2, 3, 4]);
+  assert_eq!(vec, [1, 2, 3, 4]);
+  ~~~
+
+  
 
 ### std::iter::IntoIterator
 
