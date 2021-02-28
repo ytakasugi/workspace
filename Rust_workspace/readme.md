@@ -20,3 +20,6 @@ https://qiita.com/hinastory/items/543ae9749c8bccb9afbc
 
 Rust チーとシート
 https://cheats.rs/
+
+Tokio(JP)
+https://zenn.dev/magurotuna/books/tokio-tutorial-ja

@@ -1,3 +1,5 @@
+mod parser;
+
 use std::net::TcpListener;
 use std::thread;
 use std::io::{Read, Write};
@@ -30,19 +32,40 @@ fn server_start() -> io::Result<()> {
             // 関数と違って`()`でなくとも型を推論できるなら引数の型や`-> 返り値の型`を省略できる
             // `move`はクロージャが捕捉した変数（今回は`stream`）の所有権をクロージャにムーブするためのキーワード
             move || -> io::Result<()> {
+                use parser::ParseResult::*;
+                let mut buf = Vec::new();
                 loop {
-                    // 1024バイトのバッファをスタック
+                    // 1回のread分を格納する一時バッファ
                     let mut b = [0; 1024];
                     // バッファにクライアントからの入力を読み込み
                     let n = stream.read(&mut b)?;
                     // 読み込んだバイト数が0ならストリームの終了（スレッドから抜ける）
                     if n == 0 {
                         return Ok(());
-                    // それ以外であれば読み込んだバッファの内容を書き戻す
-                    } else {
-                        stream.write(&b[0..n])?;
-                    }
-                }});
+                    } 
+                    // リクエスト全体のバッファに、読み込んだ分を追記
+                    buf.extend_from_slice(&b[0..n]);
+                    // それ以外ではHTTP/0.9のリクエストの処理
+                    match parser::parse(buf.as_slice()) {
+                        // 入力の途中なら新たな入力を待つため次のイテレーションへ
+                        Partial => continue,
+                        // エラーなら不正な入力なので何も返さずスレッドから抜ける
+                        // スレッドから抜けると`stream`のライフタイムが終わるため、コネクションが自動で閉じられる
+                        Error => {
+                            return Ok(());
+                        },
+                        // リクエストが届けば処理をする
+                        Complete(req) => {
+                        // レスポンスを返す処理をここに書く
+                        // 本来はファイルの中身を返すが、ここではリクエストの内容を含んだ文字列を返す
+                        write!(stream, "OK {}\r\n", req.0)?;
+                        // 処理が完了したらスレッドから抜ける
+                        return Ok(());
+                        },
+                    };
+                }
+            }
+        );
     }
     Ok(())
 }
