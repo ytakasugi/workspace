@@ -4,13 +4,39 @@ use iced::{
 };
 
 fn main() {
-    GUI::run(Settings::default());
+    let mut settings = Settings::default();
+    settings.window.size = (400u32, 400u32);
+    GUI::run(settings);
 }
 
-// ユニット構造体`GUI`を定義
+// `include_bytes`マクロは、指定したファイルの内容を実行バイナリに添付します。
+//  これをバイナリ配列として使えばいいのです。
+const FONT: Font = Font::External {
+    name: "PixelMplus12-Regular",
+    bytes: include_bytes!("../rsc/PixelMplus12-Regular.ttf"),
+};
+
+#[derive(Debug, Clone)]
+pub enum Message {
+    // 時間の測定を開始するメッセージ
+    Start,
+    // 時間の測定を停止するメッセージ
+    Stop,
+    // 測定した時間をリセットするメッセージ
+    Reset,
+}
+
+// アプリケーションが測定中かどうか管理するための列挙型
+pub enum TickState {
+    Stopped,
+    Ticking,
+}
+
+// 構造体`GUI`を定義
 struct GUI {
+    tick_state: TickState,
     start_stop_button_state: button::State,
-    reset_botton_state: button::State,
+    reset_button_state: button::State,
 }
 
 // icedクレートを使用する場合は、ApplicationかSandboxのどちらかを選択する必要があります。
@@ -30,7 +56,7 @@ struct GUI {
 // GUI構造体に`Application`を実装する
 impl Application for GUI {
     type Executor = executor::Null;
-    type Message = ();
+    type Message = Message;
     type Flags = ();
 
     // `new()`メソッドは、`Application`トレイトを`run()`した際に、`iced`の内部で使用される初期化のために使用されるメソッド。
@@ -39,9 +65,10 @@ impl Application for GUI {
     fn new(_flags: ()) -> (GUI, Command<Self::Message>) {
         (
             GUI{
+                tick_state: TickState::Stopped,
                 // `start_stop_button_state`と`reset_botton_state`を初期化
                 start_stop_button_state: button::State::new(),
-                reset_botton_state: button::State::new()
+                reset_button_state: button::State::new()
             }, 
             Command::none(),
         )
@@ -67,8 +94,40 @@ impl Application for GUI {
         let start_stop_button = Button::new(
             &mut self.start_stop_button_state,
             Text::new("Start")
+                // テキストの水平方向の配置を中央寄せにする
                 .horizontal_alignment(HorizontalAlignment::Center)
                 .font(FONT),
-        );
+        )
+        .min_width(80);
+
+        let reset_button = Button::new(
+            &mut self.reset_button_state,
+            Text::new("Reset")
+                .horizontal_alignment(HorizontalAlignment::Center)
+                .font(FONT),
+        )
+        .min_width(80);
+
+        Column::new()
+            // 行に要素を追加
+            .push(tick_text)
+            .push(
+                Row::new()
+                    .push(start_stop_button)
+                    .push(reset_button)
+                    // 要素間の垂直方向の間隔を設定
+                    .spacing(10)
+            )
+            // 要素間の垂直方向の間隔を設定
+            .spacing(10)
+            // 列のパディングを設定
+            .padding(10)
+            // カラムの幅を設定
+            .width(Length::Fill)
+            // カラムの高さを設定
+            .height(Length::Fill)
+            // カラムの内容の水平方向のアライメントを設定
+            .align_items(Align::Center)
+            .into()
     }
 }

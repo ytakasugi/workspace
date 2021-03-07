@@ -187,37 +187,62 @@
       }
       ~~~
 
+
     ---
-
+    
     - Required Methods
-
+    
       - `pub fn new(flags: Self::Flags) -> (Self, Command<Self::Message>)`
-
+    
         設定の一部として実行([run](https://docs.rs/iced/0.2.0/iced/trait.Application.html#method.run))するために提供されたフラグで[Application](https://docs.rs/iced/0.2.0/iced/trait.Application.html)を初期化します。
-
+    
         ここでアプリの初期状態を返します。
-
+    
         さらに、起動時にバックグラウンドで非同期アクションを実行する必要がある場合は、[Command](https://docs.rs/iced/0.2.0/iced/struct.Command.html)を返すことができます。これは、ファイルから状態をロードしたり、最初のHTTPリクエストを実行したりする場合などに便利です。
-
+    
       - `pub fn title(&self) -> String`
-
+    
         アプリケーションの現在のタイトルを返します。
-
+    
         このタイトルは動的なものにすることができます！ランタイムは必要に応じてアプリケーションのタイトルを自動的に更新します。
-
+    
       - `pub fn update(&mut self, message: Self::Message) -> Command<Self::Message>`
-
+    
         メッセージを処理し、[Application](https://docs.rs/iced/0.2.0/iced/trait.Application.html)の状態を更新します。
-
+    
         ここで更新ロジックを定義します。ユーザーのインタラクションやコマンドによって生成されるすべてのメッセージは、このメソッドによって処理されます。
-
+    
         返された[Command](https://docs.rs/iced/0.2.0/iced/struct.Command.html)は、バックグラウンドで直ちに実行されます。
-
+    
       - `pub fn view(&mut self) -> Element<'_, Self::Message>`
-
+    
         [Application](https://docs.rs/iced/0.2.0/iced/trait.Application.html)に表示するウィジェットを返します。
-
+    
         これらのウィジェットは、ユーザーのインタラクションに基づいてメッセージを生成することができます。
 
-    
+​    
+
+---
+
+### [iced::HorizontalAlignment::Center](https://docs.rs/iced/0.2.0/iced/enum.HorizontalAlignment.html#variant.Center)
+
+* Description
+
+  水平方向の中央揃え
+
+---
+
+### [iced::widget::canvas::Text::horizontal_alignment](https://docs.rs/iced/0.2.0/iced/widget/canvas/struct.Text.html#structfield.horizontal_alignment)
+
+* Description
+
+  テキストの水平方向の配置
+
+---
+
+### [iced::Length::Fill](https://docs.rs/iced/0.2.0/iced/enum.Length.html#variant.Fill)
+
+* Description
+
+  残りのスペースをすべて埋める
 

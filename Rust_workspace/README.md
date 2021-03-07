@@ -25,3 +25,7 @@ sudo apt-get install libssl-dev
 * [Rust チートシート](https://cheats.rs/)
 
 * [Tokio(JP)](https://zenn.dev/magurotuna/books/tokio-tutorial-ja)
+
+### diesel
+
+* [diesel公式サイト](https://diesel.rs/guides/getting-started/)
