@@ -89,16 +89,38 @@ impl Application for GUI {
 
     // このメソッドは、Windowに表示するウィジェットを返します。
     fn view(&mut self) -> Element<Self::Message> {
+        let duration_text = "00:00:00.00";
+
+        // `start/stop`テキストを準備
+        let start_stop_text = match self.tick_state {
+            // 測定中でなければ、`Start`ボタン
+            TickState::Stopped => Text::new("Start")
+                // テキストの水平方向の配置を中央寄せにする
+                .horizontal_alignment(HorizontalAlignment::Center)
+                .font(FONT),
+            // 測定中であれば、`Stop`ボタン
+            TickState::Ticking => Text::new("Stop")
+                .horizontal_alignment(HorizontalAlignment::Center)
+                .font(FONT),
+        };
+
+        // `start/stop`ボタンを押下したときの、メッセージを準備
+        let start_stop_message = match self.tick_state {
+            // 計測中出ない場合、startのメッセージ
+            TickState::Stopped => Message::Start,
+            // 計測中の場合、stopのメッセージ
+            TickState::Ticking => Message::Stop,
+        };
+
         // ウィジェットの初期化
         let tick_text = Text::new("00:00:00.00").font(FONT).size(60);
         let start_stop_button = Button::new(
             &mut self.start_stop_button_state,
-            Text::new("Start")
-                // テキストの水平方向の配置を中央寄せにする
-                .horizontal_alignment(HorizontalAlignment::Center)
-                .font(FONT),
+            start_stop_text
         )
-        .min_width(80);
+        .min_width(80)
+        // ボタンが押されたときに表示されるメッセージを設定
+        .on_press(start_stop_message);
 
         let reset_button = Button::new(
             &mut self.reset_button_state,
@@ -106,7 +128,9 @@ impl Application for GUI {
                 .horizontal_alignment(HorizontalAlignment::Center)
                 .font(FONT),
         )
-        .min_width(80);
+        .min_width(80)
+        // ボタンが押されたときに表示されるメッセージを設定
+        .on_press(Message::Reset);
 
         Column::new()
             // 行に要素を追加
