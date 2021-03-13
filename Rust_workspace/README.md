@@ -9,6 +9,8 @@ sudo apt-get install libssl-dev
 
 * [forcia](https://github.com/forcia/rustbook)
 
+* [ytakasugi/workspace](https://github.com/ytakasugi/workspace)
+
 ### Atcoder
 
 * [Atcoder Problems](https://kenkoooo.com/atcoder/#/table/)
