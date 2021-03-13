@@ -2,6 +2,8 @@ use iced::{
     button, executor, Align, Application, Button, Column, Command, Element, Font,
     HorizontalAlignment, Length, Row, Settings, Text,
 };
+use iced_futures::{self, futures};
+use std::time::{Duration, Instant};
 
 fn main() {
     let mut settings = Settings::default();
@@ -81,7 +83,19 @@ impl Application for GUI {
 
     // このメソッドは Message をイベントとして受け取ります。
     // また、メッセージによってアプリケーションの状態を変更します。
-    fn update(&mut self, _message: Self::Message) -> Command<Self::Message> {
+    fn update(&mut self, message: Self::Message) -> Command<Self::Message> {
+        match message {
+            // 測定開始のメッセージを受け取ったとき、測定中の状態となる
+            Message::Start => {
+                self.tick_state = TickState::Ticking;
+            }
+            // 測定停止のメッセージを受け取ったとき、停止中の状態となる
+            Message::Stop => {
+                self.tick_state = TickState::Stopped;
+            }
+            // リセットのメッセージを受け取ったとき、測定中の時間をリセットする
+            Message::Reset => ()
+        }
         // 非同期処理の実行をランタイム側へ依頼することができる仕組み
         // 初期化時点で行いたい別処理を`Command`を使用して非同期で実行できる
         Command::none()
@@ -153,5 +167,48 @@ impl Application for GUI {
             // カラムの内容の水平方向のアライメントを設定
             .align_items(Align::Center)
             .into()
+    }
+}
+
+// このサブスクリプションのレシピは、指定された間隔で繰り返しイベントを生成します。
+//間隔は、メンバー変数 "duration" で決まります。
+pub struct Timer {
+    duration: Duration,
+}
+
+impl Timer {
+    fn new(duration: Duration) -> Timer {
+        Timer{ duration: duration }
+    }
+}
+
+// これは、サブスクリプションのレシピです。
+impl<T, E> iced_native::subscription::Recipe<T, E> for Timer
+where
+    H: std::hash::Hasher,
+{
+    // サブスクリプションはこの`Output Type`を生成します。
+    type Output =Instant;
+
+    // このレシピをハッシュします。
+    // このハッシュを使って各サブスクリプションを識別します。
+    // 任意のメンバー変数からハッシュを生成できます。
+    fn hash(&self, state: &mut H) {
+        use std::hash::Hash;
+        std::any::TypeId::of::<Self>().hash(state);
+        self.duration.hash(state);
+    }
+
+    // このメソッドは、このレシピの実行と、そのサブスクリプションのイベント・ストリームの生成を担当します。
+    // ストリームは、定義した Output タイプを出力します。
+    // この例では、`Output`タイプは`Instant`です。
+    fn stream(
+        self: Box<Self>,
+        _input: futures::stream::BoxStream<'static, E>,
+    ) -> futures::stream::BoxStream<'static, Self::Output> {
+        use futures::stream::StreamExt;
+        async_std::stream::interval(self.duration)
+            .map(|_| Instant::now())
+            .boxed()
     }
 }

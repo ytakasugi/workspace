@@ -1174,57 +1174,6 @@ impl PartialEq for Person {
 
 ---
 
-### std::hash::Hash
-
-  - Description
-    ハッシュ可能な型。
-
-`Hash`を実装した型は、Hasherのインスタンスでハッシュ化することができます。
-
-  - ハッシュの実装
-    すべてのフィールドがHashを実装していれば、#[ derive(Hash)]でHashを導出することができます。結果として得られるハッシュは、各フィールドでハッシュを呼び出した値の組み合わせになります。
-
-~~~rust
-#[derive(Hash)]
-struct Rustacean {
-    name: String,
-    country: String,
-}
-~~~
-
-  値がどのようにハッシュ化されるかをより制御したい場合は、もちろん自分でHash traitを実装      することができます。
-
-~~~rust
-use std::hash::{Hash, Hasher};
-
-struct Person {
-    id: u32,
-    name: String,
-    phone: u64,
-}
-
-impl Hash for Person {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.id.hash(state);
-        self.phone.hash(state);
-    }
-}
-~~~
-
-
-  - `Hash`と`Eq`
-    HashとEqの両方を実装する場合、以下のプロパティが保持されていることが重要です。
-
-~~~
-k1 == k2 -> hash(k1) == hash(k2)
-~~~
-
-  言い換えれば、2つのキーが等しい場合、それらのハッシュもまた等しくなければなりません。     HashMapとHashSetは  どちらもこの動作に依存しています。
-
-  ありがたいことに、`#[derive(PartialEq, Eq, Hash)]`で`Eq`と`Hash`の両方を導出する際に、このプロパティを保持することを心配する必要はありません。
-
----
-
 ### std::default::Default
 
   - Description
@@ -2019,6 +1968,141 @@ struct  Point {
     Durationは、通常システムのタイムアウトに使用される時間のスパンを表す。
     各Durationは、秒の整数とナノ秒で表される端数で構成される。基礎となるシステムがナノ秒レベルの精度をサポートしていない場合、システム タイムアウトをバインディングするAPIは通常、ナノ秒数を切り上げる。
     Durationは、Add、Sub、その他のopsトレイトなど、多くの一般的なトレイトを実装している。長さ0のDurationを返すことでDefaultを実装している。
+
+---
+
+### std::time::Instant
+
+- Description
+
+  単調に減少するクロックの測定値です。不透明で、Durationでのみ使用できます。
+
+  インスタントは、作成された時点で、それまでに計測されたどの瞬間よりも小さくならないことが常に保証されており、ベンチマークの計測や、操作にかかる時間の計測などの作業によく使われます。
+
+  ただし、インスタンスは安定していることは保証されていません。言い換えれば、基礎となる時計の各刻みは同じ長さではないかもしれません（例えば、ある秒は他の秒よりも長いかもしれません）。インスタントは、前方にジャンプしたり、時間拡張（遅くなったり、速くなったり）することはあっても、後方に戻ることはありません。
+
+  インスタントは、お互いに比較することしかできない不透明なタイプです。インスタントから「何秒」を得る方法はありません。代わりに、2つのインスタント間の継続時間を測定する（または2つのインスタントを比較する）ことができるだけです。
+
+  `Instant`構造体のサイズは、ターゲットのオペレーティングシステムによって異なる場合があります。
+
+- Example
+
+  ~~~rust
+  use std::time::{Duration, Instant};
+  use std::thread::sleep;
+  
+  fn main() {
+     let now = Instant::now();
+  
+     // we sleep for 2 seconds
+     sleep(Duration::new(2, 0));
+     // it prints '2'
+     println!("{}", now.elapsed().as_secs());
+  }
+  ~~~
+
+---
+
+### std::hash::Hash
+
+- Description
+
+  ハッシュ化可能な型です。
+
+  Hashを実装した型は、Hasherのインスタンスでハッシュ化することができます。
+
+- Implementing `Hash`
+
+  すべてのフィールドがHashを実装していれば、`#[derive(Hash)]`で`Hash`を派生させることができます。結果として得られるハッシュは、各フィールドのハッシュを呼び出したときの値を組み合わせたものになります。
+
+  ~~~rust
+  #[derive(Hash)]
+  struct Rustacean {
+      name: String,
+      country: String,
+  }
+  ~~~
+
+  値がどのようにハッシュ化されるかをより細かく制御する必要がある場合は、もちろん自分でHash特性を実装することができます。
+
+  ~~~rust
+  use std::hash::{Hash, Hasher};
+  
+  struct Person {
+      id: u32,
+      name: String,
+      phone: u64,
+  }
+  
+  impl Hash for Person {
+      fn hash<H: Hasher>(&self, state: &mut H) {
+          self.id.hash(state);
+          self.phone.hash(state);
+      }
+  }
+  ~~~
+
+- `Hash` and `Eq`
+
+  HashとEqの両方を実装する際には、次のような性質が成り立つことが重要です。
+
+  ~~~
+  k1 == k2 -> hash(k1) == hash(k2)
+  ~~~
+
+  言い換えれば、2つのキーが等しい場合、それらのハッシュも等しくなければなりません。HashMapとHashSetはどちらもこの動作に依存しています。
+
+  ありがたいことに、`#[derive(PartialEq, Eq, Hash)]`で`Eq`と`Hash`の両方を導出する際には、このプロパティの保持を心配する必要はありません。
+
+- Required methods
+
+  ~~~rust
+  pub fn hash_slice<H>(data: &[Self], state: &mut H)
+  where
+      H: Hasher, 
+  ~~~
+
+  このタイプのスライスを与えられたHasherにフィードします。
+
+  - Example
+
+    ---
+
+    ~~~rust
+    use std::collections::hash_map::DefaultHasher;
+    use std::hash::{Hash, Hasher};
+    
+    let mut hasher = DefaultHasher::new();
+    7920.hash(&mut hasher);
+    println!("Hash is {:x}!", hasher.finish());
+    ~~~
+
+- Provided methods
+
+  ~~~rust
+  pub fn hash_slice<H>(data: &[Self], state: &mut H)
+  where
+      H: Hasher, 
+  
+  ~~~
+
+  このタイプのスライスを与えられたHasherにフィードします。
+
+  - Exmaple
+
+    ---
+
+    ~~~rust
+    use std::collections::hash_map::DefaultHasher;
+    use std::hash::{Hash, Hasher};
+    
+    let mut hasher = DefaultHasher::new();
+    let numbers = [6, 28, 496, 8128];
+    Hash::hash_slice(&numbers, &mut hasher);
+    println!("Hash is {:x}!", hasher.finish());
+    ~~~
+
+    
 
 ---
 
