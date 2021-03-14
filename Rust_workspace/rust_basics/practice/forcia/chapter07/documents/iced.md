@@ -220,6 +220,7 @@
     
         これらのウィジェットは、ユーザーのインタラクションに基づいてメッセージを生成することができます。
 
+
 ​    
 
 ---
@@ -245,4 +246,50 @@
 * Description
 
   残りのスペースをすべて埋める
+
+---
+
+### [iced_futures](https://docs.rs/iced_futures/0.2.0/iced_futures/)
+
+- Description
+
+  Elmにインスパイアされた、GUIプログラミングのための非同期タスクです。
+
+---
+
+### [iced_native](https://docs.rs/iced_native/0.3.0/iced_native/)
+
+- Description
+
+  レンダラに依存しないネイティブGUIランタイム。
+
+  Iced エコシステムのネイティブパス
+
+  `iced_native`は、`iced_core`の上にネイティブランタイムを構築するもので、以下の特徴があります。
+
+  - `druid`にインスパイアされたカスタムレイアウトエンジン
+  - すべての組み込みウィジェットのイベント処理
+  - レンダラーに依存しないAPI
+
+  これを実現するために、再利用可能なインターフェースをいくつか導入しています。
+
+  - `Widget trait`は、レイアウト要件からイベントや描画のロジックまで、新しいウィジェットを実装するために使用されます。
+  - `Renderer trait`の束で、これは、クレートを`Renderer`に依存しないようにするためのものです。
+
+---
+
+### [iced_native::subscription::Recipe](https://docs.rs/iced_native/0.3.0/iced_native/subscription/trait.Recipe.html)
+
+- Description
+
+  [Subscription](https://docs.rs/iced_futures/0.2.0/iced_futures/subscription/struct.Subscription.html)の説明です。
+
+  [Recipe](https://docs.rs/iced_native/0.3.0/iced_native/subscription/trait.Recipe.html)は、[Subscription](https://docs.rs/iced_futures/0.2.0/iced_futures/subscription/struct.Subscription.html)の内部定義です。それは、サブスクリプションを実行して識別するためにランタイムによって使用されます。これを使って自分のものを作ることができます
+
+- Example
+
+  リポジトリには、カスタム[Recipe](https://docs.rs/iced_native/0.3.0/iced_native/subscription/trait.Recipe.html)を使った[サンプル](https://github.com/hecrj/iced/tree/0.2/examples)がいくつかあります。
+
+  [download_progress](https://github.com/hecrj/iced/tree/0.2/examples/download_progress): 100MBのダミーファイルを非同期にダウンロードし、ダウンロードの進行状況を追跡する基本的なアプリケーションです。
+  [stopwatch](https://github.com/hecrj/iced/tree/0.2/examples/stopwatch): スタート/ストップとリセットボタンを備えた時計で、時間の聴き方を紹介しています。
 
