@@ -249,6 +249,14 @@
 
 ---
 
+### iced::Subscription::from_recipe
+
+- Description
+
+  サブスクリプションを記述するRecipeからサブスクリプションを作成します。
+
+---
+
 ### [iced_futures](https://docs.rs/iced_futures/0.2.0/iced_futures/)
 
 - Description
@@ -292,4 +300,6 @@
 
   [download_progress](https://github.com/hecrj/iced/tree/0.2/examples/download_progress): 100MBのダミーファイルを非同期にダウンロードし、ダウンロードの進行状況を追跡する基本的なアプリケーションです。
   [stopwatch](https://github.com/hecrj/iced/tree/0.2/examples/stopwatch): スタート/ストップとリセットボタンを備えた時計で、時間の聴き方を紹介しています。
+
+
 

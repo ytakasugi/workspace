@@ -1,6 +1,6 @@
 use iced::{
     button, executor, Align, Application, Button, Column, Command, Element, Font,
-    HorizontalAlignment, Length, Row, Settings, Text,
+    HorizontalAlignment, Length, Row, Settings, Subscription, Text,
 };
 use iced_futures::{self, futures};
 use std::time::{Duration, Instant};
@@ -18,6 +18,12 @@ const FONT: Font = Font::External {
     bytes: include_bytes!("../rsc/PixelMplus12-Regular.ttf"),
 };
 
+// グローバル変数を定義
+const FPS: u64 = 30;
+const MILLISEC: u64 = 1000;
+const MINUTE: u64 = 60;
+const HOUR: u64 = 60 * MINUTE;
+
 #[derive(Debug, Clone)]
 pub enum Message {
     // 時間の測定を開始するメッセージ
@@ -26,6 +32,7 @@ pub enum Message {
     Stop,
     // 測定した時間をリセットするメッセージ
     Reset,
+    Update,
 }
 
 // アプリケーションが測定中かどうか管理するための列挙型
@@ -36,6 +43,8 @@ pub enum TickState {
 
 // 構造体`GUI`を定義
 struct GUI {
+    last_update: Instant,
+    total_duration: Duration,
     tick_state: TickState,
     start_stop_button_state: button::State,
     reset_button_state: button::State,
@@ -57,7 +66,7 @@ struct GUI {
 
 // GUI構造体に`Application`を実装する
 impl Application for GUI {
-    type Executor = executor::Null;
+    type Executor = executor::Default;
     type Message = Message;
     type Flags = ();
 
@@ -67,6 +76,8 @@ impl Application for GUI {
     fn new(_flags: ()) -> (GUI, Command<Self::Message>) {
         (
             GUI{
+                last_update: Instant::now(),
+                total_duration: Duration::default(),
                 tick_state: TickState::Stopped,
                 // `start_stop_button_state`と`reset_botton_state`を初期化
                 start_stop_button_state: button::State::new(),
@@ -74,6 +85,15 @@ impl Application for GUI {
             }, 
             Command::none(),
         )
+    }
+
+    // `FPS`は、`Frame Per Second`の略
+    // `MILLISEC`を`FPS`で割った時間だけ間をあけてイベントを受信する
+    fn subscription(&self) -> Subscription<Message> {
+        let timer = Timer::new(Duration::from_millis(MILLISEC / FPS));
+        // `iced::Subscription::from_recipe`でRecipeをSubscriptionとして動作させる。
+        // ここでは、`map()`を使用して、それぞれの要素を`Message::Update`に置き換えている
+        iced::Subscription::from_recipe(timer).map(|_| Message::Update)
     }
 
     // ウィンドウのタイトルを設定します。
@@ -85,16 +105,31 @@ impl Application for GUI {
     // また、メッセージによってアプリケーションの状態を変更します。
     fn update(&mut self, message: Self::Message) -> Command<Self::Message> {
         match message {
-            // 測定開始のメッセージを受け取ったとき、測定中の状態となる
+            // 状態変数を`TickState::Ticking`に切り替え、最終更新時刻を保持している`last_update`に現在の時刻を保存する
             Message::Start => {
                 self.tick_state = TickState::Ticking;
+                self.last_update = Instant::now();
             }
-            // 測定停止のメッセージを受け取ったとき、停止中の状態となる
+            // 状態変数を`TickState::Stopped`に切り替え、時間の最終更新から現在までの経過時間を`total_duration`に加算する
             Message::Stop => {
                 self.tick_state = TickState::Stopped;
+                self.total_duration += Instant::now() - self.last_update;
             }
-            // リセットのメッセージを受け取ったとき、測定中の時間をリセットする
-            Message::Reset => ()
+            // 最終更新時刻を現在の時刻にし、これまで加算してきた経過時間をゼロにする
+            Message::Reset => {
+                self.last_update = Instant::now();
+                self.total_duration = Duration::default();
+            }
+            // 最終更新時間から、経過時間を`total_duration`に加算する。
+            // 加算したあとは、最終更新時間を現在の時間にする
+            Message::Update => match self.tick_state {
+                TickState::Ticking => {
+                    let now_update = Instant::now();
+                    self.total_duration += now_update - self.last_update;
+                    self.last_update = now_update;
+                }
+                _ => {}
+            },
         }
         // 非同期処理の実行をランタイム側へ依頼することができる仕組み
         // 初期化時点で行いたい別処理を`Command`を使用して非同期で実行できる
@@ -103,7 +138,14 @@ impl Application for GUI {
 
     // このメソッドは、Windowに表示するウィジェットを返します。
     fn view(&mut self) -> Element<Self::Message> {
-        let duration_text = "00:00:00.00";
+        let seconds = self.total_duration.as_secs();
+        let duration_text = format!(
+            "{:0>2}:{:0>2}:{:0>2}.{:0>2}",
+            seconds / HOUR,
+            (seconds % HOUR) / MINUTE,
+            seconds % MINUTE,
+            self.total_duration.subsec_millis() / 10,
+        );
 
         // `start/stop`テキストを準備
         let start_stop_text = match self.tick_state {
@@ -127,7 +169,7 @@ impl Application for GUI {
         };
 
         // ウィジェットの初期化
-        let tick_text = Text::new("00:00:00.00").font(FONT).size(60);
+        let tick_text = Text::new(duration_text).font(FONT).size(60);
         let start_stop_button = Button::new(
             &mut self.start_stop_button_state,
             start_stop_text
@@ -183,7 +225,7 @@ impl Timer {
 }
 
 // これは、サブスクリプションのレシピです。
-impl<T, E> iced_native::subscription::Recipe<T, E> for Timer
+impl<H, E> iced_native::subscription::Recipe<H, E> for Timer
 where
     H: std::hash::Hasher,
 {
@@ -207,6 +249,7 @@ where
         _input: futures::stream::BoxStream<'static, E>,
     ) -> futures::stream::BoxStream<'static, Self::Output> {
         use futures::stream::StreamExt;
+        // `async_std::stream::interval`を使用して、一定間隔で現在の時間を返す`Stream`を作成する
         async_std::stream::interval(self.duration)
             .map(|_| Instant::now())
             .boxed()

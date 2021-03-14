@@ -2152,9 +2152,9 @@ struct  Point {
 - Required methods
 
   ~~~rust
-  pub fn hash_slice<H>(data: &[Self], state: &mut H)
+  pub fn hash<H>(&self, state: &mut H)
   where
-      H: Hasher, 
+      H: Hasher,
   ~~~
 
   このタイプのスライスを与えられたHasherにフィードします。
@@ -2196,6 +2196,7 @@ struct  Point {
     Hash::hash_slice(&numbers, &mut hasher);
     println!("Hash is {:x}!", hasher.finish());
     ~~~
+
 
 ---
 
