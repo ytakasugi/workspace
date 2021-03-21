@@ -34,6 +34,8 @@ sudo apt-get install libssl-dev
 
 * [async_std](https://docs.rs/async-std/1.9.0/async_std/)
 
+* [とほほのWWW入門](http://www.tohoho-web.com/ex/rust.html)
+
 ### diesel
 
 * [diesel公式サイト](https://diesel.rs/guides/getting-started/)
