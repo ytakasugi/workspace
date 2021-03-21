@@ -45,3 +45,6 @@
 * [AtCoder Problems](https://kenkoooo.com/atcoder/#/table/)
 * [Rustで作るインタプリタ](https://qiita.com/nirasan/items/f7a232af3372ea370f4b)
 * [AtcoderとRustで始める競技プログラミング](https://zenn.dev/toga/books/apg4b-rust-ver)
+* [低レイヤを知りたい人のためのCコンパイラ作成入門](https://www.sigbus.info/compilerbook)
+* [Webプログラミング入門](https://webkaru.net/)
+* [Rustのゼロコスト抽象化の効果をアセンブラで確認](https://blog.rust-jp.rs/tatsuya6502/posts/2019-12-zero-cost-abstraction/)

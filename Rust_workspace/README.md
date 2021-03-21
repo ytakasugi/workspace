@@ -36,6 +36,8 @@ sudo apt-get install libssl-dev
 
 * [とほほのWWW入門](http://www.tohoho-web.com/ex/rust.html)
 
+* [`impl Trait`について](https://qnighy.hatenablog.com/entry/2018/01/28/220000)
+
 ### diesel
 
 * [diesel公式サイト](https://diesel.rs/guides/getting-started/)
