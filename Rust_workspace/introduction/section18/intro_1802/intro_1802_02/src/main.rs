@@ -30,7 +30,7 @@ fn chop(peeled: Option<Peeled>) -> Option<Chopped> {
     }
 }
 
-// map:`Option<T>`を`Option<U>`に変換する関数
+// map:`Option<T>`を`Option<U>`に変換するメソッド
 fn cook(chopped: Option<Chopped>) -> Option<Cooked> {
     chopped.map(|Chopped(food)| Cooked(food))
 }
