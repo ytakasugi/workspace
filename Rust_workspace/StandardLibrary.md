@@ -731,6 +731,28 @@ CopyトレイトとCloneトレイトの違いを以下に示す
   }
   ~~~
 
+---
+
+### core::option::Option::take
+
+- Description
+
+  オプションの値を削除し、代わりに`None`を残す
+
+- Example
+
+  ~~~rust
+  let mut x = Some(2);
+  let y = x.take();
+  assert_eq!(x, None);
+  assert_eq!(y, Some(2));
+  
+  let mut x: Option<u32> = None;
+  let y = x.take();
+  assert_eq!(x, None);
+  assert_eq!(y, None);
+  ~~~
+
   
 
 ---
