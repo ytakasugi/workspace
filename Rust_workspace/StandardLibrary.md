@@ -553,11 +553,78 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 
 ---
 
+### [std::result](https://doc.rust-lang.org/std/result/index.html)
+
+- Description
+
+  `Result`型によるエラー処理。
+
+  `Result<T, E>`は、エラーを返したり伝播させたりするのに使われる型です。これは、成功を表し、値を含む`Ok(T)`と、エラーを表し、エラー値を含む`Err(E)`という変種を持つ列挙型です。
+
+  ```rust
+  enum Result<T, E> {
+     Ok(T),
+     Err(E),
+  }
+  ```
+
+  関数は、エラーが予想され、回復可能な場合は常に`Result`を返します。`std`クレートでは、`Result`は`I/O`で最も顕著に使用されます。
+
+  `Result`を返す単純な関数は、次のように定義して使用することができます。
+
+  ```rust
+  #[derive(Debug)]
+  enum Version { Version1, Version2 }
+  
+  fn parse_version(header: &[u8]) -> Result<Version, &'static str> {
+      match header.get(0) {
+          None => Err("invalid header length"),
+          Some(&1) => Ok(Version::Version1),
+          Some(&2) => Ok(Version::Version2),
+          Some(_) => Err("invalid version"),
+      }
+  }
+  
+  let version = parse_version(&[1, 2, 3, 4]);
+  match version {
+      Ok(v) => println!("working with version: {:?}", v),
+      Err(e) => println!("error parsing header: {:?}", e),
+  }
+  ```
+
+  `Result`のパターンマッチは、単純なケースでは明確でわかりやすいですが、`Result`には、より簡潔に扱うことができる便利なメソッドがいくつかあります。
+
+  ```rust
+  let good_result: Result<i32, i32> = Ok(10);
+  let bad_result: Result<i32, i32> = Err(10);
+  
+  // `is_ok`と`is_err`メソッドは、その言葉通りの働きをします。
+  assert!(good_result.is_ok() && !good_result.is_err());
+  assert!(bad_result.is_err() && !bad_result.is_ok());
+  
+  // `map` は `Result` を消費して別のものを生成します。
+  let good_result: Result<i32, i32> = good_result.map(|i| i + 1);
+  let bad_result: Result<i32, i32> = bad_result.map(|i| i - 1);
+  
+  //  計算を続けるには `and_then` を使います。
+  let good_result: Result<bool, i32> = good_result.and_then(|i| Ok(i == 11));
+  
+  // エラーの処理には `or_else` を使用します。
+  let bad_result: Result<i32, i32> = bad_result.or_else(|i| Ok(i + 20));
+  
+  // 結果を取り込み、その内容を `unwrap` で返します。
+  let final_awesome_result = good_result.unwrap();
+  ```
+
+  
+
+---
+
 ### core::result::Result::map
 
 - Description
 
-  結果<T, E>を結果<U, E>にマップします。
+  `Result<T, E>`を`Result<U, E>`にマップします。
 
   この関数は、2つの関数の結果を合成するために使用することができます。
 
@@ -573,6 +640,81 @@ CopyトレイトとCloneトレイトの違いを以下に示す
       }
   }
   ~~~
+
+---
+
+### std::result::Result::and_then
+
+  - Description
+
+    結果が[Ok]の場合はopを呼び出し、そうでない場合はselfの[Err]値を返す
+
+    
+
+
+---
+
+### [std::result::Result::is_err](https://doc.rust-lang.org/stable/std/result/enum.Result.html#method.is_err)
+
+  - Description
+
+    結果が`Err`なら`true`を返す。
+
+---
+
+### [std::error::Error](https://doc.rust-lang.org/std/error/trait.Error.html)
+
+- Description
+
+  エラーは、エラー値に対する基本的な期待を表すトレイトであり、`Result<T, E>`の`E`型の値である。エラーは、`Display`と`Debug`のトレイトを通して自分自身を記述しなければならず、原因の連鎖情報を提供することもあります。
+
+  `Error::source()`は、エラーが「抽象化の境界」を越える場合に一般的に使用されます。あるモジュールが、下位モジュールのエラーに起因するエラーを報告しなければならない場合、`Error::source()`を介してそのエラーにアクセスすることを許可することができます。これにより、上位モジュールが独自のエラーを提供することが可能になり、同時にソースチェーンを介したデバッグのために実装の一部を明らかにすることができます。
+
+
+---
+
+### [std::option::Option::as_ref](https://doc.rust-lang.org/stable/std/option/enum.Option.html#method.as_ref) 
+
+- Description
+
+  `&Option<T>`から`Option<&T>`に変換します。
+
+- Example
+
+  `Option<String>`を`Option<usize>`に変換し、オリジナルを保持します。`map`メソッドは`self`引数を値で受け取り、オリジナルを消費するので、このテクニックでは `as_ref`を使用して、まず`Option`をオリジナル内部の値への参照にします。
+
+  ~~~rust
+  let text: Option<String> = Some("Hello, world!".to_string());
+  // First, cast `Option<String>` to `Option<&String>` with `as_ref`,
+  // then consume *that* with `map`, leaving `text` on the stack.
+  let text_length: Option<usize> = text.as_ref().map(|s| s.len());
+  println!("still can print text: {:?}", text);
+  ~~~
+
+
+
+---
+
+### [std::option::Option::map_or](https://doc.rust-lang.org/stable/core/option/enum.Option.html#method.map_or)
+
+- Description
+
+  含まれる値がある場合はその値に関数を適用し、ない場合は指定されたデフォルト値を返します。
+
+  関数呼び出しの結果を渡す場合は、遅延評価を行う[map_or_else](https://doc.rust-lang.org/stable/core/option/enum.Option.html#method.map_or_else)を使用することをお勧めします。
+
+- Example
+
+  ```rust
+  let x = Some("foo");
+  assert_eq!(x.map_or(42, |v| v.len()), 3);
+  
+  let x: Option<&str> = None;
+  assert_eq!(x.map_or(42, |v| v.len()), 42);
+  ```
+
+  
+
 
 ---
 
@@ -730,6 +872,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
       Ok(buffer)
   }
   ~~~
+
 
 ---
 
@@ -1791,16 +1934,7 @@ struct  Point {
 
   各値を変更できるようにするイテレータを返します。
 
----
-
-### std::error::Error
-
-  - Description
-
-    エラーは、エラー値、すなわち`Result<T, E>`の E 型の値に対する基本的な期待値を表すトレイトである。
-    エラーは、表示とデバッグのトレイトを通して自分自身を記述しなければならず、原因の連鎖情報を提供することができる。
-    `Error::source()`は、一般的にエラーが「抽象化の境界」を越える場合に使用される。
-    あるモジュールが下位レベルのモジュールからのエラーによって引き起こされたエラーを伝えなければならない場合、 [Error::source()](https://doc.rust-lang.org/stable/std/error/trait.Error.html#method.source)を介してそのエラーにアクセスできるようにすることができる。これにより、上位モジュールが独自のエラーを提供することが可能になり、同時にソースチェーンを介してデバッグ用の実装の一部を公開することも可能になる。
+  
 
 ---
 
@@ -1996,15 +2130,6 @@ struct  Point {
   - Description
 
     現在のプロセスから環境変数のキーを取得する。
-
-
----
-
-### [std::result::Result::is_err](https://doc.rust-lang.org/stable/std/result/enum.Result.html#method.is_err)
-
-  - Description
-
-    結果が`Err`なら`true`を返す。
 
 ---
 

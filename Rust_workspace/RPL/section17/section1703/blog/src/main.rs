@@ -2,15 +2,15 @@ extern crate blog;
 use blog::Post;
 
 fn main() {
+    // `Post::new`で空の文字列を生成
     let mut post = Post::new();
 
-    // 今日はお昼にサラダを食べた
+    // `add_text`メソッドを`post`に対して呼び出し、文字列を挿入
     post.add_text("I ate a salad for lunch today");
-    assert_eq!("", post.content());
 
-    post.request_review();
-    assert_eq!("", post.content());
+    let post = post.request_review();
 
-    post.approve();
+    let post = post.approve();
+
     assert_eq!("I ate a salad for lunch today", post.content());
 }
