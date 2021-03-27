@@ -647,7 +647,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 
   - Description
 
-    結果が[Ok]の場合はopを呼び出し、そうでない場合はselfの[Err]値を返す
+    結果が`Ok`の場合は`op`を呼び出し、そうでない場合は`self`の`Err`値を返す
 
     
 
@@ -659,6 +659,30 @@ CopyトレイトとCloneトレイトの違いを以下に示す
   - Description
 
     結果が`Err`なら`true`を返す。
+
+---
+
+### std::result::Result::map_err
+
+- Description
+
+  含まれる`Err`値に関数を適用し、`Ok`値はそのままにすることで、`Result<T, E>`を`Result<T, F>`にマッピングします。
+
+  この関数は、エラーを処理しながら成功した結果を渡すために使用することができます。
+
+- Example
+
+  ```rust
+  fn stringify(x: u32) -> String { format!("error code: {}", x) }
+  
+  let x: Result<u32, u32> = Ok(2);
+  assert_eq!(x.map_err(stringify), Ok(2));
+  
+  let x: Result<u32, u32> = Err(13);
+  assert_eq!(x.map_err(stringify), Err("error code: 13".to_string()))
+  ```
+
+
 
 ---
 
@@ -713,6 +737,112 @@ CopyトレイトとCloneトレイトの違いを以下に示す
   assert_eq!(x.map_or(42, |v| v.len()), 42);
   ```
 
+
+
+
+---
+
+### std::option::Option::ok_or
+
+- Description
+
+  `Option<T>`を`Result<T, E>`に変換し、`Some(v)`を`Ok(v)`に、`None`を`Err(err)`にマッピングします。
+
+  `ok_or`に渡された引数は熱心に評価されます。関数呼び出しの結果を渡す場合は、遅延的に評価される`ok_or_else`を使うことが推奨されます。
+
+- Example
+
+  ```rust
+  let x = Some("foo");
+  assert_eq!(x.ok_or(0), Ok("foo"));
+  
+  let x: Option<&str> = None;
+  assert_eq!(x.ok_or(0), Err(0));
+  ```
+
+
+
+---
+
+### std::option::Option::ok_or_else
+
+- Description
+
+  `Option<T>`を`Result<T, E>`に変換し、`Some(v)`を`Ok(v)`に、`None`を`Err(err())`にマッピングします。
+
+- Example
+
+  ```rust
+  let x = Some("foo");
+  assert_eq!(x.ok_or_else(|| 0), Ok("foo"));
+  
+  let x: Option<&str> = None;
+  assert_eq!(x.ok_or_else(|| 0), Err(0));
+  ```
+
+
+
+---
+
+### std::convert::Into
+
+- Description
+
+  入力値を消費する値から値への変換のこと。\From\の反対です。
+
+  `Into`の実装を避け、代わりに`From`を実装すべきである。`From`を実装すると、標準ライブラリのブランケット実装のおかげで、自動的に`Into`の実装が提供されます。
+
+  ジェネリック関数に`trait boundary`を指定する場合、`Into`のみを実装した型も使用できるようにするため、`From`よりも`Into`の使用を推奨する。
+
+  注意：このトレイトは失敗してはいけません。変換に失敗する可能性がある場合は、`TryInto`を使用してください。
+
+- 汎用的な実装
+
+  - `From<T> for U`は`Into<U> for T`を意味します。
+  - `Into`は反射的であり、`Into<T> for T`が実装されていることを意味します。
+
+- 古いバージョンのRustでの外部型への変換のためのIntoの実装
+
+  Rust 1.41以前では、目的の型が現在のクレートに含まれていない場合、`From`を直接実装することはできませんでした。例えば、このコードを見てみましょう。
+
+  ```rust
+  struct Wrapper<T>(Vec<T>);
+  impl<T> From<Wrapper<T>> for Vec<T> {
+      fn from(w: Wrapper<T>) -> Vec<T> {
+          w.0
+      }
+  }
+  ```
+
+  これは古いバージョンの言語ではコンパイルできません。これを回避するために、Intoを直接実装することができます。
+
+  ```rust
+  struct Wrapper<T>(Vec<T>);
+  impl<T> Into<Vec<T>> for Wrapper<T> {
+      fn into(self) -> Vec<T> {
+          self.0
+      }
+  }
+  ```
+
+  重要なのは、`Into`は`From`の実装を提供していないということです（`From`が`Into`を実装するように）。したがって、常に`From`の実装を試み、`From`が実装できない場合には`Into`にフォールバックする必要があります。
+
+- Example
+
+  `String`は`Into<Vec<u8>>`を実装しています。
+
+  指定された型`T`に変換可能なすべての引数を取るジェネリック関数が欲しいことを表現するために，`Into`<T>のtrait boundを使うことができます。例えば 関数`is_hello`は`Vec<u8>`に変換可能なすべての引数を取ります。
+
+  ```rust
+  fn is_hello<T: Into<Vec<u8>>>(s: T) {
+     let bytes = b"hello".to_vec();
+     assert_eq!(bytes, s.into());
+  }
+  
+  let s = "hello".to_string();
+  is_hello(s);
+  ```
+
   
 
 
@@ -722,7 +852,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 
 - Descrition
 
-  入力値を消費しながら値から値への変換を行う際に使用します。これは`Into`\の逆数です。
+  入力値を消費しながら値から値への変換を行う際に使用します。これは`Into`の逆数です。
 
   標準ライブラリのブランケット実装のおかげで、`From`を実装することで自動的にIntoの実装が提供されるため、常に`Into`よりも`From`を実装することを好むべきです。
 

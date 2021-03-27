@@ -6,12 +6,16 @@ type AliasedResult<T> = Result<T, ParseIntError>;
 // 値が有効ならnを変更し、無効であればエラーをそのまま見送
 fn multiply(first_number_str: &str, second_number_str: &str) -> AliasedResult<i32> {
     // `and_then`は、結果が[Ok]の場合はopを呼び出し、そうでない場合はselfの[Err]値を返す
-    // `first_number_str`のパースの結果が`Ok(n)`なら、`first_number`を引数とし`{}`内の処理結果を返却するクロージャ
-    first_number_str.parse::<i32>().and_then(|first_number| {
+    // `first_number_str`を`i32`型へ変換
+    first_number_str.parse::<i32>()
+        // クロージャの処理結果が`Ok`なら
+        .and_then(|first_number| {
         // `map`は、含まれる[Ok]値に関数を適用し、[Err]値はそのままにすることで、Result<T, E>をResult<U, E>にマッピングする。
-        // `second_number_str`のパースの結果が`Ok(n)`なら、`second_number`を引数とし`first_number * second_number`を返却するクロージャ
-        // `Err`値はそのままとなる
-        second_number_str.parse::<i32>().map(|second_number| first_number * second_number)
+        // `second_number_str`を`i32`型へ変換
+        second_number_str.parse::<i32>()
+            // `second_number`を引数とし、`first_number * second_number`を返す
+            // `Err`値の場合はそのまま
+            .map(|second_number| first_number * second_number)
     })
 }
 
