@@ -4,6 +4,21 @@
 
 * sudo apt-get install libssl-dev
 
+* Atcoder
+
+  * Cargo.toml
+
+  ```
+  [dependencies]
+  proconio = "0.4.1"
+  ```
+
+  * main.rs
+
+  ```rust
+  use proconio::input;
+  ```
+
 ### github
 
 * [ghmagazine](https://github.com/ghmagazine/rustbook)
