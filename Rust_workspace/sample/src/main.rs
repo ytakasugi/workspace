@@ -27,4 +27,6 @@ let c = |x| {
 
 println!("x is {}", c(9));
 
+println!("b is {}", b'0');
+
 }
