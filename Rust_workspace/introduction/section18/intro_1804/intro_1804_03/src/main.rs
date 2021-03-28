@@ -1,3 +1,10 @@
+/*
+元のエラーを維持しながらシンプルなコードを書くには、Boxしてしまうと良いでしょう。
+欠点として、元のエラー型はランタイムまで判明せず、静的に決定されないことが挙げられます。
+標準ライブラリはBoxに、Fromを介してあらゆるErrorトレートを実装した型から
+Box<Error>トレイトオブジェクトへの変換を実装させることで、エラーをboxしやすくしてくれます。
+*/
+
 use std::error;
 use std::fmt;
 
@@ -32,7 +39,6 @@ fn double_first(vec: Vec<&str>) -> Result<i32> {
         .and_then(|s| {
             s.parse::<i32>()
                 // `Box`に変換
-                // 
                 .map_err(|e| e.into())
                 .map(|i| 2 * i)
         })

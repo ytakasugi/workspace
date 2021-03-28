@@ -831,7 +831,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 
   `String`は`Into<Vec<u8>>`を実装しています。
 
-  指定された型`T`に変換可能なすべての引数を取るジェネリック関数が欲しいことを表現するために，`Into`<T>のtrait boundを使うことができます。例えば 関数`is_hello`は`Vec<u8>`に変換可能なすべての引数を取ります。
+  指定された型`T`に変換可能なすべての引数を取るジェネリック関数が欲しいことを表現するために，`Into`<T>の`trait bound`を使うことができます。例えば 関数`is_hello`は`Vec<u8>`に変換可能なすべての引数を取ります。
 
   ```rust
   fn is_hello<T: Into<Vec<u8>>>(s: T) {
@@ -860,7 +860,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 
   一般的な関数でトレイト境界を指定する場合は、`From`よりも`Into`を使用することをお勧めします。この方法では、`Into`を直接実装した型も引数として使用できます。
 
-  また、エラー処理を行う際にも`From`は非常に便利です。失敗する可能性のある関数を構築する場合、戻り値の型は一般的に `Result<T, E>`の形式になります。`From`形質は、関数が複数のエラー型をカプセル化した単一のエラー型を返すことを可能にすることで、エラー処理を単純化します。詳細については、「例」のセクションや書籍を参照してください。
+  また、エラー処理を行う際にも`From`は非常に便利です。失敗する可能性のある関数を構築する場合、戻り値の型は一般的に `Result<T, E>`の形式になります。`From`は、関数が複数のエラー型をカプセル化した単一のエラー型を返すことを可能にするトレイトことで、エラー処理を単純化します。詳細については、「例」のセクションや書籍を参照してください。
 
   注意：このトレイトは失敗してはいけません。変換に失敗する可能性がある場合は、`TryFrom`を使用してください。
 
@@ -1648,13 +1648,80 @@ struct  Point {
 
     イテレータをコレクションに変換する。
 
-    collect() は、イテレータ可能なものなら何でも受け取り、関連するコレクションに変換することができる。これは標準ライブラリの中でも最も強力なメソッドのひとつで、さまざまなコンテキストで使用されている。
+    `collect()`は、イテレータ可能なものなら何でも受け取り、関連するコレクションに変換することができる。これは標準ライブラリの中でも最も強力なメソッドのひとつで、さまざまなコンテキストで使用されている。
 
-    collect() が使用される最も基本的なパターンは、あるコレクションを別のコレクションに変換すること。コレクションを取得し、それに対して iter を呼び出し、多くの変換を行い、最後に collect() を行う。
+    collect() が使用される最も基本的なパターンは、あるコレクションを別のコレクションに変換すること。コレクションを取得し、それに対して`iter`を呼び出し、多くの変換を行い、最後に collect() を行う。
 
-    collect() は、一般的なコレクションではない型のインスタンスを作成することもできる。例えば、文字列から String を作成したり、Result<T, E> アイテムのイテレータを Result<Collection<T>, E> に収集したりすることができる。詳細は[例](https://doc.rust-lang.org/stable/std/iter/trait.Iterator.html#method.collect)を参照のこと。
+    `collect()`は、一般的なコレクションではない型のインスタンスを作成することもできる。例えば、文字列から`String`を作成したり、`Result<T, E>`アイテムのイテレータを`Result<Collection<T>, E>`に収集したりすることができる。詳細は[例](https://doc.rust-lang.org/stable/std/iter/trait.Iterator.html#method.collect)を参照のこと。
 
-    collect() は非常に一般的なので、型推論の問題を引き起こす可能性がある。そのため、collect() は「ターボフィッシュ」: ::<> として親しまれている構文を目にすることができる数少ないもののひとつである。これは、推論アルゴリズムがどのコレクションにコレクションしようとしているのかを具体的に理解するのに役立つ。
+    `collect()`は非常に一般的なので、型推論の問題を引き起こす可能性がある。そのため、collect() は「ターボフィッシュ」: `::<>`として親しまれている構文を目にすることができる数少ないもののひとつである。これは、推論アルゴリズムがどのコレクションにコレクションしようとしているのかを具体的に理解するのに役立つ。
+
+---
+
+### std::iter::Iterator::filter_map
+
+- Description
+
+  フィルタリングとマップの両方を行うイテレータを作成します。
+
+  返されるイテレータは、与えられたクロージャが`Some(value)``を返すような値だけを生成します。
+
+  `filter_map`を使うと、`filter`と`map`の連鎖をより簡潔にすることができます。以下の例では、`map().filter().map()`を1回の`filter_map`の呼び出しに短縮することができます。
+
+- Example
+
+  Basic usage:
+
+  ```rust
+  let a = ["1", "two", "NaN", "four", "5"];
+  
+  let mut iter = a.iter().filter_map(|s| s.parse().ok());
+  
+  assert_eq!(iter.next(), Some(1));
+  assert_eq!(iter.next(), Some(5));
+  assert_eq!(iter.next(), None);
+  ```
+
+  以下は同じ例ですが、フィルターとマップを使用しています。
+
+  ```rust
+  let a = ["1", "two", "NaN", "four", "5"];
+  let mut iter = a.iter().map(|s| s.parse()).filter(|s| s.is_ok()).map(|s| s.unwrap());
+  assert_eq!(iter.next(), Some(1));
+  assert_eq!(iter.next(), Some(5));
+  assert_eq!(iter.next(), None);
+  ```
+
+
+
+---
+
+### std::iter::Iterator::partition
+
+- Description
+
+  イテレータを消費して、そこから2つのコレクションを作成します。
+
+  `partition()`に渡される述語は、`true`または`false`を返すことができます。 `partition()`は、`true`を返したすべての要素と、`false`を返したすべての要素のペアを返します。
+
+  [`is_partitioned()`](https://doc.rust-lang.org/stable/std/iter/trait.Iterator.html#method.is_partitioned)および[`partition_in_place()`](https://doc.rust-lang.org/stable/std/iter/trait.Iterator.html#method.partition_in_place)も参照してください。
+
+- Example
+
+  ```rust
+  let a = [1, 2, 3];
+  
+  let (even, odd): (Vec<i32>, Vec<i32>) = a
+      .iter()
+      .partition(|&n| n % 2 == 0);
+  
+  assert_eq!(even, vec![2]);
+  assert_eq!(odd, vec![1, 3]);
+  ```
+
+  
+
+
 
 ---
 
