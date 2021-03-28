@@ -58,6 +58,8 @@
 
 * [Rustのライフタイムについてのよくある誤解](https://github.com/pretzelhammer/rust-blog/blob/master/posts/translations/jp/common-rust-lifetime-misconceptions.md)
 
+* [RustCoder](https://zenn.dev/toga/books/rust-atcoder)
+
 ### diesel
 
 * [diesel公式サイト](https://diesel.rs/guides/getting-started/)
