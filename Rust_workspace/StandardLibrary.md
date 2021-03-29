@@ -551,6 +551,8 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 
       繰り返しになりますが、**しばしばポインタに期待される「同じ領域を複数の所有者が共有する」という機能を `Box<T>` は持っていません**。このことに注意して必要なスマートポインタを選ぶのが肝要です。
 
+
+
 ---
 
 ### [std::result](https://doc.rust-lang.org/std/result/index.html)
@@ -683,6 +685,20 @@ CopyトレイトとCloneトレイトの違いを以下に示す
   ```
 
 
+
+---
+
+### unwrap_or_else
+
+  - Description
+
+    標準ライブラリで`Result<T, E>`に定義されている。
+
+    unwrap_or_elseを使用することで、panic!ではない独自のエラーを返すことでができる。
+
+    `Result<T,E>`の結果が`Ok`であれば、`Ok`が包んでいる値を返却する(`unwrap`に似ている)
+
+    値が`Err`値なら、このメソッドはクロージャ内でコードを呼び、クロージャに定義した引数として`unwrap_or_else`に渡す匿名関数である。
 
 ---
 
@@ -1343,6 +1359,64 @@ CopyトレイトとCloneトレイトの違いを以下に示す
   ~~~
 
 
+
+---
+
+### std::cmp::Ord::cmp
+
+- Description
+
+  このメソッドは、`self`と`other`の間の順序を返します。
+
+  慣習的に、`self.cmp(&other)`は、真の場合、式`self <operator> other`に一致する順序を返します。
+
+- Example
+
+  ```rust
+  use std::cmp::Ordering;
+  
+  assert_eq!(5.cmp(&10), Ordering::Less);
+  assert_eq!(10.cmp(&5), Ordering::Greater);
+  assert_eq!(5.cmp(&5), Ordering::Equal);
+  ```
+
+
+
+---
+
+### std::cmp::Ordering::reverse
+
+- Description
+
+  順番を逆にします。
+
+  - 昇順は降順に
+  - 降順は昇順に
+  - 等しいものは等しいままに
+
+- Example
+
+  ```rust
+  use std::cmp::Ordering;
+  
+  assert_eq!(Ordering::Less.reverse(), Ordering::Greater);
+  assert_eq!(Ordering::Equal.reverse(), Ordering::Equal);
+  assert_eq!(Ordering::Greater.reverse(), Ordering::Less);
+  ```
+
+  この方法では、比較対象を逆にすることができます。
+
+  ```rust
+  let data: &mut [_] = &mut [2, 10, 5, 8];
+  
+  // sort the array from largest to smallest.
+  data.sort_by(|a, b| a.cmp(b).reverse());
+  
+  let b: &mut [_] = &mut [10, 8, 5, 2];
+  assert!(data == b);
+  ```
+
+  
 
 ---
 
@@ -2063,31 +2137,7 @@ struct  Point {
 
     この関数は何も返却せず、プロセスを終了するので、現在のスタックや他のスレッドのスタック上のデストラクタは実行されないことに注意すること。クリーンなシャットダウンが必要な場合は、実行するデストラクタがなくなった時点でのみこの関数を呼び出すことを検討すること。
 
----
 
-### unwrap_or_else
-
-  - Description
-
-    標準ライブラリで`Result<T, E>`に定義されている。
-
-    unwrap_or_elseを使用することで、panic!ではない独自のエラーを返すことでができる。
-
-    Result<T,E>の結果がOkであれば、Okが包んでいる値を返却する(unwrapに似ている)
-
-    値がErr値なら、このメソッドはクロージャ内でコードを呼び、クロージャに定義した引数としてunwrap_or_elseに渡す匿名関数である。
-
----
-
-### std::vec::Vec::with_capacity
-
-- Description
-
-  指定された容量の新しい空のVec<T>を作成します。
-
-  Vecは、再割り当てを行わずに正確に容量要素を保持することができます。capacityが0の場合、ベクタは割り当てを行いません。
-
-  返されたベクタは指定された容量を持っていますが、ベクタの長さはゼロになることに注意することが重要です。長さと容量の違いについての説明は、容量と再割り当てを参照してください。
 
 ---
 
@@ -2123,6 +2173,82 @@ struct  Point {
 
   needleがスライスの接尾辞である場合にtrueを返します。
 
+
+
+---
+
+### slice::sort
+
+- Description
+
+  スライスをソートします。
+
+  このソートは安定しており（すなわち、等しい要素を並べ替えない）、最悪の場合`O(n * log(n))`となります。
+
+  不安定なソートは、一般的に安定したソートよりも高速で、補助的なメモリを割り当てないので、適用可能な場合は、不安定なソートが好ましいです。[`sort_unstable`](https://doc.rust-lang.org/stable/std/primitive.slice.html#method.sort_unstable)を参照してください。
+
+- 現在の実装
+
+  現在のアルゴリズムは，[`timsort`](https://en.wikipedia.org/wiki/Timsort)にヒントを得た適応的な反復型マージソートです．これは、スライスがほぼソートされている場合や、2つ以上のソートされたシーケンスを次々と連結して構成されている場合に、非常に高速になるように設計されています。
+
+  また、`self`の半分の大きさの一時ストレージを割り当てますが、短いスライスの場合は、代わりに非割り当ての挿入ソートを使用します。
+
+- Example
+
+  ```rust
+  let mut v = [-5, 4, 1, -3, 2];
+  
+  v.sort();
+  assert!(v == [-5, -3, 1, 2, 4]);
+  ```
+
+  
+
+---
+
+### slice::sort_by
+
+- Description
+
+  スライスをコンパレータ関数でソートします。
+
+  このソートは安定しており（つまり、等しい要素を並べ替えない）、最悪の場合は`O(n * log(n))`です。
+
+  コンパレータ関数は、スライス内の要素の合計順序を定義しなければなりません。順序が合計でない場合、要素の順序は指定されません。順番は、（すべての`a`、`b`、`c`について）である場合、合計の順番です。
+
+  - total and antisymmetric: `a < b`, `a == b`, `a > b` のうちの1つが正確に真で
+  - transitive:`a < b` と`b < c` が含まれるとき `a < c`. 同じことが`==`と`>`にも当てはまります。
+
+  例えば、`f64`は`NaN != NaN`なので`Ord`を実装していませんが、スライスに`NaN`が含まれていないことがわかっている場合は、`partial_cmp`をソート関数として使用することができます。
+
+  ```rust
+  let mut floats = [5f64, 4.0, 1.0, 3.0, 2.0];
+  floats.sort_by(|a, b| a.partial_cmp(b).unwrap());
+  assert_eq!(floats, [1.0, 2.0, 3.0, 4.0, 5.0]);
+  ```
+
+  不安定なソートは、一般的に安定したソートよりも高速で、補助的なメモリを割り当てないため、適用可能な場合は、不安定なソートが推奨されます。[`sort_unstable_by`](https://doc.rust-lang.org/stable/std/primitive.slice.html#method.sort_unstable_by) を参照してください。
+
+- 現在の実装
+
+  現在のアルゴリズムは，[`timsort`](https://en.wikipedia.org/wiki/Timsort)にヒントを得た適応的な反復型マージソートです．これは、スライスがほぼソートされている場合や、2つ以上のソートされたシーケンスを次々と連結して構成されている場合に、非常に高速になるように設計されています。
+
+  また、`self`の半分の大きさの一時ストレージを割り当てますが、短いスライスの場合は、代わりに非割り当ての挿入ソートを使用します。
+
+- Example
+
+  ```rust
+  let mut v = [5, 4, 1, 3, 2];
+  v.sort_by(|a, b| a.cmp(b));
+  assert!(v == [1, 2, 3, 4, 5]);
+  
+  // reverse sorting
+  v.sort_by(|a, b| b.cmp(a));
+  assert!(v == [5, 4, 3, 2, 1]);
+  ```
+
+  
+
 ---
 
 ### slice::iter_mut
@@ -2131,7 +2257,90 @@ struct  Point {
 
   各値を変更できるようにするイテレータを返します。
 
+
+
+---
+
+### std::vec::Vec::dedup
+
+- Description
+
+  [PartialEq](https://doc.rust-lang.org/stable/std/cmp/trait.PartialEq.html)トレイトの実装に従って，ベクトル中の連続した繰り返し要素を削除します。
+
+  `Vec`がソートされている場合は，すべての重複した要素を削除します。
+
+- Example
+
+  ```rust
+  let mut vec = vec![1, 2, 2, 3, 2];
   
+  vec.dedup();
+  
+  assert_eq!(vec, [1, 2, 3, 2]);
+  ```
+
+
+
+---
+
+### std::vec::Vec::with_capacity
+
+- Description
+
+  指定された容量の新しい空の`Vec<T>`を作成します。
+
+  `Vec`は、再割り当てを行わずに正確に容量要素を保持することができます。capacityが0の場合、ベクタは割り当てを行いません。
+
+  返されたベクタは指定された容量を持っていますが、ベクタの長さはゼロになることに注意することが重要です。長さと容量の違いについての説明は、容量と再割り当てを参照してください。
+
+  
+
+  
+
+---
+
+### std::collections::BTreeSet
+
+- Description
+
+  `B-Tree`をベースにしたセットです。
+
+  このコレクションの性能上の利点と欠点についての詳しい説明は、[`BTreeMap`](https://doc.rust-lang.org/stable/std/collections/struct.BTreeMap.html)のドキュメントを参照してください。
+
+  セットの中にあるアイテムが、[`Ord`](https://doc.rust-lang.org/stable/std/cmp/trait.Ord.html)トレイトによって決定される、他のアイテムに対するアイテムの順序が変更されるような方法で変更されることは、論理エラーです。これは通常、[`Cell`](https://doc.rust-lang.org/stable/std/cell/struct.Cell.html)、[`RefCell`](https://doc.rust-lang.org/stable/std/cell/struct.RefCell.html)、グローバルステート、`I/O`、または`unsafe`コードによってのみ可能です。このような論理エラーから生じる動作は規定されていませんが、未定義の動作になることはありません。これには、パニック、不正な結果、アボート、メモリリーク、終了しないことなどが含まれる。
+
+- Example
+
+  ```rust
+  use std::collections::BTreeSet;
+  
+  // Type inference lets us omit an explicit type signature (which
+  // would be `BTreeSet<&str>` in this example).
+  let mut books = BTreeSet::new();
+  
+  // Add some books.
+  books.insert("A Dance With Dragons");
+  books.insert("To Kill a Mockingbird");
+  books.insert("The Odyssey");
+  books.insert("The Great Gatsby");
+  
+  // Check for a specific one.
+  if !books.contains("The Winds of Winter") {
+      println!("We have {} books, but The Winds of Winter ain't one.",
+               books.len());
+  }
+  
+  // Remove a book.
+  books.remove("The Odyssey");
+  
+  // Iterate over everything.
+  for book in &books {
+      println!("{}", book);
+  }
+  ```
+
+  
+
 
 ---
 
