@@ -1702,7 +1702,9 @@ struct  Point {
 
   - これらのトレイトは、どのような種類のイテレータが存在し、それを使って何ができるかを定義します。これらの特徴のメソッドは、特別に勉強する価値があります。
   - 関数は、いくつかの基本的なイテレータを作成するための便利な方法を提供しています。
-  - 構造体は、このモジュールの特性にあるさまざまなメソッドの戻り値の型であることが多いです。通常、構造体自体ではなく、構造体を作成するメソッドを見たくなるでしょう。その理由についての詳細は、「`Iterator`の実装を参照してください。
+  - 構造体は、このモジュールの特性にあるさまざまなメソッドの戻り値の型であることが多いです。通常、構造体自体ではなく、構造体を作成するメソッドを見たくなるでしょう。その理由についての詳細は、`Iterator`の実装を参照してください。
+
+
 
 ---
 
@@ -1724,11 +1726,25 @@ struct  Point {
 
     `collect()`は、イテレータ可能なものなら何でも受け取り、関連するコレクションに変換することができる。これは標準ライブラリの中でも最も強力なメソッドのひとつで、さまざまなコンテキストで使用されている。
 
-    collect() が使用される最も基本的なパターンは、あるコレクションを別のコレクションに変換すること。コレクションを取得し、それに対して`iter`を呼び出し、多くの変換を行い、最後に collect() を行う。
+    `collect()`が使用される最も基本的なパターンは、あるコレクションを別のコレクションに変換すること。コレクションを取得し、それに対して`iter`を呼び出し、多くの変換を行い、最後に`collect()`を行う。
 
     `collect()`は、一般的なコレクションではない型のインスタンスを作成することもできる。例えば、文字列から`String`を作成したり、`Result<T, E>`アイテムのイテレータを`Result<Collection<T>, E>`に収集したりすることができる。詳細は[例](https://doc.rust-lang.org/stable/std/iter/trait.Iterator.html#method.collect)を参照のこと。
 
     `collect()`は非常に一般的なので、型推論の問題を引き起こす可能性がある。そのため、collect() は「ターボフィッシュ」: `::<>`として親しまれている構文を目にすることができる数少ないもののひとつである。これは、推論アルゴリズムがどのコレクションにコレクションしようとしているのかを具体的に理解するのに役立つ。
+
+- Example
+
+  ```rust
+  let a = [1, 2, 3];
+  
+  let doubled: Vec<i32> = a.iter()
+                           .map(|&x| x * 2)
+                           .collect();
+  
+  assert_eq!(vec![2, 4, 6], doubled);
+  ```
+
+  
 
 ---
 
@@ -1986,6 +2002,47 @@ struct  Point {
 
 ---
 
+### std::iter::Iterator::all
+
+- Description
+
+  イテレータのすべての要素が、ある述語にマッチするかどうかをテストします。
+
+  `all()`は、`true`または`false`を返すクロージャを受け取ります。このクロージャをイテレータの各要素に適用し、それらがすべて真を返した場合は、`all()`も真を返します。どれか一つでも偽を返せば、偽を返します。
+
+  `all()`は短絡的です。言い換えれば、偽を見つけたらすぐに処理を停止し、他に何が起こっても結果は偽になるということです。
+
+  空のイテレータはtrueを返します。
+
+- Example
+
+  ```rust
+  let a = [1, 2, 3];
+  
+  assert!(a.iter().all(|&x| x > 0));
+  
+  assert!(!a.iter().all(|&x| x > 2));
+  ```
+
+  Stopping at the first `false`:
+
+  ```rust
+  let a = [1, 2, 3];
+  
+  let mut iter = a.iter();
+  
+  assert!(!iter.all(|&x| x != 2));
+  
+  // we can still use `iter`, as there are more elements.
+  assert_eq!(iter.next(), Some(&3));
+  ```
+
+  
+
+
+
+---
+
 ### std::vec::IntoIter
 
 - Description
@@ -1993,6 +2050,8 @@ struct  Point {
   ベクトルの外に移動するイテレータ。
 
   この構造体は、`[Vec]`の`into_iter`メソッドによって作成されます（`[IntoIterator] trait`によって提供されます）。
+
+  
 
 ---
 
@@ -2013,6 +2072,34 @@ struct  Point {
   vec.extend_from_slice(&[2, 3, 4]);
   assert_eq!(vec, [1, 2, 3, 4]);
   ~~~
+
+
+
+---
+
+### std::iter::Iterator::rev
+
+- Description
+
+  イテレータの方向を反転させます。
+
+  通常、イテレータは左から右に向かって反復します。`rev()`を使うと、イテレータは右から左に向かって反復されます。
+
+  これはイテレータに終端がある場合にのみ可能なので、`rev()`は [DoubleEndedIterator](https://doc.rust-lang.org/stable/std/iter/trait.DoubleEndedIterator.html)でのみ動作します。
+
+- Example
+
+  ```rust
+  let a = [1, 2, 3];
+  
+  let mut iter = a.iter().rev();
+  
+  assert_eq!(iter.next(), Some(&3));
+  assert_eq!(iter.next(), Some(&2));
+  assert_eq!(iter.next(), Some(&1));
+  
+  assert_eq!(iter.next(), None);
+  ```
 
   
 
@@ -2147,7 +2234,63 @@ struct  Point {
 
     与えられたパターンが、この文字列スライスのサブスライスにマッチした場合に真を返す。
     そうでない場合は false を返す。
-    パターンには、&str、char、文字列のスライス、文字がマッチするかどうかを判定する関数やクロージャを指定することができる。
+    パターンには、`&str`、`char`、文字列のスライス、文字がマッチするかどうかを判定する関数やクロージャを指定することができる。
+
+---
+
+### str::chars
+
+- Description
+
+  文字列スライスの[`char`](https://doc.rust-lang.org/stable/std/primitive.char.html)に対するイテレータを返します。
+
+  文字列スライスは有効なUTF-8で構成されているので、文字列スライスを[`char`](https://doc.rust-lang.org/stable/std/primitive.char.html)ごとに反復することができます。このメソッドは、そのようなイテレータを返します。
+
+  [`char`](https://doc.rust-lang.org/stable/std/primitive.char.html)は Unicode Scalar Value を表しており、「文字」の概念とは異なることを覚えておく必要があります。実際に必要なのは、書記素クラスタのイテレータかもしれません。この機能はRustの標準ライブラリでは提供されていないので、代わりにcrates.ioをチェックしてください。
+
+- Example
+
+  ```rust
+  let word = "goodbye";
+  
+  let count = word.chars().count();
+  assert_eq!(7, count);
+  
+  let mut chars = word.chars();
+  
+  assert_eq!(Some('g'), chars.next());
+  assert_eq!(Some('o'), chars.next());
+  assert_eq!(Some('o'), chars.next());
+  assert_eq!(Some('d'), chars.next());
+  assert_eq!(Some('b'), chars.next());
+  assert_eq!(Some('y'), chars.next());
+  assert_eq!(Some('e'), chars.next());
+  
+  assert_eq!(None, chars.next());
+  ```
+
+
+
+---
+
+### slice::windows
+
+- Description
+
+  長さ`size`のすべての連続したウィンドウのイテレータを返します。ウィンドウは重なっています。スライスがsize`よりも短い場合、イテレータは値を返しません。
+
+- Example
+
+  ```rust
+  let slice = ['r', 'u', 's', 't'];
+  let mut iter = slice.windows(2);
+  assert_eq!(iter.next().unwrap(), &['r', 'u']);
+  assert_eq!(iter.next().unwrap(), &['u', 's']);
+  assert_eq!(iter.next().unwrap(), &['s', 't']);
+  assert!(iter.next().is_none());
+  ```
+
+  
 
 ---
 
@@ -2258,6 +2401,28 @@ struct  Point {
   各値を変更できるようにするイテレータを返します。
 
 
+
+---
+
+### slice::iter
+
+- Description
+
+  スライスのイテレータを返します。
+
+- Example
+
+  ```rust
+  let x = &[1, 2, 4];
+  let mut iterator = x.iter();
+  
+  assert_eq!(iterator.next(), Some(&1));
+  assert_eq!(iterator.next(), Some(&2));
+  assert_eq!(iterator.next(), Some(&4));
+  assert_eq!(iterator.next(), None);
+  ```
+
+  
 
 ---
 

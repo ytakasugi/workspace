@@ -19,6 +19,25 @@
   use proconio::input;
   ```
 
+  * 入出力マクロ
+
+  ```rust
+  use std::io::*;
+  use std::str::FromStr;
+
+  fn read<T: FromStr>() -> T {
+    let stdin = stdin();
+    let stdin = stdin.lock();
+    let token: String = stdin
+        .bytes()
+        .map(|c| c.expect("failed to read char") as char) 
+        .skip_while(|c| c.is_whitespace())
+        .take_while(|c| !c.is_whitespace())
+        .collect();
+    token.parse().ok().expect("failed to parse token")
+  }
+  ```
+
 ### github
 
 * [ghmagazine](https://github.com/ghmagazine/rustbook)
@@ -59,6 +78,8 @@
 * [Rustのライフタイムについてのよくある誤解](https://github.com/pretzelhammer/rust-blog/blob/master/posts/translations/jp/common-rust-lifetime-misconceptions.md)
 
 * [RustCoder](https://zenn.dev/toga/books/rust-atcoder)
+
+* [競プロ 典型90問](https://github.com/E869120/kyopro_educational_90)
 
 ### diesel
 
