@@ -1362,6 +1362,44 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 
 ---
 
+### std::cmp::Ord::max
+
+- Description
+
+  2 つの値の最大値を比較して返します。
+
+  比較の結果、2つの値が等しいと判断された場合は、2番目の引数を返します。
+
+- Example
+
+  ```rust
+  assert_eq!(2, 1.max(2));
+  assert_eq!(2, 2.max(2));
+  ```
+
+
+
+---
+
+### std::cmp::Ord::min
+
+- Description
+
+  2 つの値の最小値を比較して返します。
+
+  比較の結果、2 つの値が等しいと判断された場合は、最初の引数を返します。
+
+- Example
+
+  ```rust
+  assert_eq!(1, 1.min(2));
+  assert_eq!(2, 2.min(2));
+  ```
+
+
+
+---
+
 ### std::cmp::Ord::cmp
 
 - Description
@@ -2072,6 +2110,7 @@ struct  Point {
   vec.extend_from_slice(&[2, 3, 4]);
   assert_eq!(vec, [1, 2, 3, 4]);
   ~~~
+
 
 
 
