@@ -81,6 +81,8 @@
 
 * [競プロ 典型90問](https://github.com/E869120/kyopro_educational_90)
 
+* [『Rust Design Patterns』を翻訳してみました（デザインパターン・アンチパターン編）](https://qiita.com/Yappii_111/items/654717e6a6a980722189)
+
 ### diesel
 
 * [diesel公式サイト](https://diesel.rs/guides/getting-started/)
