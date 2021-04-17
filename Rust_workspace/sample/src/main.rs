@@ -29,4 +29,10 @@ println!("x is {}", c(9));
 
 println!("b is {}", b'0');
 
+let d = |z| {
+    z * z * z 
+};
+
+println!("{}", d(3));
+
 }

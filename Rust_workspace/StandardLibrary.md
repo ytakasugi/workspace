@@ -2312,6 +2312,49 @@ struct  Point {
 
 ---
 
+### str::split_whitespace
+
+- Description
+
+  文字列スライスをホワイトスペースで分割します。
+
+  返されるイテレータは、元の文字列スライスのサブスライスで、任意の量のホワイトスペースで区切られた文字列スライスを返します。
+
+  空白」は、Unicode Derived Core Property White_Spaceの条件に従って定義されます。ASCIIホワイトスペースでのみ分割したい場合は、[`split_ascii_whitespace`](https://doc.rust-lang.org/stable/std/primitive.str.html#method.split_ascii_whitespace)を使用してください。
+
+- Example
+
+  Basic Usage:
+
+  ```rust
+  let mut iter = "A few words".split_whitespace();
+  
+  assert_eq!(Some("A"), iter.next());
+  assert_eq!(Some("few"), iter.next());
+  assert_eq!(Some("words"), iter.next());
+  
+  assert_eq!(None, iter.next());
+  ```
+
+  あらゆる種類のホワイトスペースが考慮されます。
+
+  ```rust
+  let mut iter = " Mary   had\ta\u{2009}little  \n\t lamb".split_whitespace();
+  assert_eq!(Some("Mary"), iter.next());
+  assert_eq!(Some("had"), iter.next());
+  assert_eq!(Some("a"), iter.next());
+  assert_eq!(Some("little"), iter.next());
+  assert_eq!(Some("lamb"), iter.next());
+  
+  assert_eq!(None, iter.next());
+  ```
+
+  
+
+
+
+---
+
 ### f64::hypot
 
 - Description
@@ -2579,6 +2622,50 @@ struct  Point {
     この文字列スライスの小文字に相当するものを、新しい [String] として返す。
     `Lowercase`は、Unicode Derived Core Property Lowercaseの条項に従って定義される。
     大文字小文字を変更すると複数の文字に展開されてしまう文字があるため、この関数はパラメータをそのまま変更するのではなく、[String]として返す。
+
+
+
+---
+
+### char::to_digit
+
+- Description
+
+  文字を指定された基数の数字に変換します。
+
+  ここでいう「基数」は、「ベース」と呼ばれることもあります。2の基数は2進数を、10の基数は10進数を、16の基数は16進数を表し、いくつかの一般的な値を示します。任意の基数がサポートされています。
+
+  「桁」は以下の文字のみと定義されています。
+
+  - `0-9`
+  - `a-z`
+  - `A-Z`
+
+- Errors
+
+  `char`が指定された基数の数字を参照していない場合は`None`を返します。
+
+- Panics
+
+  36以上の基数が与えられるとパニックになります。
+
+- Example
+
+  Basic Usage:
+
+  ```rust
+  assert_eq!('1'.to_digit(10), Some(1));
+  assert_eq!('f'.to_digit(16), Some(15));
+  ```
+
+  数字でないものを通過すると失敗します。
+
+  ```rust
+  assert_eq!('f'.to_digit(10), None);
+  assert_eq!('z'.to_digit(16), None);
+  ```
+
+
 
 ---
 
@@ -3354,6 +3441,7 @@ struct  Point {
   
   println!("Hash is {:x}!", hasher.finish());
   ~~~
+
 
 
 
