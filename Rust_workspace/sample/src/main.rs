@@ -1,38 +1,28 @@
-fn main() {
-    let init = 0;
-    let sum = (1 ..= 5).fold(init, |acc, x| acc + x);  // (((((0 + 1) + 2) + 3) + 4) + 5)
-    println!("{}", sum);
+struct Charge {
+    num: i32,
+}
 
-    let maybe_some_string = Some(String::from("Hello, World!"));
-    // `Option::map` takes self *by value*, consuming `maybe_some_string`
-    let maybe_some_len = maybe_some_string.map(|s| s.len());
+impl Charge {
+    fn child_charge(&self) -> i32 {
+        400 * self.num
+    }
 
-    assert_eq!(maybe_some_len, Some(13));
-    println!("{}", maybe_some_len.unwrap());
-
-    let line = "1\n2\n3\n4\n";
-
-// `Ok(n)`の場合、`i * 2`を返し、`Err(e)`の場合は何も返さない
-for num in line.lines() {
-    match num.parse::<i32>().map(|i| i * 2) {
-        Ok(n) => println!("{}", n),
-        Err(..) => {}
+    fn adult_charge(&self) -> i32 {
+        1200 * self.num
     }
 }
 
-// `x`を引数とし、`x`に2乗を返却するクロージャ
-let c = |x| {
-    x * x
-};
+fn main() {
+    // 大人料金
+    let num = 2;
+    let charge = Charge{num};
 
-println!("x is {}", c(9));
+    println!("{}", charge.adult_charge());
 
-println!("b is {}", b'0');
+    // 子供料金
+    let num = 3;
+    let charge = Charge{num};
 
-let d = |z| {
-    z * z * z 
-};
-
-println!("{}", d(3));
+    println!("{}", charge.child_charge());
 
 }
