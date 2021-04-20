@@ -83,6 +83,8 @@
 
 * [『Rust Design Patterns』を翻訳してみました（デザインパターン・アンチパターン編）](https://qiita.com/Yappii_111/items/654717e6a6a980722189)
 
+* [Rust の最初のステップ](https://docs.microsoft.com/ja-jp/learn/paths/rust-first-steps/)
+
 ### diesel
 
 * [diesel公式サイト](https://diesel.rs/guides/getting-started/)

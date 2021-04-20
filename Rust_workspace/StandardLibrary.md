@@ -3032,8 +3032,8 @@ struct  Point {
   ```rust
   use std::collections::HashMap;
   
-  // Type inference lets us omit an explicit type signature (which
-  // would be `HashMap<String, String>` in this example).
+  // 型推論では，明示的な型シグネチャを省略することができます
+  // この例では `HashMap<String, String>` となります
   let mut book_reviews = HashMap::new();
   
   // Review some books.
@@ -3054,18 +3054,18 @@ struct  Point {
       "Eye lyked it alot.".to_string(),
   );
   
-  // Check for a specific one.
-  // When collections store owned values (String), they can still be
-  // queried using references (&str).
+  // 特定のものをチェックします。
+  // コレクションが所有する値(String)を格納している場合でも、
+  // 参照(&str)を使用して照会することができます。
   if !book_reviews.contains_key("Les Misérables") {
       println!("We've got {} reviews, but Les Misérables ain't one.",
                book_reviews.len());
   }
   
-  // oops, this review has a lot of spelling mistakes, let's delete it.
+  // おっと、このレビューは誤字脱字が多いので削除しましょう。
   book_reviews.remove("The Adventures of Sherlock Holmes");
   
-  // Look up the values associated with some keys.
+  // いくつかのキーに関連する値を調べる。
   let to_find = ["Pride and Prejudice", "Alice's Adventure in Wonderland"];
   for &book in &to_find {
       match book_reviews.get(book) {
@@ -3074,7 +3074,7 @@ struct  Point {
       }
   }
   
-  // Look up the value for a key (will panic if the key is not found).
+  // キーの値を検索します（キーが見つからない場合はパニックになります）。
   println!("Review for Jane: {}", book_reviews["Pride and Prejudice"]);
   
   // Iterate over everything.
