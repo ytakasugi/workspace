@@ -1,58 +1,32 @@
-trait AsJson {
-    fn as_json(&self) -> String;
-}
-
-// この関数は、`AsJson`を実装する任意の型を引数とすることができる
-fn send_data_as_json(value: &impl AsJson) {
-    println!("Sending JSON data to server...");
-    println!("-> {}", value.as_json());
-    println!("Done!\n");
-}
-
-struct Person {
-    name: String,
-    age: u8,
-    favorite_fruit: String,
-}
-
-struct Dog {
-    name: String,
-    color: String,
-    likes_petting: bool,
-}
-
-impl AsJson for Person {
-    fn as_json(&self) -> String {
-        format!(
-            r#"{{ "type": "person", "name": "{}", "age": {}, "favoriteFruit": "{}" }}"#,
-            self.name, self.age, self.favorite_fruit
-        )
-    }
-}
-
-impl AsJson for Dog {
-    fn as_json(&self) -> String {
-        format!(
-            r#"{{ "type": "dog", "name": "{}", "color": "{}", "likesPetting": {} }}"#,
-            self.name, self.color, self.likes_petting
-        )
-    }
-}
-
 fn main() {
-    let laura = Person {
-        name: String::from("Laura"),
-        age: 31,
-        favorite_fruit: String::from("apples"),
-    };
+    let number = Some(7);
+    let letter: Option<i32> = None;
+    let emoticon: Option<i32> = None;
 
-    let fido = Dog {
-        name: String::from("Fido"),
-        color: String::from("Black"),
-        likes_petting: true,
-    };
+    // もしletがnumberをデストラクトした結果が`Some(i)`になるならば
+    // ブロック内(`{}`)を実行する。
+    if let Some(i) = number {
+        println!("Matched {:?}!", i);
+    }
 
-    send_data_as_json(&laura);
-    send_data_as_json(&fido);
+    // デストラクトした結果が`Some()`にならない場合の処理を明示したい場合、`else`を使用する。
+    if let Some(i) = letter {
+        println!("Matched {:?}!", i);
+    } else {
+        // デストラクト失敗の場合。このブロック内を実行
+        println!("Didn't match a number. Let's go with a letter!");
+    }
 
+    // デストラクト失敗時の処理を更に分岐させることもできる
+    let i_like_letters = false;
+
+    if let Some(i) = emoticon {
+        println!("Matched {:?}!", i);
+    // デストラクト失敗。`else if`を評価し、処理をさらに分岐させる。
+    } else if i_like_letters {
+        println!("Didn't match a number. Let's go with a letter!");
+    } else {
+        // 今回は`else if`の評価がfalseなので、このブロック内がデフォルト
+        println!("I don't like letters. Let's go with an emoticon :)!");
+    }
 }
