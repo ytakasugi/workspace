@@ -1,0 +1,12 @@
+E:\000_GitHub\workspace\Rust_workspace\plotters_sample\target\debug\deps\gif-92b3b503c9554346.rmeta: C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\lib.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\traits.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\common.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\reader\mod.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\reader\decoder.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\encoder.rs
+
+E:\000_GitHub\workspace\Rust_workspace\plotters_sample\target\debug\deps\libgif-92b3b503c9554346.rlib: C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\lib.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\traits.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\common.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\reader\mod.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\reader\decoder.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\encoder.rs
+
+E:\000_GitHub\workspace\Rust_workspace\plotters_sample\target\debug\deps\gif-92b3b503c9554346.d: C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\lib.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\traits.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\common.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\reader\mod.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\reader\decoder.rs C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\encoder.rs
+
+C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\lib.rs:
+C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\traits.rs:
+C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\common.rs:
+C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\reader\mod.rs:
+C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\reader\decoder.rs:
+C:\Users\sigur\.cargo\registry\src\github.com-1ecc6299db9ec823\gif-0.10.3\src\encoder.rs:
