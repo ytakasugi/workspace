@@ -89,6 +89,8 @@
 
 * [Rustのパターンマッチを完全に理解した](https://frozenlib.net/blog/2018-03-11_rust-pattern-match/)
 
+* [Plotters Developer Guide](https://plotters-rs.github.io/book/intro/introduction.html)
+
 ### diesel
 
 * [diesel公式サイト](https://diesel.rs/guides/getting-started/)
