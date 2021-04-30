@@ -1,4 +1,4 @@
-### 標準ライブラリ
+# 標準ライブラリ
 
 本テキストは、Rustを学習していく中で使用する標準ライブラリについて、記載していく。
 
@@ -58,27 +58,13 @@
   デフォルトでは、`match`文は可能な限りの値を消費しますが、値を移動して所有する必要がない場合には問題になることがあります。
 
   ~~~rust
-  let maybe_name = Some(String::from("Alice"));
-  // The variable 'maybe_name' is consumed here ...
-  match maybe_name {
-      Some(n) => println!("Hello, {}", n),
-      _ => println!("Hello, world"),
-  }
-  // ... and is now unavailable.
-  println!("Hello again, {}", maybe_name.unwrap_or("world".into()));
+  let maybe_name = Some(String::from("Alice"));// The variable 'maybe_name' is consumed here ...match maybe_name {    Some(n) => println!("Hello, {}", n),    _ => println!("Hello, world"),}// ... and is now unavailable.println!("Hello again, {}", maybe_name.unwrap_or("world".into()));
   ~~~
 
   `ref`キーワードを使用すると、値は借用されるだけで、移動されることはありません。
 
   ~~~rust
-  let maybe_name = Some(String::from("Alice"));
-  // Using `ref`, the value is borrowed, not moved ...
-  match maybe_name {
-      Some(ref n) => println!("Hello, {}", n),
-      _ => println!("Hello, world"),
-  }
-  // ... so it's available here!
-  println!("Hello again, {}", maybe_name.unwrap_or("world".into()));
+  let maybe_name = Some(String::from("Alice"));// Using `ref`, the value is borrowed, not moved ...match maybe_name {    Some(ref n) => println!("Hello, {}", n),    _ => println!("Hello, world"),}// ... so it's available here!println!("Hello again, {}", maybe_name.unwrap_or("world".into()));
   ~~~
 
 - `&` vs `ref`
@@ -170,13 +156,7 @@
     - Example
 
       ~~~rust
-      fn call_with_one<F>(func: F) -> usize
-          where F: Fn(usize) -> usize {
-          func(1)
-      }
-      
-      let double = |x| x * 2;
-      assert_eq!(call_with_one(double), 2);
+      fn call_with_one<F>(func: F) -> usize    where F: Fn(usize) -> usize {    func(1)}let double = |x| x * 2;assert_eq!(call_with_one(double), 2);
       ~~~
 
 - ### FnMut
@@ -188,20 +168,7 @@
     - Example
 
       ~~~rust
-      fn do_twice<F>(mut func: F)
-          where F: FnMut()
-      {
-          func();
-          func();
-      }
-      
-      let mut x: usize = 1;
-      {
-          let add_two_to_x = || x += 2;
-          do_twice(add_two_to_x);
-      }
-      
-      assert_eq!(x, 5);
+      fn do_twice<F>(mut func: F)    where F: FnMut(){    func();    func();}let mut x: usize = 1;{    let add_two_to_x = || x += 2;    do_twice(add_two_to_x);}assert_eq!(x, 5);
       ~~~
 
 - ### FnOnce
@@ -213,24 +180,7 @@
     - Example
 
       ~~~rust
-      fn consume_with_relish<F>(func: F)
-          where F: FnOnce() -> String
-      {
-          // `func` consumes its captured variables, so it cannot be run more
-          // than once.
-          println!("Consumed: {}", func());
-      
-          println!("Delicious!");
-      
-          // Attempting to invoke `func()` again will throw a `use of moved
-          // value` error for `func`.
-      }
-      
-      let x = String::from("x");
-      let consume_and_return_x = move || x;
-      consume_with_relish(consume_and_return_x);
-      
-      // `consume_and_return_x` can no longer be invoked at this point
+      fn consume_with_relish<F>(func: F)    where F: FnOnce() -> String{    // `func` consumes its captured variables, so it cannot be run more    // than once.    println!("Consumed: {}", func());    println!("Delicious!");    // Attempting to invoke `func()` again will throw a `use of moved    // value` error for `func`.}let x = String::from("x");let consume_and_return_x = move || x;consume_with_relish(consume_and_return_x);// `consume_and_return_x` can no longer be invoked at this point
       ~~~
 
 ---
@@ -256,11 +206,7 @@
   一般的な構造体の場合，#[derive]は一般的なパラメータにバインドされたCloneを追加することで条件付きでCloneを実装します．
 
   ~~~rust
-  // `derive` implements Clone for Reading<T> when T is Clone.
-  #[derive(Clone)]
-  struct Reading<T> {
-      frequency: T,
-  }
+  // `derive` implements Clone for Reading<T> when T is Clone.#[derive(Clone)]struct Reading<T> {    frequency: T,}
   ~~~
 
 - Cloneを実装するには
@@ -270,15 +216,7 @@
   例として、関数ポインタを保持する汎用構造体があります。この場合、Cloneの実装は派生できませんが、次のように実装することができます。
 
   ~~~rust
-  struct Generate<T>(fn() -> T);
-  
-  impl<T> Copy for Generate<T> {}
-  
-  impl<T> Clone for Generate<T> {
-      fn clone(&self) -> Self {
-          *self
-      }
-  }
+  struct Generate<T>(fn() -> T);impl<T> Copy for Generate<T> {}impl<T> Clone for Generate<T> {    fn clone(&self) -> Self {        *self    }}
   ~~~
 
 - クローントレイトを実装する型
@@ -298,34 +236,14 @@
     デフォルトでは、変数バインディングは`move semantics`を持っています。言い換えれば
 
   ~~~rust
-  #[derive(Debug)]
-struct Foo;
-
-let x = Foo;
-
-let y = x;
-
-// `x` has moved into `y`, and so cannot be used
-
-// println!("{:?}", x); // error: use of moved value
+  #[derive(Debug)]struct Foo;let x = Foo;let y = x;// `x` has moved into `y`, and so cannot be used// println!("{:?}", x); // error: use of moved value
   ~~~
 
 
   しかし、型がCopyを実装している場合は、代わりに'copy semantics'を持つことになります。
 
   ~~~rust
-  // We can derive a `Copy` implementation. `Clone` is also required, as it's
-// a supertrait of `Copy`.
-#[derive(Debug, Copy, Clone)]
-struct Foo;
-
-let x = Foo;
-
-let y = x;
-
-// `y` is a copy of `x`
-
-println!("{:?}", x); // A-OK!
+  // We can derive a `Copy` implementation. `Clone` is also required, as it's// a supertrait of `Copy`.#[derive(Debug, Copy, Clone)]struct Foo;let x = Foo;let y = x;// `y` is a copy of `x`println!("{:?}", x); // A-OK!
   ~~~
 
   これら2つの例では、唯一の違いは、代入後にxへのアクセスが許可されているかどうかだけであることに注意することが重要です。この2つの例では、コピーと移動の両方がメモリ内にビットがコピーされる結果になることがありますが、これは時々最適化されています。
@@ -334,22 +252,13 @@ println!("{:?}", x); // A-OK!
     型にコピーを実装するには2つの方法があります。最も単純なのは`derive`を使用することです。
 
    ~~~rust
-   #[derive(Copy, Clone)]
-struct MyStruct;
+   #[derive(Copy, Clone)]struct MyStruct;
    ~~~
 
   コピーとクローンを手動で実装することもできます。
 
   ~~~rust 
-  struct MyStruct;
-
-impl Copy for MyStruct { }
-
-impl Clone for MyStruct {
-    fn clone(&self) -> MyStruct {
-        *self
-    }
-}
+  struct MyStruct;impl Copy for MyStruct { }impl Clone for MyStruct {    fn clone(&self) -> MyStruct {        *self    }}
   ~~~
 
   この2つの間には小さな違いがあります: `derive`戦略では型のパラメータにも`Copy`が適用されますが、これは必ずしも望ましいものではありません。
@@ -365,19 +274,13 @@ impl Clone for MyStruct {
     型は、そのコンポーネントのすべてがCopyを実装している場合にCopyを実装できます。例えば、この構造体はCopyにすることができます。
 
     ~~~rust
-    #[derive(Copy, Clone)]
-    struct Point {
-       x: i32,
-       y: i32,
-    }
+    #[derive(Copy, Clone)]struct Point {   x: i32,   y: i32,}
     ~~~
 
     構造体は`Copy`である可能性があり、`i32`は`Copy`であるため、PointはCopyになる資格があります。これに対して、次のように考えてみましょう。
 
     ~~~rust
-    struct PointList {
-        points: Vec<Point>,
-    }
+    struct PointList {    points: Vec<Point>,}
     ~~~
 
     構造体`PointList`は、`Vec<T>` が `Copy`ではないので、`Copy`を実装できません。`Copy`の実装を導出しようとすると、エラーが発生します。
@@ -389,10 +292,7 @@ impl Clone for MyStruct {
     共有参照`(&T)`も`Copy`なので、型が`Copy`ではない型Tの共有参照を保持していても、型はCopyになることができます。次の構造体を考えてみましょう。これは、上から見ても`Copy`ではない型`PointList`の共有参照を保持しているだけなので、`Copy`を実装することができます。
 
     ~~~rust
-    #[derive(Copy, Clone)]
-    struct PointListWrapper<'a> {
-        point_list_ref: &'a PointList,
-    }
+    #[derive(Copy, Clone)]struct PointListWrapper<'a> {    point_list_ref: &'a PointList,}
     ~~~
 
 - 型がコピーできないのはどんなときか
@@ -451,20 +351,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
   関数ポインタで行うと、関数を引数として他の関数に渡して使用できます。関数は、型`fn`(小文字のfです)に型強制されます。 `Fn`クロージャトレイトと混同すべきではありません。`fn`型は、*関数ポインタ*と呼ばれます。 引数が関数ポインタであると指定する記法は、クロージャのものと似ています。
 
   ~~~rust
-  fn add_one(x: i32) -> i32 {
-      x + 1
-  }
-  
-  fn do_twice(f: fn(i32) -> i32, arg: i32) -> i32 {
-      f(arg) + f(arg)
-  }
-  
-  fn main() {
-      let answer = do_twice(add_one, 5);
-  
-      // 答えは{}
-      println!("The answer is: {}", answer);
-  }
+  fn add_one(x: i32) -> i32 {    x + 1}fn do_twice(f: fn(i32) -> i32, arg: i32) -> i32 {    f(arg) + f(arg)}fn main() {    let answer = do_twice(add_one, 5);    // 答えは{}    println!("The answer is: {}", answer);}
   ~~~
 
 ---
@@ -564,10 +451,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
   `Result<T, E>`は、エラーを返したり伝播させたりするのに使われる型です。これは、成功を表し、値を含む`Ok(T)`と、エラーを表し、エラー値を含む`Err(E)`という変種を持つ列挙型です。
 
   ```rust
-  enum Result<T, E> {
-     Ok(T),
-     Err(E),
-  }
+  enum Result<T, E> {   Ok(T),   Err(E),}
   ```
 
   関数は、エラーが予想され、回復可能な場合は常に`Result`を返します。`std`クレートでは、`Result`は`I/O`で最も顕著に使用されます。
@@ -575,47 +459,13 @@ CopyトレイトとCloneトレイトの違いを以下に示す
   `Result`を返す単純な関数は、次のように定義して使用することができます。
 
   ```rust
-  #[derive(Debug)]
-  enum Version { Version1, Version2 }
-  
-  fn parse_version(header: &[u8]) -> Result<Version, &'static str> {
-      match header.get(0) {
-          None => Err("invalid header length"),
-          Some(&1) => Ok(Version::Version1),
-          Some(&2) => Ok(Version::Version2),
-          Some(_) => Err("invalid version"),
-      }
-  }
-  
-  let version = parse_version(&[1, 2, 3, 4]);
-  match version {
-      Ok(v) => println!("working with version: {:?}", v),
-      Err(e) => println!("error parsing header: {:?}", e),
-  }
+  #[derive(Debug)]enum Version { Version1, Version2 }fn parse_version(header: &[u8]) -> Result<Version, &'static str> {    match header.get(0) {        None => Err("invalid header length"),        Some(&1) => Ok(Version::Version1),        Some(&2) => Ok(Version::Version2),        Some(_) => Err("invalid version"),    }}let version = parse_version(&[1, 2, 3, 4]);match version {    Ok(v) => println!("working with version: {:?}", v),    Err(e) => println!("error parsing header: {:?}", e),}
   ```
 
   `Result`のパターンマッチは、単純なケースでは明確でわかりやすいですが、`Result`には、より簡潔に扱うことができる便利なメソッドがいくつかあります。
 
   ```rust
-  let good_result: Result<i32, i32> = Ok(10);
-  let bad_result: Result<i32, i32> = Err(10);
-  
-  // `is_ok`と`is_err`メソッドは、その言葉通りの働きをします。
-  assert!(good_result.is_ok() && !good_result.is_err());
-  assert!(bad_result.is_err() && !bad_result.is_ok());
-  
-  // `map` は `Result` を消費して別のものを生成します。
-  let good_result: Result<i32, i32> = good_result.map(|i| i + 1);
-  let bad_result: Result<i32, i32> = bad_result.map(|i| i - 1);
-  
-  //  計算を続けるには `and_then` を使います。
-  let good_result: Result<bool, i32> = good_result.and_then(|i| Ok(i == 11));
-  
-  // エラーの処理には `or_else` を使用します。
-  let bad_result: Result<i32, i32> = bad_result.or_else(|i| Ok(i + 20));
-  
-  // 結果を取り込み、その内容を `unwrap` で返します。
-  let final_awesome_result = good_result.unwrap();
+  let good_result: Result<i32, i32> = Ok(10);let bad_result: Result<i32, i32> = Err(10);// `is_ok`と`is_err`メソッドは、その言葉通りの働きをします。assert!(good_result.is_ok() && !good_result.is_err());assert!(bad_result.is_err() && !bad_result.is_ok());// `map` は `Result` を消費して別のものを生成します。let good_result: Result<i32, i32> = good_result.map(|i| i + 1);let bad_result: Result<i32, i32> = bad_result.map(|i| i - 1);//  計算を続けるには `and_then` を使います。let good_result: Result<bool, i32> = good_result.and_then(|i| Ok(i == 11));// エラーの処理には `or_else` を使用します。let bad_result: Result<i32, i32> = bad_result.or_else(|i| Ok(i + 20));// 結果を取り込み、その内容を `unwrap` で返します。let final_awesome_result = good_result.unwrap();
   ```
 
   
@@ -633,14 +483,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 - Example
 
   ~~~rust
-  let line = "1\n2\n3\n4\n";
-  
-  for num in line.lines() {
-      match num.parse::<i32>().map(|i| i * 2) {
-          Ok(n) => println!("{}", n),
-          Err(..) => {}
-      }
-  }
+  let line = "1\n2\n3\n4\n";for num in line.lines() {    match num.parse::<i32>().map(|i| i * 2) {        Ok(n) => println!("{}", n),        Err(..) => {}    }}
   ~~~
 
 ---
@@ -675,13 +518,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 - Example
 
   ```rust
-  fn stringify(x: u32) -> String { format!("error code: {}", x) }
-  
-  let x: Result<u32, u32> = Ok(2);
-  assert_eq!(x.map_err(stringify), Ok(2));
-  
-  let x: Result<u32, u32> = Err(13);
-  assert_eq!(x.map_err(stringify), Err("error code: 13".to_string()))
+  fn stringify(x: u32) -> String { format!("error code: {}", x) }let x: Result<u32, u32> = Ok(2);assert_eq!(x.map_err(stringify), Ok(2));let x: Result<u32, u32> = Err(13);assert_eq!(x.map_err(stringify), Err("error code: 13".to_string()))
   ```
 
 
@@ -724,11 +561,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
   `Option<String>`を`Option<usize>`に変換し、オリジナルを保持します。`map`メソッドは`self`引数を値で受け取り、オリジナルを消費するので、このテクニックでは `as_ref`を使用して、まず`Option`をオリジナル内部の値への参照にします。
 
   ~~~rust
-  let text: Option<String> = Some("Hello, world!".to_string());
-  // First, cast `Option<String>` to `Option<&String>` with `as_ref`,
-  // then consume *that* with `map`, leaving `text` on the stack.
-  let text_length: Option<usize> = text.as_ref().map(|s| s.len());
-  println!("still can print text: {:?}", text);
+  let text: Option<String> = Some("Hello, world!".to_string());// First, cast `Option<String>` to `Option<&String>` with `as_ref`,// then consume *that* with `map`, leaving `text` on the stack.let text_length: Option<usize> = text.as_ref().map(|s| s.len());println!("still can print text: {:?}", text);
   ~~~
 
 
@@ -746,11 +579,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 - Example
 
   ```rust
-  let x = Some("foo");
-  assert_eq!(x.map_or(42, |v| v.len()), 3);
-  
-  let x: Option<&str> = None;
-  assert_eq!(x.map_or(42, |v| v.len()), 42);
+  let x = Some("foo");assert_eq!(x.map_or(42, |v| v.len()), 3);let x: Option<&str> = None;assert_eq!(x.map_or(42, |v| v.len()), 42);
   ```
 
 
@@ -769,11 +598,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 - Example
 
   ```rust
-  let x = Some("foo");
-  assert_eq!(x.ok_or(0), Ok("foo"));
-  
-  let x: Option<&str> = None;
-  assert_eq!(x.ok_or(0), Err(0));
+  let x = Some("foo");assert_eq!(x.ok_or(0), Ok("foo"));let x: Option<&str> = None;assert_eq!(x.ok_or(0), Err(0));
   ```
 
 
@@ -789,11 +614,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 - Example
 
   ```rust
-  let x = Some("foo");
-  assert_eq!(x.ok_or_else(|| 0), Ok("foo"));
-  
-  let x: Option<&str> = None;
-  assert_eq!(x.ok_or_else(|| 0), Err(0));
+  let x = Some("foo");assert_eq!(x.ok_or_else(|| 0), Ok("foo"));let x: Option<&str> = None;assert_eq!(x.ok_or_else(|| 0), Err(0));
   ```
 
 
@@ -822,23 +643,13 @@ CopyトレイトとCloneトレイトの違いを以下に示す
   Rust 1.41以前では、目的の型が現在のクレートに含まれていない場合、`From`を直接実装することはできませんでした。例えば、このコードを見てみましょう。
 
   ```rust
-  struct Wrapper<T>(Vec<T>);
-  impl<T> From<Wrapper<T>> for Vec<T> {
-      fn from(w: Wrapper<T>) -> Vec<T> {
-          w.0
-      }
-  }
+  struct Wrapper<T>(Vec<T>);impl<T> From<Wrapper<T>> for Vec<T> {    fn from(w: Wrapper<T>) -> Vec<T> {        w.0    }}
   ```
 
   これは古いバージョンの言語ではコンパイルできません。これを回避するために、Intoを直接実装することができます。
 
   ```rust
-  struct Wrapper<T>(Vec<T>);
-  impl<T> Into<Vec<T>> for Wrapper<T> {
-      fn into(self) -> Vec<T> {
-          self.0
-      }
-  }
+  struct Wrapper<T>(Vec<T>);impl<T> Into<Vec<T>> for Wrapper<T> {    fn into(self) -> Vec<T> {        self.0    }}
   ```
 
   重要なのは、`Into`は`From`の実装を提供していないということです（`From`が`Into`を実装するように）。したがって、常に`From`の実装を試み、`From`が実装できない場合には`Into`にフォールバックする必要があります。
@@ -850,13 +661,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
   指定された型`T`に変換可能なすべての引数を取るジェネリック関数が欲しいことを表現するために，`Into`<T>の`trait bound`を使うことができます。例えば 関数`is_hello`は`Vec<u8>`に変換可能なすべての引数を取ります。
 
   ```rust
-  fn is_hello<T: Into<Vec<u8>>>(s: T) {
-     let bytes = b"hello".to_vec();
-     assert_eq!(bytes, s.into());
-  }
-  
-  let s = "hello".to_string();
-  is_hello(s);
+  fn is_hello<T: Into<Vec<u8>>>(s: T) {   let bytes = b"hello".to_vec();   assert_eq!(bytes, s.into());}let s = "hello".to_string();is_hello(s);
   ```
 
   
@@ -892,41 +697,13 @@ CopyトレイトとCloneトレイトの違いを以下に示す
   `str`から`String`への明示的な変換は以下のように行われます。
 
   ~~~rust
-  let string = "hello".to_string();
-  let other_string = String::from("hello");
-  
-  assert_eq!(string, other_string);
+  let string = "hello".to_string();let other_string = String::from("hello");assert_eq!(string, other_string);
   ~~~
 
   エラー処理を行う際に、独自のエラー型のために `From`を実装すると便利なことがよくあります。基礎となるエラー型を、基礎となるエラー型をカプセル化した独自のカスタムエラー型に変換することで、基礎となる原因に関する情報を失うことなく、単一のエラー型を返すことができます。演算子は、`From`を実装する際に自動的に提供される`Into<CliError>::into`を呼び出すことで、基礎となるエラー型を独自のエラー型に自動的に変換します。コンパイラは、`Into`のどの実装が使用されるべきかを推測します。
 
   ~~~rust
-  use std::fs;
-  use std::io;
-  use std::num;
-  
-  enum CliError {
-      IoError(io::Error),
-      ParseError(num::ParseIntError),
-  }
-  
-  impl From<io::Error> for CliError {
-      fn from(error: io::Error) -> Self {
-          CliError::IoError(error)
-      }
-  }
-  
-  impl From<num::ParseIntError> for CliError {
-      fn from(error: num::ParseIntError) -> Self {
-          CliError::ParseError(error)
-      }
-  }
-  
-  fn open_and_parse_file(file_name: &str) -> Result<i32, CliError> {
-      let mut contents = fs::read_to_string(&file_name)?;
-      let num: i32 = contents.trim().parse()?;
-      Ok(num)
-  }
+  use std::fs;use std::io;use std::num;enum CliError {    IoError(io::Error),    ParseError(num::ParseIntError),}impl From<io::Error> for CliError {    fn from(error: io::Error) -> Self {        CliError::IoError(error)    }}impl From<num::ParseIntError> for CliError {    fn from(error: num::ParseIntError) -> Self {        CliError::ParseError(error)    }}fn open_and_parse_file(file_name: &str) -> Result<i32, CliError> {    let mut contents = fs::read_to_string(&file_name)?;    let num: i32 = contents.trim().parse()?;    Ok(num)}
   ~~~
 
   
@@ -970,19 +747,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
   - Example
 
     ~~~rust
-    use std::io::prelude::*;
-    use std::io::BufReader;
-    use std::fs::File;
-    
-    fn main() -> std::io::Result<()> {
-        let f = File::open("log.txt")?;
-        let mut reader = BufReader::new(f);
-    
-        let mut line = String::new();
-        let len = reader.read_line(&mut line)?;
-        println!("First line is {} bytes long", len);
-        Ok(())
-    }
+    use std::io::prelude::*;use std::io::BufReader;use std::fs::File;fn main() -> std::io::Result<()> {    let f = File::open("log.txt")?;    let mut reader = BufReader::new(f);    let mut line = String::new();    let len = reader.read_line(&mut line)?;    println!("First line is {} bytes long", len);    Ok(())}
     ~~~
 
   - new関連関数
@@ -1008,17 +773,39 @@ CopyトレイトとCloneトレイトの違いを以下に示す
   
 
   ~~~rust
-  use std::io;
-  
-  fn get_string() -> io::Result<String> {
-      let mut buffer = String::new();
-  
-      io::stdin().read_line(&mut buffer)?;
-  
-      Ok(buffer)
-  }
+  use std::io;fn get_string() -> io::Result<String> {    let mut buffer = String::new();    io::stdin().read_line(&mut buffer)?;    Ok(buffer)}
   ~~~
 
+
+---
+
+### std::io::stdin
+
+- Description
+
+  現在のプロセスの標準入力への新しいハンドルを構築します。
+
+  返される各ハンドルは、ミューテックスを介してアクセスが同期化された共有グローバルバッファへの参照です。ロックをより明確に制御する必要がある場合は、[Stdin::lock](https://doc.rust-lang.org/stable/std/io/struct.Stdin.html#method.lock)メソッドを参照してください。
+
+- Note:Windowsの移植性への配慮
+
+  コンソールで操作する場合、このストリームのWindowsの実装では、UTF-8以外のバイトシーケンスをサポートしていません。有効なUTF-8ではないバイトを読み取ろうとすると、エラーが発生します。
+
+- Example
+
+  Using implicit synchronization:
+
+  ```rust
+  use std::io::{self, Read};fn main() -> io::Result<()> {    let mut buffer = String::new();    io::stdin().read_to_string(&mut buffer)?;    Ok(())}
+  ```
+
+  Using explicit synchronization:
+
+  ```rust
+  use std::io::{self, Read};fn main() -> io::Result<()> {    let mut buffer = String::new();    let stdin = io::stdin();    let mut handle = stdin.lock();    handle.read_to_string(&mut buffer)?;    Ok(())}
+  ```
+
+  
 
 ---
 
@@ -1031,15 +818,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 - Example
 
   ~~~rust
-  let mut x = Some(2);
-  let y = x.take();
-  assert_eq!(x, None);
-  assert_eq!(y, Some(2));
-  
-  let mut x: Option<u32> = None;
-  let y = x.take();
-  assert_eq!(x, None);
-  assert_eq!(y, None);
+  let mut x = Some(2);let y = x.take();assert_eq!(x, None);assert_eq!(y, Some(2));let mut x: Option<u32> = None;let y = x.take();assert_eq!(x, None);assert_eq!(y, None);
   ~~~
 
   
@@ -1078,24 +857,16 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 
     
 
-    	Note:このトレイトは失敗することができない。変換に失敗する可能性がある場合は、Option<T>または      			 Result<T, E>を返す専用のメソッドを使用すること。
+    Note:このトレイトは失敗することができない。変換に失敗する可能性がある場合は、Option<T>またはResult<T, E>を返す専用のメソッドを使用すること。
 
    - Generic Implementations
 
-     AsRef は、内部の型が参照または変異可能な参照である場合に自動参照を行う (例: foo.as_ref() は、foo が &mut Foo または &&mut Foo の型を持っていても同じように動作する)。
+     AsRef は、内部の型が参照または変異可能な参照である場合に自動参照を行う (例: `foo.as_ref()`は、foo が`&mut Foo`または`&&mut Foo`の型を持っていても同じように動作する)。
 
   - Example
 
   ~~~rust
-  fn is_hello<T: AsRef<str>>(s: T) {
-     assert_eq!("hello", s.as_ref());
-  }
-  
-  let s = "hello";
-  is_hello(s);
-  
-  let s = "hello".to_string();
-  is_hello(s);
+fn is_hello<T: AsRef<str>>(s: T) {   assert_eq!("hello", s.as_ref());}let s = "hello";is_hello(s);let s = "hello".to_string();is_hello(s);
   ~~~
 
 ---
@@ -1135,13 +906,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
   - Example
 
     ~~~rust
-    use std::fs;
-    
-    fn main() -> std::io::Result<()> {
-        fs::write("foo.txt", b"Lorem ipsum")?;
-        fs::write("bar.txt", "dolor sit")?;
-        Ok(())
-    }
+    use std::fs;fn main() -> std::io::Result<()> {    fs::write("foo.txt", b"Lorem ipsum")?;    fs::write("bar.txt", "dolor sit")?;    Ok(())}
     ~~~
 
 ---
@@ -1287,17 +1052,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
   導出ストラテジーを使用できない場合は、メソッドを持たない Eq を実装していることを指定します。
 
   ~~~rust
-  enum BookFormat { Paperback, Hardback, Ebook }
-  struct Book {
-      isbn: i32,
-      format: BookFormat,
-  }
-  impl PartialEq for Book {
-      fn eq(&self, other: &Self) -> bool {
-          self.isbn == other.isbn
-      }
-  }
-  　impl Eq for Book {}
+  enum BookFormat { Paperback, Hardback, Ebook }struct Book {    isbn: i32,    format: BookFormat,}impl PartialEq for Book {    fn eq(&self, other: &Self) -> bool {        self.isbn == other.isbn    }}　impl Eq for Book {}
   ~~~
 
 
@@ -1330,32 +1085,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
     ここでは、`id`と名前を無視して身長だけでソートしたい場合の例を示します。
 
   ~~~rust
-  use std::cmp::Ordering;
-  
-  #[derive(Eq)]
-  struct Person {
-      id: u32,
-      name: String,
-      height: u32,
-  }
-  
-  impl Ord for Person {
-      fn cmp(&self, other: &Self) -> Ordering {
-          self.height.cmp(&other.height)
-      }
-  }
-  
-  impl PartialOrd for Person {
-      fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-          Some(self.cmp(other))
-      }
-  }
-  
-  impl PartialEq for Person {
-      fn eq(&self, other: &Self) -> bool {
-          self.height == other.height
-      }
-  }
+  use std::cmp::Ordering;#[derive(Eq)]struct Person {    id: u32,    name: String,    height: u32,}impl Ord for Person {    fn cmp(&self, other: &Self) -> Ordering {        self.height.cmp(&other.height)    }}impl PartialOrd for Person {    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {        Some(self.cmp(other))    }}impl PartialEq for Person {    fn eq(&self, other: &Self) -> bool {        self.height == other.height    }}
   ~~~
 
 
@@ -1373,8 +1103,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 - Example
 
   ```rust
-  assert_eq!(2, 1.max(2));
-  assert_eq!(2, 2.max(2));
+  assert_eq!(2, 1.max(2));assert_eq!(2, 2.max(2));
   ```
 
 
@@ -1392,8 +1121,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 - Example
 
   ```rust
-  assert_eq!(1, 1.min(2));
-  assert_eq!(2, 2.min(2));
+  assert_eq!(1, 1.min(2));assert_eq!(2, 2.min(2));
   ```
 
 
@@ -1411,11 +1139,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 - Example
 
   ```rust
-  use std::cmp::Ordering;
-  
-  assert_eq!(5.cmp(&10), Ordering::Less);
-  assert_eq!(10.cmp(&5), Ordering::Greater);
-  assert_eq!(5.cmp(&5), Ordering::Equal);
+  use std::cmp::Ordering;assert_eq!(5.cmp(&10), Ordering::Less);assert_eq!(10.cmp(&5), Ordering::Greater);assert_eq!(5.cmp(&5), Ordering::Equal);
   ```
 
 
@@ -1435,23 +1159,13 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 - Example
 
   ```rust
-  use std::cmp::Ordering;
-  
-  assert_eq!(Ordering::Less.reverse(), Ordering::Greater);
-  assert_eq!(Ordering::Equal.reverse(), Ordering::Equal);
-  assert_eq!(Ordering::Greater.reverse(), Ordering::Less);
+  use std::cmp::Ordering;assert_eq!(Ordering::Less.reverse(), Ordering::Greater);assert_eq!(Ordering::Equal.reverse(), Ordering::Equal);assert_eq!(Ordering::Greater.reverse(), Ordering::Less);
   ```
 
   この方法では、比較対象を逆にすることができます。
 
   ```rust
-  let data: &mut [_] = &mut [2, 10, 5, 8];
-  
-  // sort the array from largest to smallest.
-  data.sort_by(|a, b| a.cmp(b).reverse());
-  
-  let b: &mut [_] = &mut [10, 8, 5, 2];
-  assert!(data == b);
+  let data: &mut [_] = &mut [2, 10, 5, 8];// sort the array from largest to smallest.data.sort_by(|a, b| a.cmp(b).reverse());let b: &mut [_] = &mut [10, 8, 5, 2];assert!(data == b);
   ```
 
   
@@ -1491,29 +1205,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
     フォーマットが異なっていても、ISBN が一致していれば 2 冊の本が同じ本とみなされるドメインの実装例。
 
     ~~~rust
-    enum BookFormat {
-        Paperback,
-        Hardback,
-        Ebook,
-    }
-    
-    struct Book {
-        isbn: i32,
-        format: BookFormat,
-    }
-    
-    impl PartialEq for Book {
-        fn eq(&self, other: &Self) -> bool {
-            self.isbn == other.isbn
-        }
-    }
-    
-    let b1 = Book { isbn: 3, format: BookFormat::Paperback };
-    let b2 = Book { isbn: 3, format: BookFormat::Ebook };
-    let b3 = Book { isbn: 10, format: BookFormat::Paperback };
-    
-    assert!(b1 == b2);
-    assert!(b1 != b3);
+    enum BookFormat {    Paperback,    Hardback,    Ebook,}struct Book {    isbn: i32,    format: BookFormat,}impl PartialEq for Book {    fn eq(&self, other: &Self) -> bool {        self.isbn == other.isbn    }}let b1 = Book { isbn: 3, format: BookFormat::Paperback };let b2 = Book { isbn: 3, format: BookFormat::Ebook };let b3 = Book { isbn: 10, format: BookFormat::Paperback };assert!(b1 == b2);assert!(b1 != b3);
     ~~~
 
 ---
@@ -1538,56 +1230,13 @@ CopyトレイトとCloneトレイトの違いを以下に示す
     型が`Ord`の場合は、`cmp`を使用して`partial_cmp`を実装することができます。
 
 ~~~rust
-use std::cmp::Ordering;
-
-#[derive(Eq)]
-struct Person {
-    id: u32,
-    name: String,
-    height: u32,
-}
-
-impl PartialOrd for Person {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
-impl Ord for Person {
-    fn cmp(&self, other: &Self) -> Ordering {
-        self.height.cmp(&other.height)
-    }
-}
-
-impl PartialEq for Person {
-    fn eq(&self, other: &Self) -> bool {
-        self.height == other.height
-    }
-}
+use std::cmp::Ordering;#[derive(Eq)]struct Person {    id: u32,    name: String,    height: u32,}impl PartialOrd for Person {    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {        Some(self.cmp(other))    }}impl Ord for Person {    fn cmp(&self, other: &Self) -> Ordering {        self.height.cmp(&other.height)    }}impl PartialEq for Person {    fn eq(&self, other: &Self) -> bool {        self.height == other.height    }}
 ~~~
 
   型のフィールドにpartial_cmpを使用すると便利です。ここでは、浮動小数点の高さのフィールドだけがソートに使用されるフィールドである Person 型の例を示します。
 
 ~~~rust
-use std::cmp::Ordering;
-
-struct Person {
-    id: u32,
-    name: String,
-    height: f64,
-}
-
-impl PartialOrd for Person {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        self.height.partial_cmp(&other.height)
-    }
-}
-
-impl PartialEq for Person {
-    fn eq(&self, other: &Self) -> bool {
-        self.height == other.height
-    }
-}
+use std::cmp::Ordering;struct Person {    id: u32,    name: String,    height: f64,}impl PartialOrd for Person {    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {        self.height.partial_cmp(&other.height)    }}impl PartialEq for Person {    fn eq(&self, other: &Self) -> bool {        self.height == other.height    }}
 ~~~
 
 ---
@@ -1600,33 +1249,20 @@ impl PartialEq for Person {
     ある種のデフォルト値にフォールバックしたい場合がありますが、それが何であるかは特に気にしません。これは、オプションのセットを定義する構造体でよく出てきます。
 
 ~~~rust
-struct SomeOptions {
-    foo: i32,
-    bar: f32,
-}
+struct SomeOptions {    foo: i32,    bar: f32,}
 ~~~
 
 デフォルト値を定義するには、既定値を使用することができます。
 
 ~~~rust
-#[derive(Default)]
-struct SomeOptions {
-    foo: i32,
-    bar: f32,
-}
-
-fn main() {
-    let options: SomeOptions = Default::default();
-}
+#[derive(Default)]struct SomeOptions {    foo: i32,    bar: f32,}fn main() {    let options: SomeOptions = Default::default();}
 ~~~
 
 これで、すべてのデフォルト値を取得できます。Rustは様々なプリミティブ型に対して`Default`を実装しています。
 特定のオプションをオーバーライドしても、他のデフォルト値を保持したい場合。
 
 ~~~rust
-fn main() {
-    let options = SomeOptions { foo: 42, ..Default::default() };
-}
+fn main() {    let options = SomeOptions { foo: 42, ..Default::default() };}
 ~~~
 
   - Derivable
@@ -1636,25 +1272,13 @@ fn main() {
     `default()`メソッドの実装を提供し、デフォルトとなるべき型の値を返すようにします。
 
 ~~~rust
-enum Kind {
-    A,
-    B,
-    C,
-}
-
-impl Default for Kind {
-    fn default() -> Self { Kind::A }
-}
+enum Kind {    A,    B,    C,}impl Default for Kind {    fn default() -> Self { Kind::A }}
 ~~~
 
   - Example
 
   ~~~rust
-  #[derive(Default)]
-struct SomeOptions {
-    foo: i32,
-    bar: f32,
-}
+  #[derive(Default)]struct SomeOptions {    foo: i32,    bar: f32,}
   ~~~
 
 ---
@@ -1672,39 +1296,13 @@ struct SomeOptions {
     ◆実装の導出
 
 ~~~rust
-#[derive(Debug)]
-struct Point {
-    x: i32,
-    y: i32,
-}
-
-let origin = Point { x: 0, y: 0 };
-
-assert_eq!(format!("The origin is: {:?}", origin), "The origin is: Point { x: 0, y: 0 }");
+#[derive(Debug)]struct Point {    x: i32,    y: i32,}let origin = Point { x: 0, y: 0 };assert_eq!(format!("The origin is: {:?}", origin), "The origin is: Point { x: 0, y: 0 }");
 ~~~
 
     　◆手動で実装
 
 ~~~rust
-use std::fmt;
-
-struct Point {
-    x: i32,
-    y: i32,
-}
-
-impl fmt::Debug for Point {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("Point")
-         .field("x", &self.x)
-         .field("y", &self.y)
-         .finish()
-    }
-}
-
-let origin = Point { x: 0, y: 0 };
-
-assert_eq!(format!("The origin is: {:?}", origin), "The origin is: Point { x: 0, y: 0 }");
+use std::fmt;struct Point {    x: i32,    y: i32,}impl fmt::Debug for Point {    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {        f.debug_struct("Point")         .field("x", &self.x)         .field("y", &self.y)         .finish()    }}let origin = Point { x: 0, y: 0 };assert_eq!(format!("The origin is: {:?}", origin), "The origin is: Point { x: 0, y: 0 }");
 ~~~
 
   - Example
@@ -1713,15 +1311,7 @@ assert_eq!(format!("The origin is: {:?}", origin), "The origin is: Point { x: 0,
 - Pretty-printing with `#?`:
 
 ~~~rust
-＃[ derive（Debug）] 
-struct  Point {
-     x：i32、
-     y：i32、
-} let origin = Point { x：0、y：0 }; assert_eq ！（format ！（"原点は：{：＃？}"、origin）、
- "原点は：Point { 
-    x：0、
-    y：0、
-}"）;
+＃[ derive（Debug）] struct  Point {     x：i32、     y：i32、} let origin = Point { x：0、y：0 }; assert_eq ！（format ！（"原点は：{：＃？}"、origin）、 "原点は：Point {     x：0、    y：0、}"）;
 ~~~
 
 ---
@@ -1773,13 +1363,7 @@ struct  Point {
 - Example
 
   ```rust
-  let a = [1, 2, 3];
-  
-  let doubled: Vec<i32> = a.iter()
-                           .map(|&x| x * 2)
-                           .collect();
-  
-  assert_eq!(vec![2, 4, 6], doubled);
+  let a = [1, 2, 3];let doubled: Vec<i32> = a.iter()                         .map(|&x| x * 2)                         .collect();assert_eq!(vec![2, 4, 6], doubled);
   ```
 
   
@@ -1801,23 +1385,13 @@ struct  Point {
   Basic usage:
 
   ```rust
-  let a = ["1", "two", "NaN", "four", "5"];
-  
-  let mut iter = a.iter().filter_map(|s| s.parse().ok());
-  
-  assert_eq!(iter.next(), Some(1));
-  assert_eq!(iter.next(), Some(5));
-  assert_eq!(iter.next(), None);
+  let a = ["1", "two", "NaN", "four", "5"];let mut iter = a.iter().filter_map(|s| s.parse().ok());assert_eq!(iter.next(), Some(1));assert_eq!(iter.next(), Some(5));assert_eq!(iter.next(), None);
   ```
 
   以下は同じ例ですが、フィルターとマップを使用しています。
 
   ```rust
-  let a = ["1", "two", "NaN", "four", "5"];
-  let mut iter = a.iter().map(|s| s.parse()).filter(|s| s.is_ok()).map(|s| s.unwrap());
-  assert_eq!(iter.next(), Some(1));
-  assert_eq!(iter.next(), Some(5));
-  assert_eq!(iter.next(), None);
+  let a = ["1", "two", "NaN", "four", "5"];let mut iter = a.iter().map(|s| s.parse()).filter(|s| s.is_ok()).map(|s| s.unwrap());assert_eq!(iter.next(), Some(1));assert_eq!(iter.next(), Some(5));assert_eq!(iter.next(), None);
   ```
 
 
@@ -1837,14 +1411,7 @@ struct  Point {
 - Example
 
   ```rust
-  let a = [1, 2, 3];
-  
-  let (even, odd): (Vec<i32>, Vec<i32>) = a
-      .iter()
-      .partition(|&n| n % 2 == 0);
-  
-  assert_eq!(even, vec![2]);
-  assert_eq!(odd, vec![1, 3]);
+  let a = [1, 2, 3];let (even, odd): (Vec<i32>, Vec<i32>) = a    .iter()    .partition(|&n| n % 2 == 0);assert_eq!(even, vec![2]);assert_eq!(odd, vec![1, 3]);
   ```
 
   
@@ -1926,34 +1493,19 @@ struct  Point {
     - Basic Usage
 
       ~~~rust
-      let a = [1, 2, 3];
-      
-      let mut iter = a.iter().take(2);
-      
-      assert_eq!(iter.next(), Some(&1));
-      assert_eq!(iter.next(), Some(&2));
-      assert_eq!(iter.next(), None);
+      let a = [1, 2, 3];let mut iter = a.iter().take(2);assert_eq!(iter.next(), Some(&1));assert_eq!(iter.next(), Some(&2));assert_eq!(iter.next(), None);
       ~~~
 
     - `take()`は、無限イテレータを使って有限にするためによく使われる
 
       ~~~ rust
-      let mut iter = (0..).take(3);
-      
-      assert_eq!(iter.next(), Some(0));
-      assert_eq!(iter.next(), Some(1));
-      assert_eq!(iter.next(), Some(2));
-      assert_eq!(iter.next(), None);
+      let mut iter = (0..).take(3);assert_eq!(iter.next(), Some(0));assert_eq!(iter.next(), Some(1));assert_eq!(iter.next(), Some(2));assert_eq!(iter.next(), None);
       ~~~
 
     - 利用可能な要素がn個よりも少ない場合、takeはそれ自身を基礎となるイテレータのサイズに制限します。
 
       ~~~rust
-      let v = vec![1, 2];
-      let mut iter = v.into_iter().take(5);
-      assert_eq!(iter.next(), Some(1));
-      assert_eq!(iter.next(), Some(2));
-      assert_eq!(iter.next(), None);
+      let v = vec![1, 2];let mut iter = v.into_iter().take(5);assert_eq!(iter.next(), Some(1));assert_eq!(iter.next(), Some(2));assert_eq!(iter.next(), None);
       ~~~
 
 ---
@@ -1969,12 +1521,7 @@ struct  Point {
   - Example
 
     ~~~rust
-    let a = [1, 2, 3];
-    
-    let mut iter = a.iter().skip(2);
-    
-    assert_eq!(iter.next(), Some(&3));
-    assert_eq!(iter.next(), None);
+    let a = [1, 2, 3];let mut iter = a.iter().skip(2);assert_eq!(iter.next(), Some(&3));assert_eq!(iter.next(), None);
     ~~~
 
 ---
@@ -2055,24 +1602,13 @@ struct  Point {
 - Example
 
   ```rust
-  let a = [1, 2, 3];
-  
-  assert!(a.iter().all(|&x| x > 0));
-  
-  assert!(!a.iter().all(|&x| x > 2));
+  let a = [1, 2, 3];assert!(a.iter().all(|&x| x > 0));assert!(!a.iter().all(|&x| x > 2));
   ```
 
   Stopping at the first `false`:
 
   ```rust
-  let a = [1, 2, 3];
-  
-  let mut iter = a.iter();
-  
-  assert!(!iter.all(|&x| x != 2));
-  
-  // we can still use `iter`, as there are more elements.
-  assert_eq!(iter.next(), Some(&3));
+  let a = [1, 2, 3];let mut iter = a.iter();assert!(!iter.all(|&x| x != 2));// we can still use `iter`, as there are more elements.assert_eq!(iter.next(), Some(&3));
   ```
 
   
@@ -2106,9 +1642,7 @@ struct  Point {
 - Example
 
   ~~~rust
-  let mut vec = vec![1];
-  vec.extend_from_slice(&[2, 3, 4]);
-  assert_eq!(vec, [1, 2, 3, 4]);
+  let mut vec = vec![1];vec.extend_from_slice(&[2, 3, 4]);assert_eq!(vec, [1, 2, 3, 4]);
   ~~~
 
 
@@ -2129,15 +1663,7 @@ struct  Point {
 - Example
 
   ```rust
-  let a = [1, 2, 3];
-  
-  let mut iter = a.iter().rev();
-  
-  assert_eq!(iter.next(), Some(&3));
-  assert_eq!(iter.next(), Some(&2));
-  assert_eq!(iter.next(), Some(&1));
-  
-  assert_eq!(iter.next(), None);
+  let a = [1, 2, 3];let mut iter = a.iter().rev();assert_eq!(iter.next(), Some(&3));assert_eq!(iter.next(), Some(&2));assert_eq!(iter.next(), Some(&1));assert_eq!(iter.next(), None);
   ```
 
   
@@ -2171,27 +1697,7 @@ struct  Point {
     ジェネリックを使用して`Add trait`を実装した同じ`Point`構造体の例を示します。
 
     ~~~rust
-    use std::ops::Add;
-    
-    #[derive(Debug, Copy, Clone, PartialEq)]
-    struct Point {
-        x: i32,
-        y: i32,
-    }
-    
-    impl Add for Point {
-        type Output = Self;
-    
-        fn add(self, other: Self) -> Self {
-            Self {
-                x: self.x + other.x,
-                y: self.y + other.y,
-            }
-        }
-    }
-    
-    assert_eq!(Point { x: 1, y: 0 } + Point { x: 2, y: 3 },
-               Point { x: 3, y: 3 });
+    use std::ops::Add;#[derive(Debug, Copy, Clone, PartialEq)]struct Point {    x: i32,    y: i32,}impl Add for Point {    type Output = Self;    fn add(self, other: Self) -> Self {        Self {            x: self.x + other.x,            y: self.y + other.y,        }    }}assert_eq!(Point { x: 1, y: 0 } + Point { x: 2, y: 3 },           Point { x: 3, y: 3 });
     ~~~
 
     
@@ -2201,28 +1707,7 @@ struct  Point {
     演算子`＋`を適用した結果の型。
 
     ~~~rust
-    use std::ops::Add;
-    
-    #[derive(Debug, Copy, Clone, PartialEq)]
-    struct Point<T> {
-        x: T,
-        y: T,
-    }
-    
-    // Notice that the implementation uses the associated type `Output`.
-    impl<T: Add<Output = T>> Add for Point<T> {
-        type Output = Self;
-    
-        fn add(self, other: Self) -> Self::Output {
-            Self {
-                x: self.x + other.x,
-                y: self.y + other.y,
-            }
-        }
-    }
-    
-    assert_eq!(Point { x: 1, y: 0 } + Point { x: 2, y: 3 },
-               Point { x: 3, y: 3 });
+    use std::ops::Add;#[derive(Debug, Copy, Clone, PartialEq)]struct Point<T> {    x: T,    y: T,}// Notice that the implementation uses the associated type `Output`.impl<T: Add<Output = T>> Add for Point<T> {    type Output = Self;    fn add(self, other: Self) -> Self::Output {        Self {            x: self.x + other.x,            y: self.y + other.y,        }    }}assert_eq!(Point { x: 1, y: 0 } + Point { x: 2, y: 3 },           Point { x: 3, y: 3 });
     ~~~
 
     
@@ -2249,7 +1734,76 @@ struct  Point {
 
     プロセスを扱うモジュール。
 
-    このモジュールは、主に子プロセスの生成と相互作用に関係していますが、現在のプロセスを終了させるための [abort] と [exit] も提供している。
+    このモジュールは、主に子プロセスの生成と相互作用に関係していますが、現在のプロセスを終了させるための`abort`と `exit]`も提供している。
+
+---
+
+### std::process::Command
+
+- Description
+
+  プロセスビルダは、新しいプロセスをどのように生成するかをきめ細かく制御します。
+
+  デフォルトの設定は、`Command::new(program)`を使って生成することができ、programには実行されるプログラムのパスが与えられます。追加のビルダメソッドにより、生成前に設定を変更することができます（例えば、引数を追加するなど）。
+
+  ```rust
+  use std::process::Command;let output = if cfg!(target_os = "windows") {    Command::new("cmd")            .args(&["/C", "echo hello"])            .output()            .expect("failed to execute process")} else {    Command::new("sh")            .arg("-c")            .arg("echo hello")            .output()            .expect("failed to execute process")};let hello = output.stdout;
+  ```
+
+  `Command`は、複数のプロセスを起動するために再利用できます。ビルダー・メソッドは、すぐにプロセスを起動することなく、コマンドを変更します。
+
+  ```rust
+  use std::process::Command;let mut echo_hello = Command::new("sh");echo_hello.arg("-c")          .arg("echo hello");let hello_1 = echo_hello.output().expect("failed to execute process");let hello_2 = echo_hello.output().expect("failed to execute process");
+  ```
+
+  同様に、プロセスを起動した後にビルダーメソッドを呼び出し、変更した設定で新しいプロセスを起動することができます。
+
+  ```rust
+  use std::process::Command;let mut list_dir = Command::new("ls");// Execute `ls` in the current directory of the program.list_dir.status().expect("process failed to execute");println!();// Change `ls` to execute in the root directory.list_dir.current_dir("/");// And then execute `ls` again but in the root directory.list_dir.status().expect("process failed to execute");
+  ```
+
+- Implementations
+
+  パス program でプログラムを起動するための新しい Command を、以下のデフォルト設定で構築します。
+
+  - プログラムへの引数なし
+  - 現在のプロセスの環境を継承します。
+  - 現在のプロセスの作業ディレクトリを継承します。
+  - `spawn`や`status`のために`stdin/stdout/stderr`を継承するが、`output`のためにパイプを作成する。
+
+  これらのデフォルト値を変更したり、プロセスを設定するためのビルダー・メソッドが用意されています。
+
+  programが絶対パスでない場合、`PATH`は`OS`で定義された方法で検索されます。
+
+  使用される検索パスは、コマンドで`PATH`環境変数を設定することで制御できますが、`Windows`では実装上の制限があります（`#37519`を参照）。
+
+- Example
+
+  Basic usage:
+
+  ```rust
+  use std::process::Command;Command::new("sh")        .spawn()        .expect("sh command failed to start");
+  ```
+
+
+
+---
+
+### std::process::Command::spawn
+
+- Description
+
+  コマンドを子プロセスとして実行し、そのハンドルを返します。
+
+  デフォルトでは、`stdin`、`stdout`、`stderr`が親プロセスから継承されます。
+
+- Example
+
+  ```rust
+  use std::process::Command;Command::new("ls")        .spawn()        .expect("ls command failed to start");
+  ```
+
+  
 
 ---
 
@@ -2290,22 +1844,7 @@ struct  Point {
 - Example
 
   ```rust
-  let word = "goodbye";
-  
-  let count = word.chars().count();
-  assert_eq!(7, count);
-  
-  let mut chars = word.chars();
-  
-  assert_eq!(Some('g'), chars.next());
-  assert_eq!(Some('o'), chars.next());
-  assert_eq!(Some('o'), chars.next());
-  assert_eq!(Some('d'), chars.next());
-  assert_eq!(Some('b'), chars.next());
-  assert_eq!(Some('y'), chars.next());
-  assert_eq!(Some('e'), chars.next());
-  
-  assert_eq!(None, chars.next());
+  let word = "goodbye";let count = word.chars().count();assert_eq!(7, count);let mut chars = word.chars();assert_eq!(Some('g'), chars.next());assert_eq!(Some('o'), chars.next());assert_eq!(Some('o'), chars.next());assert_eq!(Some('d'), chars.next());assert_eq!(Some('b'), chars.next());assert_eq!(Some('y'), chars.next());assert_eq!(Some('e'), chars.next());assert_eq!(None, chars.next());
   ```
 
 
@@ -2327,31 +1866,26 @@ struct  Point {
   Basic Usage:
 
   ```rust
-  let mut iter = "A few words".split_whitespace();
-  
-  assert_eq!(Some("A"), iter.next());
-  assert_eq!(Some("few"), iter.next());
-  assert_eq!(Some("words"), iter.next());
-  
-  assert_eq!(None, iter.next());
+  let mut iter = "A few words".split_whitespace();assert_eq!(Some("A"), iter.next());assert_eq!(Some("few"), iter.next());assert_eq!(Some("words"), iter.next());assert_eq!(None, iter.next());
   ```
 
   あらゆる種類のホワイトスペースが考慮されます。
 
   ```rust
-  let mut iter = " Mary   had\ta\u{2009}little  \n\t lamb".split_whitespace();
-  assert_eq!(Some("Mary"), iter.next());
-  assert_eq!(Some("had"), iter.next());
-  assert_eq!(Some("a"), iter.next());
-  assert_eq!(Some("little"), iter.next());
-  assert_eq!(Some("lamb"), iter.next());
-  
-  assert_eq!(None, iter.next());
+  let mut iter = " Mary   had\ta\u{2009}little  \n\t lamb".split_whitespace();assert_eq!(Some("Mary"), iter.next());assert_eq!(Some("had"), iter.next());assert_eq!(Some("a"), iter.next());assert_eq!(Some("little"), iter.next());assert_eq!(Some("lamb"), iter.next());assert_eq!(None, iter.next());
   ```
 
   
 
+---
 
+### std::trim
+
+- Description
+
+  文字列スライスから先頭と末尾のホワイトスペースを削除したものを返します。
+
+  空白は、`Unicode Derived Core Property White_Space`の条件に従って定義されます。
 
 ---
 
@@ -2364,18 +1898,10 @@ struct  Point {
 - Example
 
   ```rust
-  let x = 2.0_f64;
-  let y = 3.0_f64;
-  
-  // sqrt(x^2 + y^2)
-  let abs_difference = (x.hypot(y) - (x.powi(2) + y.powi(2)).sqrt()).abs();
-  
-  assert!(abs_difference < 1e-10);
+  let x = 2.0_f64;let y = 3.0_f64;// sqrt(x^2 + y^2)let abs_difference = (x.hypot(y) - (x.powi(2) + y.powi(2)).sqrt()).abs();assert!(abs_difference < 1e-10);
   ```
 
   
-
-
 
 ---
 
@@ -2388,12 +1914,7 @@ struct  Point {
 - Example
 
   ```rust
-  let slice = ['r', 'u', 's', 't'];
-  let mut iter = slice.windows(2);
-  assert_eq!(iter.next().unwrap(), &['r', 'u']);
-  assert_eq!(iter.next().unwrap(), &['u', 's']);
-  assert_eq!(iter.next().unwrap(), &['s', 't']);
-  assert!(iter.next().is_none());
+  let slice = ['r', 'u', 's', 't'];let mut iter = slice.windows(2);assert_eq!(iter.next().unwrap(), &['r', 'u']);assert_eq!(iter.next().unwrap(), &['u', 's']);assert_eq!(iter.next().unwrap(), &['s', 't']);assert!(iter.next().is_none());
   ```
 
   
@@ -2445,10 +1966,7 @@ struct  Point {
 - Example
 
   ```rust
-  let mut v = [-5, 4, 1, -3, 2];
-  
-  v.sort();
-  assert!(v == [-5, -3, 1, 2, 4]);
+  let mut v = [-5, 4, 1, -3, 2];v.sort();assert!(v == [-5, -3, 1, 2, 4]);
   ```
 
   
@@ -2471,9 +1989,7 @@ struct  Point {
   例えば、`f64`は`NaN != NaN`なので`Ord`を実装していませんが、スライスに`NaN`が含まれていないことがわかっている場合は、`partial_cmp`をソート関数として使用することができます。
 
   ```rust
-  let mut floats = [5f64, 4.0, 1.0, 3.0, 2.0];
-  floats.sort_by(|a, b| a.partial_cmp(b).unwrap());
-  assert_eq!(floats, [1.0, 2.0, 3.0, 4.0, 5.0]);
+  let mut floats = [5f64, 4.0, 1.0, 3.0, 2.0];floats.sort_by(|a, b| a.partial_cmp(b).unwrap());assert_eq!(floats, [1.0, 2.0, 3.0, 4.0, 5.0]);
   ```
 
   不安定なソートは、一般的に安定したソートよりも高速で、補助的なメモリを割り当てないため、適用可能な場合は、不安定なソートが推奨されます。[`sort_unstable_by`](https://doc.rust-lang.org/stable/std/primitive.slice.html#method.sort_unstable_by) を参照してください。
@@ -2487,13 +2003,7 @@ struct  Point {
 - Example
 
   ```rust
-  let mut v = [5, 4, 1, 3, 2];
-  v.sort_by(|a, b| a.cmp(b));
-  assert!(v == [1, 2, 3, 4, 5]);
-  
-  // reverse sorting
-  v.sort_by(|a, b| b.cmp(a));
-  assert!(v == [5, 4, 3, 2, 1]);
+  let mut v = [5, 4, 1, 3, 2];v.sort_by(|a, b| a.cmp(b));assert!(v == [1, 2, 3, 4, 5]);// reverse sortingv.sort_by(|a, b| b.cmp(a));assert!(v == [5, 4, 3, 2, 1]);
   ```
 
   
@@ -2519,13 +2029,7 @@ struct  Point {
 - Example
 
   ```rust
-  let x = &[1, 2, 4];
-  let mut iterator = x.iter();
-  
-  assert_eq!(iterator.next(), Some(&1));
-  assert_eq!(iterator.next(), Some(&2));
-  assert_eq!(iterator.next(), Some(&4));
-  assert_eq!(iterator.next(), None);
+  let x = &[1, 2, 4];let mut iterator = x.iter();assert_eq!(iterator.next(), Some(&1));assert_eq!(iterator.next(), Some(&2));assert_eq!(iterator.next(), Some(&4));assert_eq!(iterator.next(), None);
   ```
 
   
@@ -2543,11 +2047,7 @@ struct  Point {
 - Example
 
   ```rust
-  let mut vec = vec![1, 2, 2, 3, 2];
-  
-  vec.dedup();
-  
-  assert_eq!(vec, [1, 2, 3, 2]);
+  let mut vec = vec![1, 2, 2, 3, 2];vec.dedup();assert_eq!(vec, [1, 2, 3, 2]);
   ```
 
 
@@ -2583,31 +2083,7 @@ struct  Point {
 - Example
 
   ```rust
-  use std::collections::BTreeSet;
-  
-  // Type inference lets us omit an explicit type signature (which
-  // would be `BTreeSet<&str>` in this example).
-  let mut books = BTreeSet::new();
-  
-  // Add some books.
-  books.insert("A Dance With Dragons");
-  books.insert("To Kill a Mockingbird");
-  books.insert("The Odyssey");
-  books.insert("The Great Gatsby");
-  
-  // Check for a specific one.
-  if !books.contains("The Winds of Winter") {
-      println!("We have {} books, but The Winds of Winter ain't one.",
-               books.len());
-  }
-  
-  // Remove a book.
-  books.remove("The Odyssey");
-  
-  // Iterate over everything.
-  for book in &books {
-      println!("{}", book);
-  }
+  use std::collections::BTreeSet;// Type inference lets us omit an explicit type signature (which// would be `BTreeSet<&str>` in this example).let mut books = BTreeSet::new();// Add some books.books.insert("A Dance With Dragons");books.insert("To Kill a Mockingbird");books.insert("The Odyssey");books.insert("The Great Gatsby");// Check for a specific one.if !books.contains("The Winds of Winter") {    println!("We have {} books, but The Winds of Winter ain't one.",             books.len());}// Remove a book.books.remove("The Odyssey");// Iterate over everything.for book in &books {    println!("{}", book);}
   ```
 
   
@@ -2654,15 +2130,13 @@ struct  Point {
   Basic Usage:
 
   ```rust
-  assert_eq!('1'.to_digit(10), Some(1));
-  assert_eq!('f'.to_digit(16), Some(15));
+  assert_eq!('1'.to_digit(10), Some(1));assert_eq!('f'.to_digit(16), Some(15));
   ```
 
   数字でないものを通過すると失敗します。
 
   ```rust
-  assert_eq!('f'.to_digit(10), None);
-  assert_eq!('z'.to_digit(16), None);
+  assert_eq!('f'.to_digit(10), None);assert_eq!('z'.to_digit(16), None);
   ```
 
 
@@ -2684,39 +2158,7 @@ struct  Point {
   関数に渡された値をログアウトさせたい場合を考えてみましょう。対象となる値がDebugを実装していることはわかっていますが、その具体的な型はわかりません。特定の型に対して特別な扱いをしたいと考えています。この例では、`String`値の長さを値の前に表示しています。コンパイル時には値の具体的な型がわからないので、代わりにランタイム・リフレクションを使用する必要があります。
 
   ~~~rust
-  use std::fmt::Debug;
-  use std::any::Any;
-  
-  // Logger function for any type that implements Debug.
-  fn log<T: Any + Debug>(value: &T) {
-      let value_any = value as &dyn Any;
-  
-      // Try to convert our value to a `String`. If successful, we want to
-      // output the String`'s length as well as its value. If not, it's a
-      // different type: just print it out unadorned.
-      match value_any.downcast_ref::<String>() {
-          Some(as_string) => {
-              println!("String ({}): {}", as_string.len(), as_string);
-          }
-          None => {
-              println!("{:?}", value);
-          }
-      }
-  }
-  
-  // This function wants to log its parameter out prior to doing work with it.
-  fn do_work<T: Any + Debug>(value: &T) {
-      log(value);
-      // ...do some other work
-  }
-  
-  fn main() {
-      let my_string = "Hello World".to_string();
-      do_work(&my_string);
-  
-      let my_i8: i8 = 100;
-      do_work(&my_i8);
-  }
+  use std::fmt::Debug;use std::any::Any;// Logger function for any type that implements Debug.fn log<T: Any + Debug>(value: &T) {    let value_any = value as &dyn Any;    // Try to convert our value to a `String`. If successful, we want to    // output the String`'s length as well as its value. If not, it's a    // different type: just print it out unadorned.    match value_any.downcast_ref::<String>() {        Some(as_string) => {            println!("String ({}): {}", as_string.len(), as_string);        }        None => {            println!("{:?}", value);        }    }}// This function wants to log its parameter out prior to doing work with it.fn do_work<T: Any + Debug>(value: &T) {    log(value);    // ...do some other work}fn main() {    let my_string = "Hello World".to_string();    do_work(&my_string);    let my_i8: i8 = 100;    do_work(&my_i8);}
   ~~~
 
 ---
@@ -2736,10 +2178,7 @@ struct  Point {
 - Implementation
 
   ~~~rust
-  pub fn of<T>() -> TypeId
-  where
-      T: 'static + ?Sized, 
-  
+  pub fn of<T>() -> TypeIdwhere    T: 'static + ?Sized, 
   ~~~
 
   このジェネリック関数がインスタンス化された型のTypeIdを返します。
@@ -2749,14 +2188,7 @@ struct  Point {
     ---
 
     ~~~rust
-    use std::any::{Any, TypeId};
-    
-    fn is_string<T: ?Sized + Any>(_s: &T) -> bool {
-        TypeId::of::<String>() == TypeId::of::<T>()
-    }
-    
-    assert_eq!(is_string(&0), false);
-    assert_eq!(is_string(&"cookie monster".to_string()), true);
+    use std::any::{Any, TypeId};fn is_string<T: ?Sized + Any>(_s: &T) -> bool {    TypeId::of::<String>() == TypeId::of::<T>()}assert_eq!(is_string(&0), false);assert_eq!(is_string(&"cookie monster".to_string()), true);
     ~~~
 
     
@@ -2778,36 +2210,20 @@ struct  Point {
     おそらくPhantomDataの最も一般的な使用例は、未使用の寿命パラメータを持つ構造体で、通常は安全でないコードの一部として使用されます。例えば、ここには`*const T`型の2つのポインタを持つ`Slice`構造体があり、おそらくどこかの配列を指していると思われます。
 
     ~~~rust
-    struct Slice<'a, T> {
-        start: *const T,
-        end: *const T,
-    }
+    struct Slice<'a, T> {    start: *const T,    end: *const T,}
     ~~~
 
     この意図は、基礎となるデータはライフタイム`'a`に対してのみ有効なので、`Slice`は`'a`よりも長生きしてはいけないということです。しかし、この意図はコードでは表現されていません。ライフタイム`'a`の用途がないため、どのデータに適用されるのかが明確ではありません。これを修正するには、コンパイラに`Slice`構造体に参照`&'a T`が含まれているかのように動作するように指示します。
 
     ~~~rust
-    use std::marker::PhantomData;
-    
-    struct Slice<'a, T: 'a> {
-        start: *const T,
-        end: *const T,
-        phantom: PhantomData<&'a T>,
-    }
+    use std::marker::PhantomData;struct Slice<'a, T: 'a> {    start: *const T,    end: *const T,    phantom: PhantomData<&'a T>,}
     ~~~
 
     これにより、`T: 'a`というアノテーションが必要になり、T内の参照が有効期間`'a`にわたって有効であることを示します。
     `Slice`を初期化する際には、`Phantom`フィールドに`PhantomData`という値を指定するだけです。
 
     ~~~rust
-    fn borrow_vec<T>(vec: &Vec<T>) -> Slice<'_, T> {
-        let ptr = vec.as_ptr();
-        Slice {
-            start: ptr,
-            end: unsafe { ptr.add(vec.len()) },
-            phantom: PhantomData,
-        }
-    }
+    fn borrow_vec<T>(vec: &Vec<T>) -> Slice<'_, T> {    let ptr = vec.as_ptr();    Slice {        start: ptr,        end: unsafe { ptr.add(vec.len()) },        phantom: PhantomData,    }}
     ~~~
 
   - Unused type parameters
@@ -2815,28 +2231,7 @@ struct  Point {
     構造体自体にはデータが存在しないにもかかわらず、未使用の型パラメータが存在し、構造体がどのようなデータに「関連付けられているか」を示すことがあります。ここでは、`FFI`でこのような問題が発生する例を示します。外部インターフェイスでは、異なるタイプの`Rust`値を参照するために`*mut()`型のハンドルを使用します。ハンドルをラップする`ExternalResource`構造体のファントム型パラメータを使用して`Rust`型を追跡します。
 
     ~~~rust
-    use std::marker::PhantomData;
-    use std::mem;
-    
-    struct ExternalResource<R> {
-       resource_handle: *mut (),
-       resource_type: PhantomData<R>,
-    }
-    
-    impl<R: ResType> ExternalResource<R> {
-        fn new() -> Self {
-            let size_of_res = mem::size_of::<R>();
-            Self {
-                resource_handle: foreign_lib::new(size_of_res),
-                resource_type: PhantomData,
-            }
-        }
-    
-        fn do_stuff(&self, param: ParamType) {
-            let foreign_params = convert_params(param);
-            foreign_lib::do_stuff(self.resource_handle, foreign_params);
-        }
-    }
+    use std::marker::PhantomData;use std::mem;struct ExternalResource<R> {   resource_handle: *mut (),   resource_type: PhantomData<R>,}impl<R: ResType> ExternalResource<R> {    fn new() -> Self {        let size_of_res = mem::size_of::<R>();        Self {            resource_handle: foreign_lib::new(size_of_res),            resource_type: PhantomData,        }    }    fn do_stuff(&self, param: ParamType) {        let foreign_params = convert_params(param);        foreign_lib::do_stuff(self.resource_handle, foreign_params);    }}
     ~~~
 
   - Ownership and the drop check
@@ -2846,7 +2241,7 @@ struct  Point {
 
 ---
 
-### env::var
+### std::env::var
 
   - Description
 
@@ -2884,17 +2279,7 @@ struct  Point {
 - Example
 
   ~~~rust
-  use std::time::{Duration, Instant};
-  use std::thread::sleep;
-  
-  fn main() {
-     let now = Instant::now();
-  
-     // we sleep for 2 seconds
-     sleep(Duration::new(2, 0));
-     // it prints '2'
-     println!("{}", now.elapsed().as_secs());
-  }
+  use std::time::{Duration, Instant};use std::thread::sleep;fn main() {   let now = Instant::now();   // we sleep for 2 seconds   sleep(Duration::new(2, 0));   // it prints '2'   println!("{}", now.elapsed().as_secs());}
   ~~~
 
 ---
@@ -2912,30 +2297,13 @@ struct  Point {
   すべてのフィールドがHashを実装していれば、`#[derive(Hash)]`で`Hash`を派生させることができます。結果として得られるハッシュは、各フィールドのハッシュを呼び出したときの値を組み合わせたものになります。
 
   ~~~rust
-  #[derive(Hash)]
-  struct Rustacean {
-      name: String,
-      country: String,
-  }
+  #[derive(Hash)]struct Rustacean {    name: String,    country: String,}
   ~~~
 
   値がどのようにハッシュ化されるかをより細かく制御する必要がある場合は、もちろん自分でHash特性を実装することができます。
 
   ~~~rust
-  use std::hash::{Hash, Hasher};
-  
-  struct Person {
-      id: u32,
-      name: String,
-      phone: u64,
-  }
-  
-  impl Hash for Person {
-      fn hash<H: Hasher>(&self, state: &mut H) {
-          self.id.hash(state);
-          self.phone.hash(state);
-      }
-  }
+  use std::hash::{Hash, Hasher};struct Person {    id: u32,    name: String,    phone: u64,}impl Hash for Person {    fn hash<H: Hasher>(&self, state: &mut H) {        self.id.hash(state);        self.phone.hash(state);    }}
   ~~~
 
 - `Hash` and `Eq`
@@ -2953,9 +2321,7 @@ struct  Point {
 - Required methods
 
   ~~~rust
-  pub fn hash<H>(&self, state: &mut H)
-  where
-      H: Hasher,
+  pub fn hash<H>(&self, state: &mut H)where    H: Hasher,
   ~~~
 
   このタイプのスライスを与えられたHasherにフィードします。
@@ -2965,21 +2331,13 @@ struct  Point {
     ---
 
     ~~~rust
-    use std::collections::hash_map::DefaultHasher;
-    use std::hash::{Hash, Hasher};
-    
-    let mut hasher = DefaultHasher::new();
-    7920.hash(&mut hasher);
-    println!("Hash is {:x}!", hasher.finish());
+    use std::collections::hash_map::DefaultHasher;use std::hash::{Hash, Hasher};let mut hasher = DefaultHasher::new();7920.hash(&mut hasher);println!("Hash is {:x}!", hasher.finish());
     ~~~
 
 - Provided methods
 
   ~~~rust
-  pub fn hash_slice<H>(data: &[Self], state: &mut H)
-  where
-      H: Hasher, 
-  
+  pub fn hash_slice<H>(data: &[Self], state: &mut H)where    H: Hasher, 
   ~~~
 
   このタイプのスライスを与えられたHasherにフィードします。
@@ -2989,13 +2347,7 @@ struct  Point {
     ---
 
     ~~~rust
-    use std::collections::hash_map::DefaultHasher;
-    use std::hash::{Hash, Hasher};
-    
-    let mut hasher = DefaultHasher::new();
-    let numbers = [6, 28, 496, 8128];
-    Hash::hash_slice(&numbers, &mut hasher);
-    println!("Hash is {:x}!", hasher.finish());
+    use std::collections::hash_map::DefaultHasher;use std::hash::{Hash, Hasher};let mut hasher = DefaultHasher::new();let numbers = [6, 28, 496, 8128];Hash::hash_slice(&numbers, &mut hasher);println!("Hash is {:x}!", hasher.finish());
     ~~~
 
   
@@ -3030,125 +2382,25 @@ struct  Point {
 - Exmaple
 
   ```rust
-  use std::collections::HashMap;
-  
-  // 型推論では，明示的な型シグネチャを省略することができます
-  // この例では `HashMap<String, String>` となります
-  let mut book_reviews = HashMap::new();
-  
-  // Review some books.
-  book_reviews.insert(
-      "Adventures of Huckleberry Finn".to_string(),
-      "My favorite book.".to_string(),
-  );
-  book_reviews.insert(
-      "Grimms' Fairy Tales".to_string(),
-      "Masterpiece.".to_string(),
-  );
-  book_reviews.insert(
-      "Pride and Prejudice".to_string(),
-      "Very enjoyable.".to_string(),
-  );
-  book_reviews.insert(
-      "The Adventures of Sherlock Holmes".to_string(),
-      "Eye lyked it alot.".to_string(),
-  );
-  
-  // 特定のものをチェックします。
-  // コレクションが所有する値(String)を格納している場合でも、
-  // 参照(&str)を使用して照会することができます。
-  if !book_reviews.contains_key("Les Misérables") {
-      println!("We've got {} reviews, but Les Misérables ain't one.",
-               book_reviews.len());
-  }
-  
-  // おっと、このレビューは誤字脱字が多いので削除しましょう。
-  book_reviews.remove("The Adventures of Sherlock Holmes");
-  
-  // いくつかのキーに関連する値を調べる。
-  let to_find = ["Pride and Prejudice", "Alice's Adventure in Wonderland"];
-  for &book in &to_find {
-      match book_reviews.get(book) {
-          Some(review) => println!("{}: {}", book, review),
-          None => println!("{} is unreviewed.", book)
-      }
-  }
-  
-  // キーの値を検索します（キーが見つからない場合はパニックになります）。
-  println!("Review for Jane: {}", book_reviews["Pride and Prejudice"]);
-  
-  // Iterate over everything.
-  for (book, review) in &book_reviews {
-      println!("{}: \"{}\"", book, review);
-  }
+  use std::collections::HashMap;// 型推論では，明示的な型シグネチャを省略することができます// この例では `HashMap<String, String>` となりますlet mut book_reviews = HashMap::new();// Review some books.book_reviews.insert(    "Adventures of Huckleberry Finn".to_string(),    "My favorite book.".to_string(),);book_reviews.insert(    "Grimms' Fairy Tales".to_string(),    "Masterpiece.".to_string(),);book_reviews.insert(    "Pride and Prejudice".to_string(),    "Very enjoyable.".to_string(),);book_reviews.insert(    "The Adventures of Sherlock Holmes".to_string(),    "Eye lyked it alot.".to_string(),);// 特定のものをチェックします。// コレクションが所有する値(String)を格納している場合でも、// 参照(&str)を使用して照会することができます。if !book_reviews.contains_key("Les Misérables") {    println!("We've got {} reviews, but Les Misérables ain't one.",             book_reviews.len());}// おっと、このレビューは誤字脱字が多いので削除しましょう。book_reviews.remove("The Adventures of Sherlock Holmes");// いくつかのキーに関連する値を調べる。let to_find = ["Pride and Prejudice", "Alice's Adventure in Wonderland"];for &book in &to_find {    match book_reviews.get(book) {        Some(review) => println!("{}: {}", book, review),        None => println!("{} is unreviewed.", book)    }}// キーの値を検索します（キーが見つからない場合はパニックになります）。println!("Review for Jane: {}", book_reviews["Pride and Prejudice"]);// Iterate over everything.for (book, review) in &book_reviews {    println!("{}: \"{}\"", book, review);}
   ```
 
   HashMapには[`Entry API`](https://doc.rust-lang.org/stable/std/collections/struct.HashMap.html#method.entry)も実装されており、キーとその値の取得、設定、更新、削除をより複雑な方法で行うことができます。
 
   ```rust
-  use std::collections::HashMap;
-  
-  // type inference lets us omit an explicit type signature (which
-  // would be `HashMap<&str, u8>` in this example).
-  let mut player_stats = HashMap::new();
-  
-  fn random_stat_buff() -> u8 {
-      // could actually return some random value here - let's just return
-      // some fixed value for now
-      42
-  }
-  
-  // insert a key only if it doesn't already exist
-  player_stats.entry("health").or_insert(100);
-  
-  // insert a key using a function that provides a new value only if it
-  // doesn't already exist
-  player_stats.entry("defence").or_insert_with(random_stat_buff);
-  
-  // update a key, guarding against the key possibly not being set
-  let stat = player_stats.entry("attack").or_insert(100);
-  *stat += random_stat_buff();
+  use std::collections::HashMap;// type inference lets us omit an explicit type signature (which// would be `HashMap<&str, u8>` in this example).let mut player_stats = HashMap::new();fn random_stat_buff() -> u8 {    // could actually return some random value here - let's just return    // some fixed value for now    42}// insert a key only if it doesn't already existplayer_stats.entry("health").or_insert(100);// insert a key using a function that provides a new value only if it// doesn't already existplayer_stats.entry("defence").or_insert_with(random_stat_buff);// update a key, guarding against the key possibly not being setlet stat = player_stats.entry("attack").or_insert(100);*stat += random_stat_buff();
   ```
 
   カスタムのキータイプで`HashMap`を使用する最も簡単な方法は、`Eq`と`Hash`を派生させることです。また、`PartialEq`を派生させる必要があります。
 
   ```rust
-  use std::collections::HashMap;
-  
-  #[derive(Hash, Eq, PartialEq, Debug)]
-  struct Viking {
-      name: String,
-      country: String,
-  }
-  
-  impl Viking {
-      /// Creates a new Viking.
-      fn new(name: &str, country: &str) -> Viking {
-          Viking { name: name.to_string(), country: country.to_string() }
-      }
-  }
-  
-  // Use a HashMap to store the vikings' health points.
-  let mut vikings = HashMap::new();
-  
-  vikings.insert(Viking::new("Einar", "Norway"), 25);
-  vikings.insert(Viking::new("Olaf", "Denmark"), 24);
-  vikings.insert(Viking::new("Harald", "Iceland"), 12);
-  
-  // Use derived implementation to print the status of the vikings.
-  for (viking, health) in &vikings {
-      println!("{:?} has {} hp", viking, health);
-  }
+  use std::collections::HashMap;#[derive(Hash, Eq, PartialEq, Debug)]struct Viking {    name: String,    country: String,}impl Viking {    /// Creates a new Viking.    fn new(name: &str, country: &str) -> Viking {        Viking { name: name.to_string(), country: country.to_string() }    }}// Use a HashMap to store the vikings' health points.let mut vikings = HashMap::new();vikings.insert(Viking::new("Einar", "Norway"), 25);vikings.insert(Viking::new("Olaf", "Denmark"), 24);vikings.insert(Viking::new("Harald", "Iceland"), 12);// Use derived implementation to print the status of the vikings.for (viking, health) in &vikings {    println!("{:?} has {} hp", viking, health);}
   ```
 
   要素の固定されたリストを持つ`HashMap`は、配列から初期化することができます。
 
   ```rust
-  use std::collections::HashMap;
-  
-  let timber_resources: HashMap<&str, i32> = [("Norway", 100), ("Denmark", 50), ("Iceland", 10)]
-      .iter().cloned().collect();
-  // use the values stored in map
+  use std::collections::HashMap;let timber_resources: HashMap<&str, i32> = [("Norway", 100), ("Denmark", 50), ("Iceland", 10)]    .iter().cloned().collect();// use the values stored in map
   ```
 
 
@@ -3168,15 +2420,7 @@ struct  Point {
 - Example
 
   ```rust
-  use std::collections::HashMap;
-  
-  let mut map = HashMap::new();
-  assert_eq!(map.insert(37, "a"), None);
-  assert_eq!(map.is_empty(), false);
-  
-  map.insert(37, "b");
-  assert_eq!(map.insert(37, "c"), Some("b"));
-  assert_eq!(map[&37], "c");
+  use std::collections::HashMap;let mut map = HashMap::new();assert_eq!(map.insert(37, "a"), None);assert_eq!(map.is_empty(), false);map.insert(37, "b");assert_eq!(map.insert(37, "c"), Some("b"));assert_eq!(map[&37], "c");
   ```
 
 
@@ -3194,12 +2438,7 @@ struct  Point {
 - Example
 
   ```rust
-  use std::collections::HashMap;
-  
-  let mut map = HashMap::new();
-  map.insert(1, "a");
-  assert_eq!(map.get(&1), Some(&"a"));
-  assert_eq!(map.get(&2), None);
+  use std::collections::HashMap;let mut map = HashMap::new();map.insert(1, "a");assert_eq!(map.get(&1), Some(&"a"));assert_eq!(map.get(&2), None);
   ```
 
   
@@ -3217,12 +2456,7 @@ struct  Point {
 - Example
 
   ```rust
-  use std::collections::HashMap;
-  
-  let mut map = HashMap::new();
-  map.insert(1, "a");
-  assert_eq!(map.remove(&1), Some("a"));
-  assert_eq!(map.remove(&1), None);
+  use std::collections::HashMap;let mut map = HashMap::new();map.insert(1, "a");assert_eq!(map.remove(&1), Some("a"));assert_eq!(map.remove(&1), None);
   ```
 
 
@@ -3248,63 +2482,19 @@ struct  Point {
 - Example
 
   ```rust
-  use std::collections::HashSet;
-  // Type inference lets us omit an explicit type signature (which
-  // would be `HashSet<String>` in this example).
-  let mut books = HashSet::new();
-  
-  // Add some books.
-  books.insert("A Dance With Dragons".to_string());
-  books.insert("To Kill a Mockingbird".to_string());
-  books.insert("The Odyssey".to_string());
-  books.insert("The Great Gatsby".to_string());
-  
-  // Check for a specific one.
-  if !books.contains("The Winds of Winter") {
-      println!("We have {} books, but The Winds of Winter ain't one.",
-               books.len());
-  }
-  
-  // Remove a book.
-  books.remove("The Odyssey");
-  
-  // Iterate over everything.
-  for book in &books {
-      println!("{}", book);
-  }
+  use std::collections::HashSet;// Type inference lets us omit an explicit type signature (which// would be `HashSet<String>` in this example).let mut books = HashSet::new();// Add some books.books.insert("A Dance With Dragons".to_string());books.insert("To Kill a Mockingbird".to_string());books.insert("The Odyssey".to_string());books.insert("The Great Gatsby".to_string());// Check for a specific one.if !books.contains("The Winds of Winter") {    println!("We have {} books, but The Winds of Winter ain't one.",             books.len());}// Remove a book.books.remove("The Odyssey");// Iterate over everything.for book in &books {    println!("{}", book);}
   ```
 
   `HashSet`をカスタムタイプで使用する最も簡単な方法は、`Eq`と`Hash`を派生させることです。`PartialEq`も派生させなければなりませんが、これは将来的には`Eq`によって暗示されることになるでしょう。
 
   ```rust
-  use std::collections::HashSet;
-  #[derive(Hash, Eq, PartialEq, Debug)]
-  struct Viking {
-      name: String,
-      power: usize,
-  }
-  
-  let mut vikings = HashSet::new();
-  
-  vikings.insert(Viking { name: "Einar".to_string(), power: 9 });
-  vikings.insert(Viking { name: "Einar".to_string(), power: 9 });
-  vikings.insert(Viking { name: "Olaf".to_string(), power: 4 });
-  vikings.insert(Viking { name: "Harald".to_string(), power: 8 });
-  
-  // Use derived implementation to print the vikings.
-  for x in &vikings {
-      println!("{:?}", x);
-  }
+  use std::collections::HashSet;#[derive(Hash, Eq, PartialEq, Debug)]struct Viking {    name: String,    power: usize,}let mut vikings = HashSet::new();vikings.insert(Viking { name: "Einar".to_string(), power: 9 });vikings.insert(Viking { name: "Einar".to_string(), power: 9 });vikings.insert(Viking { name: "Olaf".to_string(), power: 4 });vikings.insert(Viking { name: "Harald".to_string(), power: 8 });// Use derived implementation to print the vikings.for x in &vikings {    println!("{:?}", x);}
   ```
 
   要素の固定リストを持つ`HashSet`は、配列から初期化することができます。
 
   ```rust
-  use std::collections::HashSet;
-  
-  let viking_names: HashSet<&'static str> =
-      [ "Einar", "Olaf", "Harald" ].iter().cloned().collect();
-  // use the values stored in the set
+  use std::collections::HashSet;let viking_names: HashSet<&'static str> =    [ "Einar", "Olaf", "Harald" ].iter().cloned().collect();// use the values stored in the set
   ```
 
 
@@ -3320,17 +2510,7 @@ struct  Point {
 - Example
 
   ```rust
-  use std::collections::HashSet;
-  let a: HashSet<_> = [1, 2, 3].iter().cloned().collect();
-  let b: HashSet<_> = [4, 2, 3, 4].iter().cloned().collect();
-  
-  // Print 1, 2, 3, 4 in arbitrary order.
-  for x in a.union(&b) {
-      println!("{}", x);
-  }
-  
-  let union: HashSet<_> = a.union(&b).collect();
-  assert_eq!(union, [1, 2, 3, 4].iter().collect());
+  use std::collections::HashSet;let a: HashSet<_> = [1, 2, 3].iter().cloned().collect();let b: HashSet<_> = [4, 2, 3, 4].iter().cloned().collect();// Print 1, 2, 3, 4 in arbitrary order.for x in a.union(&b) {    println!("{}", x);}let union: HashSet<_> = a.union(&b).collect();assert_eq!(union, [1, 2, 3, 4].iter().collect());
   ```
 
 
@@ -3348,11 +2528,7 @@ struct  Point {
 - Example
 
   ```rust
-  use std::collections::HashSet;
-  
-  let set: HashSet<_> = [1, 2, 3].iter().cloned().collect();
-  assert_eq!(set.contains(&1), true);
-  assert_eq!(set.contains(&4), false);
+  use std::collections::HashSet;let set: HashSet<_> = [1, 2, 3].iter().cloned().collect();assert_eq!(set.contains(&1), true);assert_eq!(set.contains(&4), false);
   ```
 
 
@@ -3751,7 +2927,7 @@ struct  Point {
    `Weak<T>`は、内部の値が既に落とされている可能性があるため、Tへの自動参照は行わない。
 
    - Cloning references
-     既存の参照カウントポインタと同じアロケーションへの新しい参照の作成は、Rc<T>とWeak<T>のために実装されたClone traitを使用して行われる。
+     既存の参照カウントポインタと同じアロケーションへの新しい参照の作成は、`Rc<T>`と`Weak<T>`のために実装されたClone traitを使用して行われる。
 
    ~~~rust
    use std::rc::Rc;
@@ -3907,34 +3083,20 @@ struct  Point {
       既存の参照カウントされたポインタから新しい参照を作成するには、`Arc<T>`と`Weak<T>`に実装された`Clone`トレイトを使用します。
 
     ~~~rust
-    use std::sync::Arc;
-    let foo = Arc::new(vec![1.0, 2.0, 3.0]);
-    // The two syntaxes below are equivalent.
-    let a = foo.clone();
-    let b = Arc::clone(&foo);
-    // a, b, and foo are all Arcs that point to the same memory location
+    use std::sync::Arc;let foo = Arc::new(vec![1.0, 2.0, 3.0]);// The two syntaxes below are equivalent.let a = foo.clone();let b = Arc::clone(&foo);// a, b, and foo are all Arcs that point to the same memory location
     ~~~
 
     - Deref behavior
       `Arc<T>`は自動的に (Deref trait を介して) `T`に派生するので、`Arc<T>`型の値に対して`T`のメソッドを呼び出すことができる。`T`のメソッドとの名前の衝突を避けるため、`Arc<T>`のメソッドは関連する関数であり、完全修飾構文を用いて呼び出される。
 
     ~~~rust
-    use std::sync::Arc;
-    
-    let my_arc = Arc::new(());
-    Arc::downgrade(&my_arc);
+    use std::sync::Arc;let my_arc = Arc::new(());Arc::downgrade(&my_arc);
     ~~~
 
     `Clone` のようなトレイトの`Arc<T>`の実装も、完全修飾構文を使って呼ばれることがある。
 
     ~~~rust
-    use std::sync::Arc;
-    
-    let arc = Arc::new(());
-    // Method-call syntax
-    let arc2 = arc.clone();
-    // Fully qualified syntax
-    let arc3 = Arc::clone(&arc);
+    use std::sync::Arc;let arc = Arc::new(());// Method-call syntaxlet arc2 = arc.clone();// Fully qualified syntaxlet arc3 = Arc::clone(&arc);
     ~~~
 
     `Weak<T>`は、内部の値が既にドロップされている可能性があるため、`T`への自動参照は行わない。
@@ -3970,21 +3132,7 @@ struct  Point {
   - Example
 
     ~~~rust
-    use std::net::{TcpListener, TcpStream};
-    
-    fn handle_client(stream: TcpStream) {
-        // ...
-    }
-    
-    fn main() -> std::io::Result<()> {
-        let listener = TcpListener::bind("127.0.0.1:80")?;
-    
-        // accept connections and process them serially
-        for stream in listener.incoming() {
-            handle_client(stream?);
-        }
-        Ok(())
-    }
+    use std::net::{TcpListener, TcpStream};fn handle_client(stream: TcpStream) {    // ...}fn main() -> std::io::Result<()> {    let listener = TcpListener::bind("127.0.0.1:80")?;    // accept connections and process them serially    for stream in listener.incoming() {        handle_client(stream?);    }    Ok(())}
     ~~~
 
     
@@ -4010,21 +3158,13 @@ struct  Point {
       127.0.0.0.1:80 にバインドされた TCP リスナーを作成します。
 
       ~~~rust
-      use std::net::TcpListener;
-      
-      let listener = TcpListener::bind("127.0.0.1:80").unwrap();
+      use std::net::TcpListener;let listener = TcpListener::bind("127.0.0.1:80").unwrap();
       ~~~
 
       127.0.0.0.1:80 にバインドされた TCP リスナーを作成します。失敗した場合は、127.0.0.0.1:443 にバインドされた TCP リスナーを作成します。
 
       ~~~rust
-      use std::net::{SocketAddr, TcpListener};
-      
-      let addrs = [
-          SocketAddr::from(([127, 0, 0, 1], 80)),
-          SocketAddr::from(([127, 0, 0, 1], 443)),
-      ];
-      let listener = TcpListener::bind(&addrs[..]).unwrap();
+      use std::net::{SocketAddr, TcpListener};let addrs = [    SocketAddr::from(([127, 0, 0, 1], 80)),    SocketAddr::from(([127, 0, 0, 1], 443)),];let listener = TcpListener::bind(&addrs[..]).unwrap();
       ~~~
 
   - incoming
@@ -4036,18 +3176,7 @@ struct  Point {
     - Example
 
       ~~~rust
-      use std::net::TcpListener;
-      
-      let listener = TcpListener::bind("127.0.0.1:80").unwrap();
-      
-      for stream in listener.incoming() {
-          match stream {
-              Ok(stream) => {
-                  println!("new client!");
-              }
-              Err(e) => { /* connection failed */ }
-          }
-      }
+      use std::net::TcpListener;let listener = TcpListener::bind("127.0.0.1:80").unwrap();for stream in listener.incoming() {    match stream {        Ok(stream) => {            println!("new client!");        }        Err(e) => { /* connection failed */ }    }}
       ~~~
 
 ---
@@ -4067,16 +3196,7 @@ struct  Point {
   - Example
 
     ~~~rust
-    use std::io::prelude::*;
-    use std::net::TcpStream;
-    
-    fn main() -> std::io::Result<()> {
-        let mut stream = TcpStream::connect("127.0.0.1:34254")?;
-    
-        stream.write(&[1])?;
-        stream.read(&mut [0; 128])?;
-        Ok(())
-    } // the stream is closed here
+    use std::io::prelude::*;use std::net::TcpStream;fn main() -> std::io::Result<()> {    let mut stream = TcpStream::connect("127.0.0.1:34254")?;    stream.write(&[1])?;    stream.read(&mut [0; 128])?;    Ok(())} // the stream is closed here
     ~~~
 
 - 
