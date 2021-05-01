@@ -91,6 +91,8 @@
 
 * [Plotters Developer Guide](https://plotters-rs.github.io/book/intro/introduction.html)
 
+* [競プロ典型90問をRustで解く](https://dev.thanaism.com/tags/rust/)
+
 ### diesel
 
 * [diesel公式サイト](https://diesel.rs/guides/getting-started/)

@@ -687,7 +687,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 
 ---
 
-### unwrap_or_else
+### std::result::Result::unwrap_or_else
 
   - Description
 
@@ -796,6 +796,30 @@ CopyトレイトとCloneトレイトの違いを以下に示す
   ```
 
 
+
+---
+
+### std::option::Option::take
+
+- Description
+
+  オプションの値を削除し、代わりに`None`を残す
+
+- Example
+
+  ~~~rust
+  let mut x = Some(2);
+  let y = x.take();
+  assert_eq!(x, None);
+  assert_eq!(y, Some(2));
+  
+  let mut x: Option<u32> = None;
+  let y = x.take();
+  assert_eq!(x, None);
+  assert_eq!(y, None);
+  ~~~
+
+  
 
 ---
 
@@ -1062,31 +1086,63 @@ CopyトレイトとCloneトレイトの違いを以下に示す
   }
   ```
 
-  
+
+
 
 ---
 
-### core::option::Option::take
+### std::io::stdout
 
 - Description
 
-  オプションの値を削除し、代わりに`None`を残す
+  現在のプロセスの標準出力への新しいハンドルを構築します。
+
+  返される各ハンドルは、ミューテックスを介してアクセスが同期化された共有グローバルバッファへの参照です。ロックをより明確に制御する必要がある場合は、`Stdout::lock`メソッドを参照してください。
+
+- Note:Windowsの移植性への配慮
+
+  コンソールで操作する場合、このストリームのWindowsの実装では、UTF-8以外のバイトシーケンスをサポートしていません。有効なUTF-8でないバイトを書き込もうとすると、エラーが発生します。
 
 - Example
 
-  ~~~rust
-  let mut x = Some(2);
-  let y = x.take();
-  assert_eq!(x, None);
-  assert_eq!(y, Some(2));
-  
-  let mut x: Option<u32> = None;
-  let y = x.take();
-  assert_eq!(x, None);
-  assert_eq!(y, None);
-  ~~~
+  Using implicit synchronization:
 
+  ```rust
+  use std::io::{self, Write};
   
+  fn main() -> io::Result<()> {
+      io::stdout().write_all(b"hello world")?;
+  
+      Ok(())
+  }
+  ```
+
+  Using explicit synchronization:
+
+  ```rust
+  use std::io::{self, Write};
+  
+  fn main() -> io::Result<()> {
+      let stdout = io::stdout();
+      let mut handle = stdout.lock();
+  
+      handle.write_all(b"hello world")?;
+  
+      Ok(())
+  }
+  ```
+
+
+
+---
+
+### std::io::Stdout::flush
+
+- Description
+
+  この出力ストリームをフラッシュして、一時的にバッファリングされたコンテンツがすべて目的地に到達するようにします。
+
+
 
 ---
 
@@ -1102,7 +1158,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 
 ---
 
-### AsRef
+### std::convert::AsRef
 
   - Description
 
@@ -1110,23 +1166,23 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 
     このトレイトは、可変参照間の変換に使用される`FnMut`に似ている。
 
-    もし、高度な変換を行う必要がある場合は、`From`を&T型で実装するか、カスタム関数を実装するほうがよい。
+    もし、高度な変換を行う必要がある場合は、`From`を`&T型`で実装するか、カスタム関数を実装するほうがよい。
 
-    AsRefは、参照と同じシグネチャを持っていますが、いくつか異なる点がある。
+    `AsRef`は、参照と同じシグネチャを持っていますが、いくつか異なる点がある。
 
-     - AsRefとは異なり、参照は任意のTに対してブランケット実装(トレイト境界を満たすあらゆる型にトレイトを実装すること)を持っており、参照または値のどちらかを受け取るために使用できる
+     - `AsRef`とは異なり、参照は任意のTに対してブランケット実装(トレイト境界を満たすあらゆる型にトレイトを実装すること)を持っており、参照または値のどちらかを受け取るために使用できる
 
-     - 参照では、参照した値の[Hash]、[Eq]、[Ord]が同等であることが要求される
+     - 参照では、参照した値の`Hash`、`Eq`、`Ord`が同等であることが要求される
 
-     - 構造体の単一フィールドのみを借用したい場合はAsrefを実施できますが、参照は実装できない。
+     - 構造体の単一フィールドのみを借用したい場合は`Asref`を実施できますが、参照は実装できない。
 
     
 
-    Note:このトレイトは失敗することができない。変換に失敗する可能性がある場合は、Option<T>またはResult<T, E>を返す専用のメソッドを使用すること。
+    Note:このトレイトは失敗することができない。変換に失敗する可能性がある場合は、`Option<T>`または`Result<T, E>`を返す専用のメソッドを使用すること。
 
    - Generic Implementations
 
-     AsRef は、内部の型が参照または変異可能な参照である場合に自動参照を行う (例: `foo.as_ref()`は、foo が`&mut Foo`または`&&mut Foo`の型を持っていても同じように動作する)。
+     `AsRef`は、内部の型が参照または変異可能な参照である場合に自動参照を行う (例: `foo.as_ref()`は、`foo`が`&mut Foo`または`&&mut Foo`の型を持っていても同じように動作する)。
 
   - Example
 
@@ -1144,7 +1200,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 
 ---
 
-### Path
+### std::path::Path
 
   - Discription
 
@@ -1153,6 +1209,16 @@ CopyトレイトとCloneトレイトの違いを以下に示す
     この型はパスを検査するための多くの操作をサポートしている。パスをその構成要素に分割したり(Unixでは/で区切って、Windowsでは/または/で区切って)、ファイル名を抽出したり、パスが絶対パスかどうかを判断したりなど。
 
     非サイズ型であり、常に 参照 や [Box] のようなポインタの後ろで使用されなければならない。
+
+---
+
+### std::path::Path::new
+
+- Description
+
+  文字列スライスを`Path`スライスとして直接ラップします。
+
+  これはコストのかからない変換です。
 
 ---
 
@@ -1223,17 +1289,7 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 
     この関数から返されるイテレータは、io::Result<[String]>のインスタンスを返します。返される各文字列は、最後に改行バイト（0xAバイト）やCRLF（0xD、0xAバイト）は持たない。
 
----
 
-### str::lines
-
-  - Description
-
-    各行の文字列を文字列スライスとして、イテレータを返す。
-
-    行は、改行（\ n）または改行によるキャリッジリターン（\ r \ n）のいずれかで終了する。
-
-    最終行終了はオプションである。最終行終了で終わる文字列は、最終行終了のない、そうでなければ同一の文字列と同じ行を返す。
 
 ---
 
@@ -1261,11 +1317,21 @@ CopyトレイトとCloneトレイトの違いを以下に示す
 
     イテレータの n 番目の要素を返す。
 
-    ほとんどのインデックス操作と同様に、カウントはゼロから始まるので、 nth(0) は最初の値を返し、 nth(1) は 2 番目の値を返す。
+    ほとんどのインデックス操作と同様に、カウントはゼロから始まるので、 `nth(0)`は最初の値を返し、 `nth(1)`は 2 番目の値を返す。
 
-    返された要素と同様に、先行するすべての要素がイテレータから消費されることに注意すること。つまり、先行する要素は破棄され、同じイテレータで nth(0) を複数回呼び出すと、異なる要素が返されることになる。
+    返された要素と同様に、先行するすべての要素がイテレータから消費されることに注意すること。つまり、先行する要素は破棄され、同じイテレータで `nth(0)`を複数回呼び出すと、異なる要素が返されることになる。
 
-    nth() は、n がイテレータの長さ以上であれば [None] を返す。
+    `nth()`は、n がイテレータの長さ以上であれば `None`を返す。
+
+---
+
+### std::env::set_current_dir
+
+- Description
+
+  現在の作業ディレクトリを、指定したパスに変更します。
+
+  操作に失敗した場合は、`Err`を返します。
 
 ---
 
@@ -1800,7 +1866,7 @@ struct  Point {
 
 ---
 
-###  Iterator::collect
+###  std::iter::Iterator::collect
 
   - Description
 
@@ -2032,7 +2098,7 @@ struct  Point {
 
 ---
 
-### core::iter::Iterator::map
+### std::iter::Iterator::map
 
   - Description
     クロージャを受け取り、各要素上でそのクロージャを呼び出すイテレータを作成します。
@@ -2042,7 +2108,7 @@ struct  Point {
 
 ---
 
-### core::iter::Iterator::take_while
+### std::iter::Iterator::take_while
 
   - Description
     述語に基づいて要素を生成するイテレータを作成します。
@@ -2051,7 +2117,7 @@ struct  Point {
 
 ---
 
-### core::iter::Iterator::filter
+### std::iter::Iterator::filter
 
   - Description
     クロージャを使用して要素を生成するかどうかを決定するイテレータを作成します。
@@ -2059,7 +2125,7 @@ struct  Point {
 
 ---
 
-### core::iter::Iterator::fold
+### std::iter::Iterator::fold
 
   - Description
     関数を適用し、単一の最終値を生成するイテレータメソッド。
@@ -2121,40 +2187,79 @@ struct  Point {
 
   
 
-
-
 ---
 
-### std::vec::IntoIter
+### std::iter::Iterator::peekable
 
 - Description
 
-  ベクトルの外に移動するイテレータ。
+  `peek`を使ってイテレータの次の要素を消費することなく見ることができるイテレータを作成します。
 
-  この構造体は、`[Vec]`の`into_iter`メソッドによって作成されます（`[IntoIterator] trait`によって提供されます）。
-  
-  
+  イテレータに`peek`メソッドを追加します。詳細は、そのドキュメントを[参照](https://doc.rust-lang.org/stable/std/iter/struct.Peekable.html#method.peek)してください。
 
----
-
-### std::vec::Vec::extend_from_slice
-
-- Description
-
-  スライス内のすべての要素をクローン化し、`Vec`に追加します。
-
-  他のスライスを反復処理し、各要素をクローン化し、この`Vec`に追加します。他のベクトルは順番に巡回されます．
-
-  この関数は`extend`と同じですが、代わりにスライスを扱うように特化されていることに注意してください。Rustが特殊化された場合、この関数はおそらく非推奨になるでしょう（しかし、まだ利用可能です）。
+  `peek`が初めて呼ばれたとき、基礎となるイテレータはまだ進んでいることに注意してください。次の要素を取得するために、基礎となるイテレータで next が呼び出されるため、`next`メソッドの副作用 (次の値を取得する以外のこと) が発生します。
 
 - Example
 
-  ~~~rust
-  let mut vec = vec![1];
-  vec.extend_from_slice(&[2, 3, 4]);
-  assert_eq!(vec, [1, 2, 3, 4]);
-  ~~~
+  ```rust
+  let xs = [1, 2, 3];
+  
+  let mut iter = xs.iter().peekable();
+  
+  // peek() lets us see into the future
+  assert_eq!(iter.peek(), Some(&&1));
+  assert_eq!(iter.next(), Some(&1));
+  
+  assert_eq!(iter.next(), Some(&2));
+  
+  // we can peek() multiple times, the iterator won't advance
+  assert_eq!(iter.peek(), Some(&&3));
+  assert_eq!(iter.peek(), Some(&&3));
+  
+  assert_eq!(iter.next(), Some(&3));
+  
+  // after the iterator is finished, so is peek()
+  assert_eq!(iter.peek(), None);
+  assert_eq!(iter.next(), None);
+  ```
 
+
+
+---
+
+### std::iter::Iterator::peek
+
+- Description
+
+  イテレータを進めずに`next()`の値への参照を返します。
+
+  `next`同様、値がある場合は`Some(T)`で包まれます。しかし、イテレーションが終わった場合はNoneが返されます。
+
+  `peek()`は参照を返し、多くのイテレータは参照を反復しているので、戻り値が二重参照になってしまうという紛らわしい状況になることがあります。以下の例では、この影響を見ることができます。
+
+- Example
+
+  ```rust
+  let xs = [1, 2, 3];
+  
+  let mut iter = xs.iter().peekable();
+  
+  // peek() lets us see into the future
+  assert_eq!(iter.peek(), Some(&&1));
+  assert_eq!(iter.next(), Some(&1));
+  
+  assert_eq!(iter.next(), Some(&2));
+  
+  // The iterator does not advance even if we `peek` multiple times
+  assert_eq!(iter.peek(), Some(&&3));
+  assert_eq!(iter.peek(), Some(&&3));
+  
+  assert_eq!(iter.next(), Some(&3));
+  
+  // After the iterator is finished, so is `peek()`
+  assert_eq!(iter.peek(), None);
+  assert_eq!(iter.next(), None);
+  ```
 
 
 
@@ -2197,6 +2302,40 @@ struct  Point {
   型に対して`IntoIterator`を実装することで、それをイテレータに変換する方法を定義します。これは、ある種のコレクションを記述する型ではよくあることです。
 
   `IntoIterator`を実装する利点のひとつは、あなたの型が`Rust`の`for loop`構文で動作することです。
+
+---
+
+### std::vec::IntoIter
+
+- Description
+
+  ベクトルの外に移動するイテレータ。
+
+  この構造体は、`[Vec]`の`into_iter`メソッドによって作成されます（`[IntoIterator] trait`によって提供されます）。
+  
+  
+
+---
+
+### std::vec::Vec::extend_from_slice
+
+- Description
+
+  スライス内のすべての要素をクローン化し、`Vec`に追加します。
+
+  他のスライスを反復処理し、各要素をクローン化し、この`Vec`に追加します。他のベクトルは順番に巡回されます．
+
+  この関数は`extend`と同じですが、代わりにスライスを扱うように特化されていることに注意してください。Rustが特殊化された場合、この関数はおそらく非推奨になるでしょう（しかし、まだ利用可能です）。
+
+- Example
+
+  ~~~rust
+  let mut vec = vec![1];
+  vec.extend_from_slice(&[2, 3, 4]);
+  assert_eq!(vec, [1, 2, 3, 4]);
+  ~~~
+
+
 
 ---
 
@@ -2357,6 +2496,10 @@ struct  Point {
 
 - Implementations
 
+  ```rust
+  pub fn new<S: AsRef<OsStr>>(program: S) -> Command
+  ```
+
   パス program でプログラムを起動するための新しい Command を、以下のデフォルト設定で構築します。
 
   - プログラムへの引数なし
@@ -2417,6 +2560,44 @@ struct  Point {
     この関数は何も返却せず、現在のプロセスを即座に終了させる。終了コードは基盤となるOSに渡され、別のプロセスで使用できるようになる。
 
     この関数は何も返却せず、プロセスを終了するので、現在のスタックや他のスレッドのスタック上のデストラクタは実行されないことに注意すること。クリーンなシャットダウンが必要な場合は、実行するデストラクタがなくなった時点でのみこの関数を呼び出すことを検討すること。
+
+---
+
+### std::process::Child
+
+- Description
+
+  実行中または終了した子プロセスの表現。
+
+  この構造体は、子プロセスを表現し、管理するために使用されます。子プロセスは、`Command`構造体を介して作成されます。`Command`構造体は、生成プロセスを設定し、ビルダースタイルのインターフェイスを使用してそれ自体を構築することができます。
+
+  子プロセスの`Drop`は実装されていないので、子プロセスが終了したことを確認しないと、子プロセスの`Child`ハンドルがスコープ外に出た後でも、子プロセスは実行され続けます。
+
+  `wait`(または`wait`をラップした他の関数) を呼び出すと、親プロセスは子が実際に終了するまで待ってから続行します。
+
+- Warning
+
+  システムによっては、OSがリソースを解放するために`wait`などの呼び出しが必要な場合があります。終了したのにwaitされていないプロセスは「ゾンビ」として残っています。あまり多くのゾンビを放置すると、グローバルリソース（プロセスIDなど）を使い果たしてしまう可能性があります。
+
+  標準ライブラリは子プロセスを自動的に待ちません（子プロセスがドロップされても待ちません）。そのため、長時間動作するアプリケーションでは、最初に待機せずに`Child`ハンドルをドロップすることは推奨されません。システムによっては、OSがリソースを解放するためにwaitなどの呼び出しが必要な場合があります。終了したのに`wait`されていないプロセスは「ゾンビ」として残っています。あまり多くのゾンビを放置すると、グローバルリソース（プロセスIDなど）を使い果たしてしまう可能性があります。
+
+  標準ライブラリは子プロセスを自動的に待ちません（子プロセスがドロップされても待ちません）。そのため、長時間動作するアプリケーションでは、最初に待機せずに`Child`ハンドルをドロップすることは推奨されません。
+
+- Example
+
+  ```rust
+  use std::process::Command;
+  
+  let mut child = Command::new("/bin/cat")
+                          .arg("file.txt")
+                          .spawn()
+                          .expect("failed to execute child");
+  
+  let ecode = child.wait()
+                   .expect("failed to wait on child");
+  
+  assert!(ecode.success());
+  ```
 
 
 
@@ -2504,7 +2685,22 @@ struct  Point {
   assert_eq!(None, iter.next());
   ```
 
-  
+
+
+
+---
+
+### str::lines
+
+  - Description
+
+    各行の文字列を文字列スライスとして、イテレータを返す。
+
+    行は、改行（\ n）または改行によるキャリッジリターン（\ r \ n）のいずれかで終了する。
+
+    最終行終了はオプションである。最終行終了で終わる文字列は、最終行終了のない、そうでなければ同一の文字列と同じ行を返す。
+
+
 
 ---
 
@@ -3060,7 +3256,7 @@ struct  Point {
 
 ---
 
-### std::hash::Hash
+### `std::hash::Hash`
 
 - Description
 
@@ -3159,7 +3355,38 @@ struct  Point {
     println!("Hash is {:x}!", hasher.finish());
     ~~~
   
+
+
+
+---
+
+### `std::hash::Hasher`
+
+- Description
+
+  任意のバイトストリームをハッシュ化するための`trait`です。
+
+  `Hasher`のインスタンスは通常、データのハッシュ化の際に変更される状態を表します。
+
+  `Hasher`は、生成されたハッシュを (`finish`を使って) 取得したり、整数やバイトのスライスを (`write`や`write_u8`などを使って) インスタンスに書き込むための、かなり基本的なインターフェースを提供します。ほとんどの場合、`Hasher`インスタンスは、`Hash trait`と一緒に使用されます。
+
+- Example
+
+  ~~~rust
+  use std::collections::hash_map::DefaultHasher;
+  use std::hash::Hasher;
   
+  let mut hasher = DefaultHasher::new();
+  
+  hasher.write_u32(1989);
+  hasher.write_u8(11);
+  hasher.write_u8(9);
+  hasher.write(b"Huh?");
+  
+  println!("Hash is {:x}!", hasher.finish());
+  ~~~
+
+
 
 
 ---
@@ -3574,36 +3801,6 @@ struct  Point {
   ```
 
   
-
----
-
-### std::hash::Hasher
-
-- Description
-
-  任意のバイトストリームをハッシュ化するための`trait`です。
-
-  `Hasher`のインスタンスは通常、データのハッシュ化の際に変更される状態を表します。
-
-  `Hasher`は、生成されたハッシュを (`finish`を使って) 取得したり、整数やバイトのスライスを (`write`や`write_u8`などを使って) インスタンスに書き込むための、かなり基本的なインターフェースを提供します。ほとんどの場合、`Hasher`インスタンスは、`Hash trait`と一緒に使用されます。
-
-- Example
-
-  ~~~rust
-  use std::collections::hash_map::DefaultHasher;
-  use std::hash::Hasher;
-  
-  let mut hasher = DefaultHasher::new();
-  
-  hasher.write_u32(1989);
-  hasher.write_u8(11);
-  hasher.write_u8(9);
-  hasher.write(b"Huh?");
-  
-  println!("Hash is {:x}!", hasher.finish());
-  ~~~
-
-
 
 
 ---
