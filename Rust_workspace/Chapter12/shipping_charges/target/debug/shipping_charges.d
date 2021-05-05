@@ -1,1 +1,0 @@
-C:\Users\sigur\Documents\900_github\700_init\Rust_workspace\shipping_charges\target\debug\shipping_charges.exe: C:\Users\sigur\Documents\900_github\700_init\Rust_workspace\shipping_charges\src\main.rs
